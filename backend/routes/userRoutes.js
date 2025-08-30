@@ -1,15 +1,9 @@
-// backend/routes/userRoutes.js
 import express from "express";
+import login from "../controllers/userController.js";
 
 const router = express.Router();
 
 // GET /api/users/
-router.get("/", (req, res) => {
-  res.send("User route working!");
-});
-
-router.get("/test", (req, res) => {
-  res.json({ message: "Test route working" });
-});
+router.route("/login").post(login);
 
 export default router;

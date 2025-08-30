@@ -13,7 +13,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // routes
-app.use("/api/users", userRoutes);
+app.use("/users", userRoutes);
 
 app.get('/', (req, res) => {
   res.send('Hello, Express!');
