@@ -1,12 +1,16 @@
 {
-  "files": [],
-  "references": [
-    { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.node.json" }
-  ],  "compilerOptions": {
+  "compilerOptions": {
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
-    }
-  }
+    },
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "esnext",
+    "lib": ["dom", "esnext"],
+    "types": ["node"]
+  },
+  "include": ["src", "vite.config.ts"]
 }

@@ -3,7 +3,11 @@ import login from "../controllers/userController.js";
 
 const router = express.Router();
 
-// GET /api/users/
-router.route("/login").post(login);
+// Simple test GET route
+router.route("/login").get(login)
+  .post((req, res) => {
+    // Your login handler
+    res.send("hello post");
+  });
 
 export default router;
