@@ -6,10 +6,6 @@ const userSchema = new mongoose.Schema({
           type: String,
           required: true,
         },
-         displayName: {    // optional, user can edit later
-           type: String,
-           required: true}
-        ,
         email: {
           type: String,
           required: true,
