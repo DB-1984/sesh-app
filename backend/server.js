@@ -3,10 +3,13 @@ import express from 'express';
 import dotenv from 'dotenv';
 import userRoutes from './routes/userRoutes.js';
 dotenv.config();
+import connectDB from './utils/conn.js';
 
 // constants
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+connectDB()
 
 // middleware
 app.use(express.json());
