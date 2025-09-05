@@ -1,5 +1,12 @@
+// Login and Register controllers
+
 const login = (req, res) => {
-    res.send("login");
+    res.send("login response");
     }
 
-export default login;
+const register = (req, res) => {
+    res.send("register response");
+    }
+
+export { register, login };
+

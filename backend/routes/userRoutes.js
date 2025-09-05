@@ -1,13 +1,9 @@
 import express from "express";
-import login from "../controllers/userController.js";
+import { login, register } from "../controllers/userController.js";
 
 const router = express.Router();
 
-// Simple test GET route
-router.route("/login").get(login)
-  .post((req, res) => {
-    // Your login handler
-    res.send("hello post");
-  });
+router.route("/login").post(login);
+router.route("/register").post(register);
 
 export default router;
