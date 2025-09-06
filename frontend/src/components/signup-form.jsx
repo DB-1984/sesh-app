@@ -40,8 +40,8 @@ export function SignupForm() {
   };
 
   return (
-    <section className="bg-muted h-screen flex items-center justify-center">
-      <div className="w-full max-w-md bg-background p-8 rounded-md shadow-md">
+    <section className="h-screen flex items-center justify-center">
+      <div className="w-full max-w-md bg-background p-8 rounded-md">
         <h1 className="text-2xl font-bold text-center mb-6">Create Account</h1>
 
         <form onSubmit={handleSubmit(submitHandler)} className="flex flex-col gap-4">

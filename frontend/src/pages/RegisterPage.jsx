@@ -1,24 +1,26 @@
+import { GalleryVerticalEnd } from "lucide-react"
 import { SignupForm } from "@/components/signup-form";
 
 export default function RegisterPage() {
   return (
-    <div className="flex min-h-screen">
-      {/* Left half: signup form */}
-      <div className="w-1/2 flex items-center justify-center bg-muted">
-        <div className="w-full max-w-md p-8">
-          <SignupForm />
+    <div className="grid min-h-svh lg:grid-cols-2">
+      <div className="flex flex-col gap-4 p-6 md:p-10">
+        <div className="flex justify-center gap-2 md:justify-start">
+          <a href="#" className="flex items-center gap-2 font-medium">
+            <div className="bg-primary text-primary-foreground flex size-6 items-center justify-center rounded-md">
+              <GalleryVerticalEnd className="size-4" />
+            </div>
+            Acme Inc.
+          </a>
+        </div>
+        <div className="flex flex-1 items-center justify-center">
+          <div className="w-full max-w-xs">
+            <SignupForm />
+          </div>
         </div>
       </div>
-
-      {/* Right half: branding/image */}
-      <div
-        className="w-1/2 bg-cover bg-center"
-        style={{ backgroundImage: "url('/path-to-your-image.jpg')" }}
-      >
-        <div className="flex h-full items-center justify-center">
-          <h1 className="text-white text-3xl font-bold">Welcome to Sesh</h1>
-        </div>
+      <div className="bg-zinc-900 relative hidden lg:block">
       </div>
     </div>
-  );
+  )
 }

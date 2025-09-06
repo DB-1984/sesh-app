@@ -22,6 +22,7 @@ export function LoginForm({ onSubmit }) {
 
   return (
     <form onSubmit={handleSubmit(submitHandler)} className={cn("flex flex-col gap-6")}>
+      <h1 className="text-2xl font-bold text-center mb-6">Log In</h1>
       <div className="grid gap-6">
         <div className="grid gap-3">
           <Label htmlFor="email">Email</Label>
