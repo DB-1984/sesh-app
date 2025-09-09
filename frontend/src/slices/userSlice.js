@@ -12,7 +12,7 @@ const userSlice = createSlice({
     name: "user",  
     initialState,  
     reducers: {
-        setUserInfo: (state, action) => {
+        setUserInfo: (state, action) => { // dispatch(res) sets the payload
             state.userInfo = action.payload;  // Update user information
         },
         clearUserInfo: (state) => {
@@ -21,5 +21,6 @@ const userSlice = createSlice({
     }
 });     
 
-export const { setUserInfo, clearUserInfo } = userSlice.actions;
-export default userSlice.reducer;   
+export const { setUserInfo, clearUserInfo } = userSlice.actions; // this sets dispatch() to handle payloads only
+
+export default userSlice.reducer; // for Store

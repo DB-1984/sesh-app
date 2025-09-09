@@ -1,20 +1,25 @@
 import { useForm } from "react-hook-form";
+import { useDispatch } from "react-redux";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { useRegisterMutation } from "@/slices/userApiSlice.js";
+import { setUserInfo } from "../slices/userSlice";
 
 //in the signup form, we gather data with the useForm hook, which is 
 // passed to the handleSubmit function (in this case, submitHandler), 
 // in order to get the data object to pass to the mutation function
 
 export function SignupForm() {
+
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const [registerUser, { isLoading }] = useRegisterMutation();
 
   const {
-    register,
+    register, // useForm registration of inputs, not RTK
     handleSubmit,
     formState: { errors },
   } = useForm();
@@ -26,11 +31,12 @@ export function SignupForm() {
     }
 
     try {
-      await registerUser({
+      const res = await registerUser({
         name: data.name,
         email: data.email,
         password: data.password,
       }).unwrap();
+      dispatch(setUserInfo(res));
 
       toast.success("Account created!");
       navigate("/users/login");
