@@ -96,9 +96,9 @@ export function SignupForm() {
             )}
           </div>
 
-          <Button type="submit" className="w-full mt-2" disabled={isLoading}>
-            {isLoading ? "Creating..." : "Sign Up"}
-          </Button>
+          <button type="submit" className="w-full mt-2">
+  {isLoading ? "Creating..." : "Sign Up"}
+</button>
 
           <p className="text-center text-sm mt-4">
             Already have an account?{" "}
