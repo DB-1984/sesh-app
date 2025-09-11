@@ -4,7 +4,6 @@ import dotenv from 'dotenv';
 import userRoutes from './routes/userRoutes.js';
 dotenv.config();
 import connectDB from './utils/conn.js';
-import cors from "cors";
 
 // constants
 const app = express();
@@ -15,9 +14,6 @@ connectDB()
 // middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-// Allow all origins (dev only)
-app.use(cors());
 
 // routes
 app.use("/api/users", userRoutes);
