@@ -37,7 +37,6 @@ export function SignupForm() {
         password: data.password,
       }).unwrap();
       dispatch(setUserInfo(res));
-
       toast.success("Account created!");
       navigate("/users/login");
     } catch (err) {
@@ -96,10 +95,10 @@ export function SignupForm() {
             )}
           </div>
 
-          <button type="submit" className="w-full mt-2">
+        
+<Button type="submit" className="w-full mt-2">
   {isLoading ? "Creating..." : "Sign Up"}
-</button>
-
+</Button>
           <p className="text-center text-sm mt-4">
             Already have an account?{" "}
             <a href="/users/login" className="underline">

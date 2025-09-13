@@ -2,11 +2,33 @@ import User from "../models/userModel.js";
 // not used now: import jwt from "jsonwebtoken";
 import generateToken from "../utils/generateToken.js";
 
-const login = (req, res) => {
-    res.send("login response");
-    }
+const login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
 
-    const register = async (req, res, next) => {
+    // Look for a user with matching email
+    const user = await User.findOne({ email });
+
+    // Verify password using model method
+    if (user && (await user.matchPassword(password))) {
+      generateToken(res, user._id); // writes JWT cookie/header
+
+      return res.json({
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+      });
+    } else {
+      return res.status(401).json({ message: "Invalid email or password" });
+    }
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+
+const register = async (req, res, next) => {
         
         try {
           const { name, email, password } = req.body;

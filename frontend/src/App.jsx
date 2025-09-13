@@ -1,26 +1,17 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-import LoginPage from "./pages/LoginPage";
-import RegisterPage from "./pages/RegisterPage";
+import { Outlet } from "react-router-dom";
 
-const App = () => {
-  const isLoggedIn = false; // replace with session logic later
+// main or index jsx/tsx mounts everything to the DOM, and App.js
+// is the parent of all the components being 'fed' to main/index, 
+// with Outlet governing which Component loads inside of it
 
+export default function App() {
   return (
-    <Router>
-      <Routes>
-        <Route
-          path="/users/login"
-          element={isLoggedIn ? <Navigate to="/users/login" /> : <LoginPage />}
-        />
-         <Route
-          path="/users/register"
-          element={isLoggedIn ? <Navigate to="/users/login" /> : <RegisterPage />}
-        />
-        {/* Redirect any unknown route to login */}
-        <Route path="*" element={<Navigate to="/users/login" />} />
-      </Routes>
-    </Router>
+    <div>
+      <header>Header</header>
+      <main>
+        <Outlet />
+      </main>
+      <footer>Footer</footer>
+    </div>
   );
-};
-
-export default App;
+}

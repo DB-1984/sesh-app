@@ -6,6 +6,9 @@ import { BASE_URL } from "../constants";
 // - `reducerPath` is just a namespace in Redux state ("api")
 export const apiSlice = createApi({
   reducerPath: "api",
-  baseQuery: fetchBaseQuery({ baseUrl: BASE_URL }),
-  endpoints: () => ({}), // Endpoints will be injected later (see userApiSlice)
+  baseQuery: fetchBaseQuery({ 
+    baseUrl: BASE_URL,
+    credentials: "include", // 🔑 ensures JWT cookie is sent automatically
+  }),
+  endpoints: () => ({}), 
 });
