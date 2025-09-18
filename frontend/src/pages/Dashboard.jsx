@@ -1,42 +1,58 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+// Dashboard.jsx
+import { useSelector } from "react-redux";
+import { Card, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { WorkoutForm } from "../components/workout-form";
+import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
+import { SeshCard } from "../components/sesh-card.jsx";
+import { useGetSeshesQuery } from "../slices/seshApiSlice";
 
 export default function Dashboard() {
-  // Dummy user
-  const user = {
-    name: "Jane Doe",
-    initials: "JD",
+
+  function getInitials(name = "") {
+  return name
+    .split(" ")                // split full name into words
+    .map((n) => n[0])          // take first letter of each
+    .join("")                  // join them
+    .toUpperCase();            // make it uppercase
+}
+
+ // get the state.userInfo property from Redux store - this is the specific data
+ // that is set to the decoded cookie's payload
+const { userInfo } = useSelector((state) => state.user);
+
+  // Fetch all seshes
+  const { data: seshes = [], isLoading, isError } = useGetSeshesQuery();
+
+  // Optional: handle delete function (if you implement delete mutation later)
+  const handleDelete = (id) => {
+    console.log("Delete sesh with id:", id);
+    // call delete mutation here
   };
 
-  // Dummy workouts
-  const workouts = [
-    { id: "1", name: "Chest Day", description: "Bench, Flyes, Pushups" },
-    { id: "2", name: "Leg Day", description: "Squats, Deadlifts, Lunges" },
-  ];
+  if (isLoading) return <p>Loading...</p>;
+  if (isError) return <p>Failed to load seshes</p>;
 
   return (
     <div className="grid lg:grid-cols-3 gap-6 p-6">
       {/* User card */}
       <Card className="flex flex-col items-center p-4">
         <Avatar className="w-20 h-20 mb-4">
-          <AvatarFallback>{user.initials}</AvatarFallback>
+          <AvatarFallback>{getInitials(userInfo?.name)}</AvatarFallback>
         </Avatar>
-        <CardTitle>{user.name}</CardTitle>
+        <CardTitle>{userInfo?.name}</CardTitle>
       </Card>
 
-      {/* Workouts section */}
+      {/* Sesh list */}
       <div className="lg:col-span-2 flex flex-col gap-4">
-        {workouts.map((w) => (
-          <WorkoutForm
-            key={w.id}
-            defaultValues={w}
-            onSubmit={(data) => handleSaveWorkout(w.id, data)}
-          />
+        {seshes.map((sesh) => (
+          <SeshCard key={sesh._id} sesh={sesh} onDelete={handleDelete} />
         ))}
 
-        {/* Add new workout */}
-        <WorkoutForm onSubmit={(data) => handleSaveWorkout(null, data)} />
+        {/* Add new Sesh */}
+        <Link to="/sesh/new">
+          <Button className="w-full">Add New Sesh</Button>
+        </Link>
       </div>
     </div>
   );

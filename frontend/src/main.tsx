@@ -17,7 +17,7 @@ const router = createBrowserRouter(
       <Route path="/users/login" element={<LoginPage />} />
       <Route path="/users/register" element={<RegisterPage />} /> {/* replace with RegisterPage */}
 
-      {/* Private routes */}
+      {/* Private routes - checked on the backend with 'protect' middleware */}
       <Route element={<PrivateRoute />}>
         <Route path="/users/dashboard" element={<Dashboard />} />
       </Route>

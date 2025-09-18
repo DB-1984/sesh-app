@@ -10,5 +10,6 @@ export const apiSlice = createApi({
     baseUrl: BASE_URL,
     credentials: "include", // 🔑 ensures JWT cookie is sent automatically
   }),
+  tagTypes: ["Sesh", "User"], // optional, for cache invalidation
   endpoints: () => ({}), 
 });
