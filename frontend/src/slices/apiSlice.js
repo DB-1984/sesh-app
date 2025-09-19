@@ -8,8 +8,8 @@ export const apiSlice = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({ 
     baseUrl: BASE_URL,
-    credentials: "include", // 🔑 ensures JWT cookie is sent automatically
+    credentials: "include",   // 🔑 send cookies automatically
   }),
-  tagTypes: ["Sesh", "User"], // optional, for cache invalidation
+  tagTypes: ["Sesh", "User"],
   endpoints: () => ({}), 
 });

@@ -11,16 +11,20 @@ const initialState = { // check for user info in local storage
 const userSlice = createSlice({
     name: "user",  
     initialState,  
-    reducers: {
-        setUserInfo: (state, action) => { // dispatch(res) sets the payload
-            state.userInfo = action.payload;  // Update user information
+     reducers: {
+        setUserInfo: (state, action) => {
+        state.userInfo = action.payload; // dispatch(res) sets the payload to userInfo
+        
+        // write it as a JSON string to local storage
+        localStorage.setItem('userInfo', JSON.stringify(action.payload));
         },
-        clearUserInfo: (state) => {
-            state.userInfo = null;  // Clear user information
-        }
+        logoutUser: (state, action) => {
+        state.userInfo = null;
+        localStorage.removeItem('userInfo');
+    }
     }
 });     
 
-export const { setUserInfo, clearUserInfo } = userSlice.actions; // this sets dispatch() to handle payloads only
+export const { setUserInfo, logoutUser } = userSlice.actions; // this sets dispatch() to handle payloads only
 
 export default userSlice.reducer; // for Store

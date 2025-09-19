@@ -5,6 +5,7 @@ import userRoutes from './routes/userRoutes.js';
 import seshRoutes from './routes/seshRoutes.js';
 dotenv.config();
 import connectDB from './utils/conn.js';
+import cookieParser from "cookie-parser";
 
 // constants
 const app = express();
@@ -15,6 +16,7 @@ connectDB()
 // middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser()); // to parse cookies from incoming requests
 
 // routes
 app.use("/api/users", userRoutes);

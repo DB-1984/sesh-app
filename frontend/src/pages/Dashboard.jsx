@@ -3,11 +3,32 @@ import { useSelector } from "react-redux";
 import { Card, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 import { SeshCard } from "../components/sesh-card.jsx";
-import { useGetSeshesQuery } from "../slices/seshApiSlice";
+import { useGetSeshesQuery, useAddSeshMutation } from "../slices/seshApiSlice";
 
 export default function Dashboard() {
+
+// get the state.userInfo property from Redux store - this is the specific data
+// that is set to the decoded cookie's payload
+const { userInfo } = useSelector((state) => state.user);
+
+const [addSesh, { isLoading: addSeshisLoading, isError: addSeshIsError, error }] = useAddSeshMutation();
+
+const handleAddSesh = async () => {
+  try {
+    const newSesh = await addSesh({
+      title: "New Sesh",
+      date: new Date().toISOString(),
+      workouts: [],
+    }).unwrap();
+
+    toast.success(`Sesh "${newSesh.title}" created!`);
+    // navigate(`/sesh/${newSesh._id}/edit`); // Uncomment if you want to navigate to the edit page
+  } catch (err) {
+    toast.error(err?.data?.message || "Failed to create sesh");
+  }
+};
 
   function getInitials(name = "") {
   return name
@@ -16,10 +37,6 @@ export default function Dashboard() {
     .join("")                  // join them
     .toUpperCase();            // make it uppercase
 }
-
- // get the state.userInfo property from Redux store - this is the specific data
- // that is set to the decoded cookie's payload
-const { userInfo } = useSelector((state) => state.user);
 
   // Fetch all seshes
   const { data: seshes = [], isLoading, isError } = useGetSeshesQuery();
@@ -50,9 +67,14 @@ const { userInfo } = useSelector((state) => state.user);
         ))}
 
         {/* Add new Sesh */}
-        <Link to="/sesh/new">
-          <Button className="w-full">Add New Sesh</Button>
-        </Link>
+       <Button 
+          onClick={handleAddSesh} 
+          className="w-full" 
+          disabled={addSeshisLoading}
+        >
+          {addSeshisLoading ? "Adding..." : "Add New Sesh"}
+        </Button>
+
       </div>
     </div>
   );

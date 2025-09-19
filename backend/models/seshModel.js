@@ -7,21 +7,23 @@ const seshSchema = new mongoose.Schema(
       required: true,
     },
     date: {
-      type: Date, // use Date type for proper sorting/filtering
+      type: Date,
       required: true,
     },
-    workouts: [ // workouts pushed to a sesh are stored by their timestamp IDs
+    workouts: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Workout", // reference to Workout model
+        ref: "Workout",
       },
     ],
+    user: {                        
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User", // 'look in Users with this ID' to see which user created the sesh
+      required: true,
+    },
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true }
 );
 
 const Sesh = mongoose.model("Sesh", seshSchema);
-
 export default Sesh;
