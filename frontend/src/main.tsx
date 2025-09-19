@@ -5,19 +5,19 @@ import { Provider } from "react-redux";
 import { store } from "./store.js";
 import "./index.css";
 import App from "./App.jsx";
-import LoginPage from "./pages/LoginPage";
-import RegisterPage from "./pages/RegisterPage";
+import LoginRegisterPage from "./pages/LoginRegisterPage";
 import Dashboard from "./pages/Dashboard";
 import PrivateRoute from "./components/private-route.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route element={<App />}>
-      {/* Public routes */}
-      <Route path="/users/login" element={<LoginPage />} />
-      <Route path="/users/register" element={<RegisterPage />} /> {/* replace with RegisterPage */}
+      {/* Public routes - the /users/ is preserved but loads the LoginRegisterPage 
+      with the correct component based on the Route prop 'mode' */}
+      <Route path="/users/login" element={<LoginRegisterPage mode="login" />} />
+      <Route path="/users/register" element={<LoginRegisterPage mode="register" />} />
 
-      {/* Private routes - checked on the backend with 'protect' middleware */}
+      {/* Private routes */}
       <Route element={<PrivateRoute />}>
         <Route path="/users/dashboard" element={<Dashboard />} />
       </Route>
