@@ -4,6 +4,6 @@ import { getAllSeshes, createSesh } from "../controllers/seshController.js";
 
 const router = express.Router();
 
-router.route("/").get(getAllSeshes).post(protect, createSesh);
+router.route("/").get(protect, getAllSeshes).post(protect, createSesh);
 
 export default router;

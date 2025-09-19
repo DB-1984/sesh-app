@@ -3,9 +3,9 @@ import Workout from "../models/workoutModel.js";
 
 const getAllSeshes = async (req, res) => {
   try {
-    // mongoose expects a filter object; if userId is provided in query, filter by it
-    const filter = req.query.userId ? { user: req.query.userId } : {};
-    const seshes = await Sesh.find(filter).populate("workouts");
+    // Use logged-in user from protect middleware
+    // filter the find by passing an object assigning the user field to req.user._id
+    const seshes = await Sesh.find({ user: req.user._id }).populate("workouts");
     res.status(200).json(seshes);
   } catch (error) {
     res.status(500).json({ message: error.message });

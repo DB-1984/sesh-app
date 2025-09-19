@@ -4,8 +4,11 @@ import { Card, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
 import { SeshCard } from "../components/sesh-card.jsx";
 import { useGetSeshesQuery, useAddSeshMutation } from "../slices/seshApiSlice";
+import { logoutUser} from "../slices/userSlice.js";
+import { useNavigate } from "react-router-dom";
 
 export default function Dashboard() {
 
@@ -14,6 +17,9 @@ export default function Dashboard() {
 const { userInfo } = useSelector((state) => state.user);
 
 const [addSesh, { isLoading: addSeshisLoading, isError: addSeshIsError, error }] = useAddSeshMutation();
+
+const dispatch = useDispatch();
+const navigate = useNavigate();
 
 const handleAddSesh = async () => {
   try {
@@ -28,6 +34,11 @@ const handleAddSesh = async () => {
   } catch (err) {
     toast.error(err?.data?.message || "Failed to create sesh");
   }
+};
+
+const handleLogout = () => {
+  dispatch(logoutUser());
+  navigate("/"); // send back to login/landing
 };
 
   function getInitials(name = "") {
@@ -58,6 +69,14 @@ const handleAddSesh = async () => {
           <AvatarFallback>{getInitials(userInfo?.name)}</AvatarFallback>
         </Avatar>
         <CardTitle>{userInfo?.name}</CardTitle>
+
+        <Button
+          variant="outline"
+          className="mt-4 w-full"
+          onClick={handleLogout}
+        >
+          Log out
+        </Button>
       </Card>
 
       {/* Sesh list */}
