@@ -14,10 +14,10 @@ export function SeshCard({ sesh, onDelete }) {
       <CardContent className="flex justify-between items-center">
         <p>{new Date(sesh.date).toLocaleDateString()}</p>
         <div className="flex gap-2">
-          <Link to={`/sesh/${sesh._id}`}>
+          <Link to={`sesh/${sesh._id}`}>
             <Button variant="outline">View</Button>
           </Link>
-          <Link to={`/sesh/${sesh._id}/edit`}>
+          <Link to={`sesh/${sesh._id}/edit`}>
             <Button variant="outline">Edit</Button>
           </Link>
           {/* Here, onDelete is a prop, not the actual function */}

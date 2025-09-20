@@ -8,6 +8,8 @@ import App from "./App.jsx";
 import LoginRegisterPage from "./pages/LoginRegisterPage";
 import Dashboard from "./pages/Dashboard";
 import PrivateRoute from "./components/private-route.jsx";
+import AllSeshes from "./components/all-seshes.jsx";
+import ViewSesh from "./components/view-sesh.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -18,9 +20,12 @@ const router = createBrowserRouter(
       <Route path="/users/register" element={<LoginRegisterPage mode="register" />} />
 
       {/* Private routes */}
-      <Route element={<PrivateRoute />}>
-        <Route path="/users/dashboard" element={<Dashboard />} />
+     <Route element={<PrivateRoute />}>
+      <Route path="/users/dashboard" element={<Dashboard />}> {/* Always mount this */}
+        <Route index element={<AllSeshes />} /> {/* Load all seshes by default */}
+        <Route path="sesh/:id" element={<ViewSesh />} /> {/* Load this if the path is /sesh/id: */}
       </Route>
+    </Route>
 
       {/* Catch-all redirect */}
       <Route path="*" element={<Navigate to="/users/login" replace />} />
