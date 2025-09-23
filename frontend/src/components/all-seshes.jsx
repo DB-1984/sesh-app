@@ -1,11 +1,16 @@
 // all seshes goes to the <Outlet /> in Dashboard.jsx
 import { Button } from "@/components/ui/button";
 import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
 import { SeshCard } from "./sesh-card";
 import { useGetSeshesQuery, useAddSeshMutation } from "../slices/seshApiSlice";
 
 export default function AllSeshes() {
-  const { data: seshes = [], isLoading, isError } = useGetSeshesQuery();
+
+  const { userInfo } = useSelector((state) => state.user);
+
+  // pass the logged-in user's _id to the getSeshes hook so RTK Query keeps cache separate per user
+  const { data: seshes = [], isLoading, isError } = useGetSeshesQuery(userInfo._id);
   const [addSesh, { isLoading: addSeshLoading }] = useAddSeshMutation();
 
   const handleAddSesh = async () => {

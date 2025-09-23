@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import { useGetSeshesQuery, useUpdateSeshMutation } from "../slices/seshApiSlice";
+import { useGetSeshesQuery, /* useUpdateSeshMutation */ } from "../slices/seshApiSlice";
 import { Button } from "@/components/ui/button";
 
 export default function ViewSesh() {
   const { id } = useParams(); // get the sesh ID from the URL
   const { data: seshes = [], isLoading, isError } = useGetSeshesQuery(); 
   // fetch all seshes; will be used to find the current sesh
-  const [updateSesh] = useUpdateSeshMutation(); // mutation for saving changes to the sesh (not made yet)
+  // const [updateSesh] = useUpdateSeshMutation(); // mutation for saving changes to the sesh (not made yet)
 
   const [currentSesh, setCurrentSesh] = useState(null); // local state for the sesh being viewed
   const [newWorkout, setNewWorkout] = useState(""); // temporary input value for adding a workout
