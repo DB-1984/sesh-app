@@ -30,6 +30,14 @@ export const seshApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Sesh"],
     }),
+    deleteWorkout: builder.mutation({
+      query: ({ seshId, workout }) => ({
+        url: `${SESH_URL}/${seshId}/workouts`,
+        method: "DELETE",
+        body: workout,
+      }),
+      invalidatesTags: ["Sesh"],
+    })
   }),
 });
 
@@ -37,5 +45,6 @@ export const {
   useGetSeshesQuery,
   useAddSeshMutation,
   useDeleteSeshMutation,
-  useAddWorkoutMutation
+  useAddWorkoutMutation,
+  useDeleteWorkoutMutation
 } = seshApiSlice;

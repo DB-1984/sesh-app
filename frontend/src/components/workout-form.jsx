@@ -11,7 +11,7 @@ export function WorkoutForm({ onSubmit, defaultValues }) {
     <form onSubmit={form.handleSubmit(onSubmit)}>
       <Card className="w-full max-w-md mx-auto">
         <CardHeader>
-          <CardTitle>Workout Details</CardTitle>
+          <CardTitle>Add Workout</CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
           <Input {...form.register("exercise", { required: true })} placeholder="Exercise" />

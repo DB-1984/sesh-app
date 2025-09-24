@@ -28,6 +28,31 @@ const addWorkoutToSesh = async (req, res) => {
   }
 };
 
+const deleteWorkoutFromSesh = async (req, res) => {
+  try {
+    const { seshId } = req.params;
+    // assign the _id property from the {workout} body to 'workoutId'
+    const { _id: workoutId } = req.body;
+
+    const sesh = await Sesh.findById(seshId);
+    if (!sesh) return res.status(404).json({ message: "Sesh not found" });
+
+    sesh.workouts = sesh.workouts.filter( // redfine the workouts property without the deleted ID
+      (wId) => wId.toString() !== workoutId
+    );
+    await sesh.save();
+
+    await Workout.findByIdAndDelete(workoutId); // delete the actual document
+
+    // Return updated sesh with populated workouts (find the workout docs by ID and grab all data)
+    const updatedSesh = await Sesh.findById(seshId).populate("workouts");
+    res.status(200).json(updatedSesh);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
 const getAllSeshes = async (req, res) => {
   try {
     // Use logged-in user from protect middleware
@@ -68,5 +93,5 @@ const getSeshById = async (req, res) => {
   }
 }
 
-    export { getAllSeshes, createSesh, addWorkoutToSesh };
+    export { getAllSeshes, createSesh, addWorkoutToSesh, deleteWorkoutFromSesh };
 

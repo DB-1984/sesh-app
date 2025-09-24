@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import { useGetSeshesQuery, useAddWorkoutMutation } from "../slices/seshApiSlice";
+import { useGetSeshesQuery, useAddWorkoutMutation, useDeleteWorkoutMutation } from "../slices/seshApiSlice";
 import { WorkoutForm } from "@/components/workout-form"; 
 import { Button } from "@/components/ui/button";
 
@@ -9,6 +9,7 @@ export default function ViewSesh() {
   const { id } = useParams();
   const { data: seshes = [], isLoading, isError } = useGetSeshesQuery();
   const [addWorkout, { isLoading: addWorkoutLoading }] = useAddWorkoutMutation();
+  const [deleteWorkout, { isLoading: deleteWorkoutLoading }] = useDeleteWorkoutMutation();
 
   const [currentSesh, setCurrentSesh] = useState(null);
 
@@ -22,6 +23,20 @@ export default function ViewSesh() {
   }, [isError, isLoading, seshes, id]);
 
   if (isLoading || !currentSesh) return null;
+
+  const handleDeleteWorkout = async (workout) => {
+    try {
+      await deleteWorkout({ seshId: currentSesh._id, workout }).unwrap();
+      toast.success("Workout deleted!");
+      // update local state for instant UI
+      setCurrentSesh({
+        ...currentSesh,
+        workouts: currentSesh.workouts.filter(w => w._id !== workout._id), // local state
+      });
+    } catch (err) {
+      toast.error(err?.data?.message || "Failed to delete workout");
+    }
+  };
 
   return (
     <div className="flex flex-col gap-4 p-4 border rounded">
@@ -38,10 +53,17 @@ export default function ViewSesh() {
         <h3 className="font-semibold">Workouts</h3>
         {currentSesh.workouts?.length ? (
           <ul className="list-disc pl-5">
-            {currentSesh.workouts.map((w, i) => (
-              <li key={i}>
-                {w.exercise} — {w.sets}x{w.reps}, rest {w.rest}s
-              </li>
+            {currentSesh.workouts.map((workout, i) => (
+             <li key={i} className="flex items-center py-3 justify-between">
+             <span>{workout.exercise} — {workout.sets}x{workout.reps}, rest {workout.rest}s</span>
+             <Button
+               size="sm"
+               variant="destructive"
+               onClick={() => handleDeleteWorkout(workout)}
+             >
+               Delete
+             </Button>
+           </li>
             ))}
           </ul>
         ) : (
