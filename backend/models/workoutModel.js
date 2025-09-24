@@ -19,8 +19,8 @@ const workoutSchema = new mongoose.Schema(
       required: true,
     },
      comments: {
-      type: Number,
-      required: true,
+      type: String,
+      required: false,
     },
   },
   {

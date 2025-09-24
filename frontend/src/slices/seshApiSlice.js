@@ -22,6 +22,14 @@ export const seshApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Sesh"],     // triggers refetch for getSeshes
     }),
+    addWorkout: builder.mutation({
+      query: ({ seshId, workout }) => ({
+        url: `${SESH_URL}/${seshId}/workouts`,
+        method: "POST",
+        body: workout,
+      }),
+      invalidatesTags: ["Sesh"],
+    }),
   }),
 });
 
@@ -29,4 +37,5 @@ export const {
   useGetSeshesQuery,
   useAddSeshMutation,
   useDeleteSeshMutation,
+  useAddWorkoutMutation
 } = seshApiSlice;
