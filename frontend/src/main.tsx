@@ -10,12 +10,16 @@ import Dashboard from "./pages/Dashboard";
 import PrivateRoute from "./components/private-route.jsx";
 import AllSeshes from "./components/all-seshes.jsx";
 import ViewSesh from "./components/view-sesh.jsx";
+import seshSm from "@/assets/sesh-sm.png";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route element={<App />}>
       {/* Public routes - the /users/ is preserved but loads the LoginRegisterPage 
       with the correct component based on the Route prop 'mode' */}
+
+      {/*“The LoginRegisterPage is dynamic based on the mode prop, which is determined 
+      by the route that matches the current URL.” */}
       <Route path="/users/login" element={<LoginRegisterPage mode="login" />} />
       <Route path="/users/register" element={<LoginRegisterPage mode="register" />} />
 

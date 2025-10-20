@@ -1,11 +1,15 @@
 import seshSqWh from "@/assets/sesh-sq-white.png";
-import seshSm from "@/assets/sesh-sm.png";
 import { LoginForm } from "@/components/login-form";
 import { SignupForm } from "@/components/signup-form";
+import seshSm from "@/assets/sesh-sm.png";
 
 export default function LoginRegisterPage({ mode = "login" }) {
 
-// use a mode prop to determine which form to show - passed from the Route in main.tsx
+// Use a mode prop to determine which form to show with a nested component - passed from the Route in main.tsx
+
+// Because we use a combined LoginRegisterPage for both /login and /register routes
+// and import a login and signup form component separately, we can conditionally render
+// the appropriate form based on the mode prop, which is passed the path from the Route
 const FormComponent = mode === "login" ? LoginForm : SignupForm;
 
   return (
