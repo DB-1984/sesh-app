@@ -42,14 +42,15 @@ import { Card, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { logoutUser } from "../slices/userSlice";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation} from "react-router-dom";
 import seshSm from "@/assets/sesh-sm.png";
 
 export default function UserInfo() {
   const { userInfo } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  const location = useLocation();
+  
   const handleLogout = () => {
     dispatch(logoutUser()); // handles redux state
     dispatch(apiSlice.util.resetApiState()); // clears cached data
@@ -63,13 +64,25 @@ export default function UserInfo() {
       .join("")
       .toUpperCase();
 
+  const isNested = location.pathname !== "/users/dashboard";
+
   return (
     <Card className="flex flex-col items-center p-4">
-            <img src={seshSm} alt="Sesh logo" className="mx-auto w-24" />
+    <img src={seshSm} alt="Sesh logo" className="mx-auto w-24" />
       <Avatar className="w-20 h-20 mb-4">
         <AvatarFallback>{getInitials(userInfo?.name)}</AvatarFallback>
       </Avatar>
       <CardTitle>{userInfo?.name}</CardTitle>
+
+      {isNested && (
+        <Button
+          variant="outline"
+          className="mt-2 w-full"
+          onClick={() => navigate("/users/dashboard")}
+        >
+          Home
+        </Button>
+      )}
 
 
       <Button
