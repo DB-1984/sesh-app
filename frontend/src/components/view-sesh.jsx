@@ -28,7 +28,7 @@
  */
 
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useGetSeshesQuery, useAddWorkoutMutation, useDeleteWorkoutMutation } from "../slices/seshApiSlice";
 import { WorkoutForm } from "@/components/workout-form"; 
@@ -57,8 +57,8 @@ export default function ViewSesh() {
 
   if (isLoading || !currentSesh) return null; // show nothing while loading or if no sesh found
 
-  // Deletes a workout
-  const handleDeleteWorkout = async (workout) => {
+    // Edits a workout
+  const handleEditWorkout = async (workout) => {
     try {
       // Call the deleteWorkout mutation with session ID and workout data
       await deleteWorkout({ seshId: currentSesh._id, workout }).unwrap();
@@ -73,6 +73,7 @@ export default function ViewSesh() {
       toast.error(err?.data?.message || "Failed to delete workout");
     }
   };
+
 
   return (
     <div className="flex flex-col gap-4 p-4 border rounded">
@@ -99,13 +100,19 @@ export default function ViewSesh() {
                   <span>
                     {workout.exercise} — {workout.sets}x{workout.reps} @ {workout.weight}kg, rest {workout.rest}s
                   </span>
-                  <Button
-                    size="sm"
-                    variant="destructive"
-                    onClick={() => handleDeleteWorkout(workout)}
+              
+                 <div className="flex gap-2">
+                   <Link
+                    to={`/users/dashboard/sesh/${currentSesh._id}/workout/${workout._id}/edit`}
                   >
-                    Delete
-                  </Button>
+                    <Button size="sm" variant="outline">
+                      Edit
+                    </Button>
+                  </Link>
+                    <Button size="sm" variant="destructive" onClick={() => handleDeleteWorkout(workout)}>
+                      Delete
+                    </Button>
+                  </div>
                 </div>
 
                 {/* Optional workout comments */}

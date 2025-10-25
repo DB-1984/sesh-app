@@ -81,6 +81,31 @@ const createSesh = async (req, res) => {
   }
 };
 
+const editWorkoutInSesh = async (req, res) => {
+  try {
+    // get the associated IDs and updated data from params/body (placeheld in the RTK mutation call)
+    const { seshId, workoutId } = req.params;
+    const workoutData = req.body;
+
+    // Find and update the workout
+    const updatedWorkout = await Workout.findByIdAndUpdate(
+      workoutId,
+      workoutData,
+      { new: true } // new: true returns the updated document
+    );
+
+    if (!updatedWorkout) {
+      return res.status(404).json({ message: "Workout not found" });
+    }
+
+    // Return updated sesh with populated workouts - the revised workout will be included
+    const updatedSesh = await Sesh.findById(seshId).populate("workouts");
+    res.status(200).json(updatedSesh);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
+
 const getSeshById = async (req, res) => {
   try {
     const sesh = await Sesh.findById(req.params.id).populate("workouts"); // populate workouts  for the sesh
@@ -93,5 +118,5 @@ const getSeshById = async (req, res) => {
   }
 }
 
-    export { getAllSeshes, createSesh, addWorkoutToSesh, deleteWorkoutFromSesh };
+export { getAllSeshes, createSesh, addWorkoutToSesh, deleteWorkoutFromSesh, getSeshById, editWorkoutInSesh };
 

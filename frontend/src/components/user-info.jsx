@@ -84,7 +84,6 @@ export default function UserInfo() {
         </Button>
       )}
 
-
       <Button
         variant="outline"
         className="mt-4 w-full"
