@@ -46,10 +46,10 @@ export const seshApiSlice = apiSlice.injectEndpoints({
     // We have to find the sesh, then the related workout from the id array of associated workouts to that sesh:
     // pass the workout id to identify which workout to edit in the database
     // pass the updated workout data created in edit-workout component level state
-    query: ({ seshId, workoutId, workoutData }) => ({
+    query: ({ seshId, workoutId, updatedWorkout }) => ({
       url: `${SESH_URL}/${seshId}/workouts/${workoutId}`,
       method: "PUT",
-      body: workoutData,
+      body: updatedWorkout,
     }),
     invalidatesTags: ["Sesh"],
   }),
@@ -59,6 +59,7 @@ export const seshApiSlice = apiSlice.injectEndpoints({
 export const {
   useGetSeshesQuery,
   useAddSeshMutation,
+  useGetSeshByIdQuery,
   useDeleteSeshMutation,
   useAddWorkoutMutation,
   useDeleteWorkoutMutation,

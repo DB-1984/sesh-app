@@ -29,6 +29,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 
+
+/* The form component's native onSubmit action calls a function (handleSubmit) wrapping 
+a handler (also called handleSubmit) which relies on a function passed to it from the 
+parent, also called onSubmit - this is a function holding the data, passed from the 
+parent */
+
 export function WorkoutForm({ onSubmit, defaultValues }) {
   // Initialize form state with react-hook-form
   const form = useForm({ defaultValues });
