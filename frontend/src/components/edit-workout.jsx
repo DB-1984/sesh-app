@@ -1,29 +1,24 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { useEffect } from "react";
-import {
-  useGetSeshByIdQuery,
-  useEditWorkoutMutation,
-} from "../slices/seshApiSlice";
 import { toast } from "react-toastify";
 import { WorkoutForm } from "@/components/workout-form";
-import { useForm } from "react-hook-form";
+import { useGetSeshByIdQuery, useEditWorkoutMutation } from "../slices/seshApiSlice";
 
 export default function EditWorkout() {
   const { seshId, workoutId } = useParams();
   const navigate = useNavigate();
 
+  // ✅ Hooks always at top level
   const { data: sesh, isLoading } = useGetSeshByIdQuery(seshId);
+  const [editWorkout] = useEditWorkoutMutation();
 
-  // 3️⃣ workout comes AFTER the query
+  // Compute workout after hooks
   const workout = sesh?.workouts?.find((w) => w._id === workoutId);
 
-  // 4️⃣ Block render until workout exists
+  // Early returns for loading / missing data
   if (isLoading || !sesh) return <p>Loading...</p>;
   if (!workout) return <p>Workout not found.</p>;
 
-  const [editWorkout] = useEditWorkoutMutation();
-
-  // 5️⃣ Submit handler receives formValues from RHF
+  // Submit handler
   const onSubmit = async (formValues) => {
     try {
       await editWorkout({
