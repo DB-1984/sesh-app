@@ -12,39 +12,71 @@ import { useLoginMutation } from "@/slices/userApiSlice";
 export function LoginForm() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { register, handleSubmit, formState: { errors } } = useForm();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
   const [login, { isLoading }] = useLoginMutation();
 
   const submitHandler = async (data) => {
     try {
-      const user = await login(data).unwrap(); // trigger backend
-      dispatch(setUserInfo(user));            // store in Redux
-      navigate("/users/dashboard");           // redirect
+      const user = await login(data).unwrap();
+      dispatch(setUserInfo(user));
+
+      toast.success("Welcome back!", {
+        delay: 100, // 🔸 Gives react-toastify a tick to mount/render
+      });
+
+      setTimeout(() => {
+        navigate("/users/dashboard");
+      }, 200); // 🔸 Ensures toast renders before redirect
     } catch (err) {
-      toast.error(err?.data?.message || "Login failed");
+      console.error("Login error:", err);
+      toast.error(err?.data?.message || "Invalid email or password", {
+        autoClose: 3000,
+      });
     }
   };
 
   return (
-    <form onSubmit={handleSubmit(submitHandler)} className="flex flex-col gap-6">
+    <form
+      onSubmit={handleSubmit(submitHandler)}
+      className="flex flex-col gap-6"
+    >
       <h1 className="text-2xl font-bold text-center mb-6">Log In</h1>
       <div className="grid gap-6">
         <div className="grid gap-3">
           <Label htmlFor="email">Email</Label>
-          <Input id="email" type="email" {...register("email", { required: "Email required" })} />
-          {errors.email && <p className="text-red-500">{errors.email.message}</p>}
+          <Input
+            id="email"
+            type="email"
+            {...register("email", { required: "Email required" })}
+          />
+          {errors.email && (
+            <p className="text-red-500">{errors.email.message}</p>
+          )}
         </div>
         <div className="grid gap-3">
           <Label htmlFor="password">Password</Label>
-          <Input id="password" type="password" {...register("password", { required: "Password required" })} />
-          {errors.password && <p className="text-red-500">{errors.password.message}</p>}
+          <Input
+            id="password"
+            type="password"
+            {...register("password", { required: "Password required" })}
+          />
+          {errors.password && (
+            <p className="text-red-500">{errors.password.message}</p>
+          )}
         </div>
         <Button type="submit" className="w-full" disabled={isLoading}>
           {isLoading ? "Logging in..." : "Login"}
         </Button>
       </div>
       <div className="text-center text-sm">
-        Don’t have an account? <a href="/users/register" className="underline underline-offset-4">Sign up</a>
+        Don’t have an account?{" "}
+        <a href="/users/register" className="underline underline-offset-4">
+          Sign up
+        </a>
       </div>
     </form>
   );

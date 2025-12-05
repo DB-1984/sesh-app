@@ -38,11 +38,13 @@
 
 // components/UserInfo.jsx
 import { useSelector, useDispatch } from "react-redux";
+import { useState, useEffect } from "react";
 import { Card, CardTitle } from "@/components/ui/card";
+import { apiSlice } from "../slices/apiSlice"; 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { logoutUser } from "../slices/userSlice";
-import { useNavigate, useLocation} from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import seshSm from "@/assets/sesh-sm.png";
 
 export default function UserInfo() {
@@ -50,7 +52,7 @@ export default function UserInfo() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
-  
+
   const handleLogout = () => {
     dispatch(logoutUser()); // handles redux state
     dispatch(apiSlice.util.resetApiState()); // clears cached data
@@ -66,9 +68,30 @@ export default function UserInfo() {
 
   const isNested = location.pathname !== "/users/dashboard";
 
+  const [darkMode, setDarkMode] = useState(false);
+
+  // Toggle the `.dark` class on the <html> element
+  useEffect(() => {
+    const root = document.documentElement;
+    if (darkMode) {
+      root.classList.add("dark");
+    } else {
+      root.classList.remove("dark");
+    }
+  }, [darkMode]);
+
   return (
     <Card className="flex flex-col items-center p-4">
-    <img src={seshSm} alt="Sesh logo" className="mx-auto w-24" />
+      <div className="p-4">
+        <button
+          onClick={() => setDarkMode(!darkMode)}
+          className="px-4 py-2 rounded border border-border bg-background text-foreground hover:bg-card hover:text-card-foreground transition-colors duration-200"
+        >
+          {darkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
+        </button>
+      </div>
+
+      <img src={seshSm} alt="Sesh logo" className="mx-auto w-24" />
       <Avatar className="w-20 h-20 mb-4">
         <AvatarFallback>{getInitials(userInfo?.name)}</AvatarFallback>
       </Avatar>
@@ -84,11 +107,7 @@ export default function UserInfo() {
         </Button>
       )}
 
-      <Button
-        variant="outline"
-        className="mt-4 w-full"
-        onClick={handleLogout}
-      >
+      <Button variant="outline" className="mt-4 w-full" onClick={handleLogout}>
         Log out
       </Button>
     </Card>
