@@ -40,12 +40,13 @@
 import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
 import { Card, CardTitle } from "@/components/ui/card";
-import { apiSlice } from "../slices/apiSlice"; 
+import { apiSlice } from "../slices/apiSlice";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { logoutUser } from "../slices/userSlice";
 import { useNavigate, useLocation } from "react-router-dom";
 import seshSm from "@/assets/sesh-sm.png";
+import seshSmDrk from "@/assets/sesh-sm-dark.png";
 
 export default function UserInfo() {
   const { userInfo } = useSelector((state) => state.user);
@@ -55,6 +56,8 @@ export default function UserInfo() {
 
   const handleLogout = () => {
     dispatch(logoutUser()); // handles redux state
+    const root = document.documentElement;
+    root.classList.remove("dark"); // force back to light mode
     dispatch(apiSlice.util.resetApiState()); // clears cached data
     navigate("/");
   };
@@ -91,7 +94,9 @@ export default function UserInfo() {
         </button>
       </div>
 
-      <img src={seshSm} alt="Sesh logo" className="mx-auto w-24" />
+      <span className="logo-text mx-auto text-4xl font-bold text-foreground">
+        Sesh
+      </span>
       <Avatar className="w-20 h-20 mb-4">
         <AvatarFallback>{getInitials(userInfo?.name)}</AvatarFallback>
       </Avatar>

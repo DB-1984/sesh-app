@@ -1,7 +1,27 @@
+@import url('https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&display=swap');
+
 @import "tailwindcss";
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
+
+
+.logo-text, .logo-text-large {
+  font-family: 'Silkscreen', sans-serif !important;
+}
+
+/* Optional enhancements */
+.logo-text {
+  letter-spacing: 0.03em;
+  display: inline-block;
+}
+
+.logo-text-large {
+  letter-spacing: 0.03em;
+  display: inline-block;
+  color: white;
+  font-size: 8rem
+}
 
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
