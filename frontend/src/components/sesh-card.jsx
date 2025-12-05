@@ -4,20 +4,29 @@ import { Button } from "@/components/ui/button";
 
 export function SeshCard({ sesh, onDelete }) {
   return (
-    <Card className="w-full flex flex-col gap-4">
+    <Card className="card-bare w-full flex flex-col gap-4">
       <CardHeader>
         <CardTitle>{sesh.title}</CardTitle>
       </CardHeader>
       <CardContent className="flex justify-between items-center">
-        <p>{new Date(sesh.date).toLocaleDateString()}</p>
-        <div className="flex gap-2">
+        <div className="flex flex-col gap-1">
+          <p>{new Date(sesh.date).toLocaleDateString()}</p>
+          <p className="text-sm opacity-70">
+            {sesh.workouts?.length > 0
+              ? `${sesh.workouts.length} ${
+                  sesh.workouts.length === 1 ? "Workout" : "Workouts"
+                }`
+              : "No Workouts"}
+          </p>
+        </div>
+
+        <div className="flex gap-2 shrink-0">
           <Link to={`sesh/${sesh._id}`}>
-            <Button variant="outline">View</Button>
+            <Button variant="outline" className="whitespace-nowrap">
+              View
+            </Button>
           </Link>
-          <Button
-            variant="destructive"
-            onClick={() => onDelete(sesh._id)}
-          >
+          <Button variant="destructive" onClick={() => onDelete(sesh._id)}>
             Delete
           </Button>
         </div>

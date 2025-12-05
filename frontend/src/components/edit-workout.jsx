@@ -1,7 +1,11 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { WorkoutForm } from "@/components/workout-form";
-import { useGetSeshByIdQuery, useEditWorkoutMutation } from "../slices/seshApiSlice";
+import { Button } from "@/components/ui/button";
+import {
+  useGetSeshByIdQuery,
+  useEditWorkoutMutation,
+} from "../slices/seshApiSlice";
 
 export default function EditWorkout() {
   const { seshId, workoutId } = useParams();
@@ -35,11 +39,17 @@ export default function EditWorkout() {
   };
 
   return (
-    <WorkoutForm
-      defaultValues={workout}
-      onSubmit={onSubmit}
-      title="Edit Workout"
-      submitLabel="Save Changes"
-    />
+    <>
+      <Button variant="outline"  className="w-50 mx-auto" onClick={() => navigate(`/users/dashboard/sesh/${seshId}`)}>
+        Back
+      </Button>
+
+      <WorkoutForm
+        defaultValues={workout}
+        onSubmit={onSubmit}
+        title="Edit Workout"
+        submitLabel="Save Changes"
+      />
+    </>
   );
 }

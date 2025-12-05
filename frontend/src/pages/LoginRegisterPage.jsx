@@ -1,7 +1,5 @@
-import seshSqWh from "@/assets/sesh-sq-white.png";
 import { LoginForm } from "@/components/login-form";
 import { SignupForm } from "@/components/signup-form";
-import seshSm from "@/assets/sesh-sm.png";
 
 export default function LoginRegisterPage({ mode = "login" }) {
   // Use a mode prop to determine which form to show with a nested component - passed from the Route in main.tsx

@@ -45,8 +45,8 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { logoutUser } from "../slices/userSlice";
 import { useNavigate, useLocation } from "react-router-dom";
-import seshSm from "@/assets/sesh-sm.png";
-import seshSmDrk from "@/assets/sesh-sm-dark.png";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 
 export default function UserInfo() {
   const { userInfo } = useSelector((state) => state.user);
@@ -84,14 +84,16 @@ export default function UserInfo() {
   }, [darkMode]);
 
   return (
-    <Card className="flex flex-col items-center p-4">
-      <div className="p-4">
-        <button
-          onClick={() => setDarkMode(!darkMode)}
-          className="px-4 py-2 rounded border border-border bg-background text-foreground hover:bg-card hover:text-card-foreground transition-colors duration-200"
-        >
-          {darkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
-        </button>
+    <Card className="flex flex-col items-center p-4 bg-transparent border-none shadow-none text-inherit">
+      <div className="flex items-center space-x-2 p-4">
+        <Switch
+          id="theme-mode"
+          checked={darkMode}
+          onCheckedChange={(checked) => setDarkMode(checked)}
+        />
+        <Label htmlFor="theme-mode">
+          {darkMode ? "Dark Mode" : "Light Mode"}
+        </Label>
       </div>
 
       <span className="logo-text mx-auto text-4xl font-bold text-foreground">
@@ -105,14 +107,14 @@ export default function UserInfo() {
       {isNested && (
         <Button
           variant="outline"
-          className="mt-2 w-full"
+          className="mt-2 w-50"
           onClick={() => navigate("/users/dashboard")}
         >
           Home
         </Button>
       )}
 
-      <Button variant="outline" className="mt-4 w-full" onClick={handleLogout}>
+      <Button variant="outline" className="w-50" onClick={handleLogout}>
         Log out
       </Button>
     </Card>
