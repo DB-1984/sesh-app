@@ -37,7 +37,7 @@ export function WorkoutForm({
 
   return (
     <form onSubmit={form.handleSubmit(handleSubmit)}>
-      <Card className="w-full max-w-md mx-auto">
+      <Card className="w-full border-none shadow-none mx-auto">
         <CardHeader>
           <CardTitle>{title}</CardTitle>
         </CardHeader>

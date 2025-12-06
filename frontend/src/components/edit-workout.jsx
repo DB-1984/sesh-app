@@ -40,7 +40,8 @@ export default function EditWorkout() {
 
   return (
     <>
-      <Button variant="outline"  className="w-50 mx-auto" onClick={() => navigate(`/users/dashboard/sesh/${seshId}`)}>
+    <div className="flex flex-col gap-4 p-4 border">
+      <Button variant="outline"  className="w-50" onClick={() => navigate(`/users/dashboard/sesh/${seshId}`)}>
         Back
       </Button>
 
@@ -50,6 +51,7 @@ export default function EditWorkout() {
         title="Edit Workout"
         submitLabel="Save Changes"
       />
+      </div>
     </>
   );
 }
