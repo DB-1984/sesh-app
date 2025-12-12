@@ -38,7 +38,8 @@
 
 // components/UserInfo.jsx
 import { useSelector, useDispatch } from "react-redux";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
+import { setMode } from "../slices/modeSlice"; // or themeSlice
 import { Card, CardTitle } from "@/components/ui/card";
 import { apiSlice } from "../slices/apiSlice";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -50,6 +51,7 @@ import { Label } from "@/components/ui/label";
 
 export default function UserInfo() {
   const { userInfo } = useSelector((state) => state.user);
+  const { mode } = useSelector((state) => state.mode);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
@@ -57,7 +59,6 @@ export default function UserInfo() {
   const handleLogout = () => {
     dispatch(logoutUser()); // handles redux state
     const root = document.documentElement;
-    root.classList.remove("dark"); // force back to light mode
     dispatch(apiSlice.util.resetApiState()); // clears cached data
     navigate("/");
   };
@@ -71,28 +72,28 @@ export default function UserInfo() {
 
   const isNested = location.pathname !== "/users/dashboard";
 
-  const [darkMode, setDarkMode] = useState(false);
-
   // Toggle the `.dark` class on the <html> element
   useEffect(() => {
     const root = document.documentElement;
-    if (darkMode) {
+    if (mode === "dark") {
       root.classList.add("dark");
     } else {
       root.classList.remove("dark");
     }
-  }, [darkMode]);
+  }, [mode]);
 
   return (
     <Card className="flex flex-col items-center p-4 bg-transparent border-none shadow-none text-inherit">
       <div className="flex items-center space-x-2 p-4">
         <Switch
           id="theme-mode"
-          checked={darkMode}
-          onCheckedChange={(checked) => setDarkMode(checked)}
+          checked={mode === "dark"}
+          onCheckedChange={(checked) =>
+            dispatch(setMode(checked ? "dark" : "light"))
+          } 
         />
         <Label htmlFor="theme-mode">
-          {darkMode ? "Dark Mode" : "Light Mode"}
+          {mode === "dark" ? "Dark Mode" : "Light Mode"}
         </Label>
       </div>
 
