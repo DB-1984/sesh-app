@@ -15,7 +15,7 @@ export default function AllSeshes() {
       const newSesh = await addSesh({
         title: "New Sesh",
         date: new Date().toISOString(),
-        workouts: [],
+        exercises: [],
       }).unwrap();
 
       toast.success(`Sesh "${newSesh.title}" created!`);

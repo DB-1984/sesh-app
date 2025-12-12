@@ -12,11 +12,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 
-export function WorkoutForm({
+export function ExerciseForm({
   onSubmit,
   defaultValues,
   title = "Add Workout",
-  submitLabel = "Save Workout",
+  submitLabel = "Save Exercise",
 }) {
   // Initialize form with initial values
   const form = useForm({ defaultValues });
@@ -37,7 +37,7 @@ export function WorkoutForm({
 
   return (
     <form onSubmit={form.handleSubmit(handleSubmit)}>
-      <Card className="w-full border-none shadow-none mx-auto">
+      <Card className="w-full border-none bg-none rounded-none shadow-none mx-auto">
         <CardHeader>
           <CardTitle>{title}</CardTitle>
         </CardHeader>

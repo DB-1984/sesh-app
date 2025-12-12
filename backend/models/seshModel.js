@@ -10,13 +10,8 @@ const seshSchema = new mongoose.Schema(
       type: Date,
       required: true,
     },
-    workouts: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Workout",
-      },
-    ],
-    user: {                        
+    exercises: [{ type: mongoose.Schema.Types.ObjectId, ref: "Exercise" }],
+    user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User", // 'look in Users with this ID' to see which user created the sesh
       required: true,

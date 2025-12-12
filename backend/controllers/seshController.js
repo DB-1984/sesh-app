@@ -1,26 +1,23 @@
 import Sesh from "../models/seshModel.js";
-import Workout from "../models/workoutModel.js";
+import Exercise from "../models/exerciseModel.js"; // was Workout
 
-const addWorkoutToSesh = async (req, res) => {
+const addExerciseToSesh = async (req, res) => {
   try {
-     // aliased to the addWorkout call in view-sesh
     const { seshId } = req.params;
-    const workoutData = req.body;
+    const exerciseData = req.body;
 
-    // Create a new Workout document
-    const newWorkout = new Workout(workoutData);
-    const savedWorkout = await newWorkout.save();
+    // Create new Exercise document
+    const newExercise = new Exercise(exerciseData);
+    const savedExercise = await newExercise.save();
 
-    // Find the Sesh and add the workout ID
+    // Add the Exercise ID to the Sesh
     const sesh = await Sesh.findById(seshId);
     if (!sesh) return res.status(404).json({ message: "Sesh not found" });
 
-    sesh.workouts.push(savedWorkout._id); // push the workout ID to the workouts: array of the sesh
+    sesh.exercises.push(savedExercise._id);
     await sesh.save();
 
-    // “For the workouts array in this Sesh, replace each ObjectId with the full Workout document it refers to.”
-    const updatedSesh = await Sesh.findById(seshId).populate("workouts");
-
+    const updatedSesh = await Sesh.findById(seshId).populate("exercises");
     res.status(201).json(updatedSesh);
   } catch (err) {
     console.error(err);
@@ -28,24 +25,22 @@ const addWorkoutToSesh = async (req, res) => {
   }
 };
 
-const deleteWorkoutFromSesh = async (req, res) => {
+const deleteExerciseFromSesh = async (req, res) => {
   try {
     const { seshId } = req.params;
-    // assign the _id property from the {workout} body to 'workoutId'
-    const { _id: workoutId } = req.body;
+    const { _id: exerciseId } = req.body;
 
     const sesh = await Sesh.findById(seshId);
     if (!sesh) return res.status(404).json({ message: "Sesh not found" });
 
-    sesh.workouts = sesh.workouts.filter( // redfine the workouts property without the deleted ID
-      (wId) => wId.toString() !== workoutId
+    sesh.exercises = sesh.exercises.filter(
+      (id) => id.toString() !== exerciseId
     );
     await sesh.save();
 
-    await Workout.findByIdAndDelete(workoutId); // delete the actual document
+    await Exercise.findByIdAndDelete(exerciseId);
 
-    // Return updated sesh with populated workouts (find the workout docs by ID and grab all data)
-    const updatedSesh = await Sesh.findById(seshId).populate("workouts");
+    const updatedSesh = await Sesh.findById(seshId).populate("exercises");
     res.status(200).json(updatedSesh);
   } catch (error) {
     console.error(error);
@@ -55,23 +50,22 @@ const deleteWorkoutFromSesh = async (req, res) => {
 
 const getAllSeshes = async (req, res) => {
   try {
-    // Use logged-in user from protect middleware
-    // filter the find by passing an object assigning the user field to req.user._id
-    const seshes = await Sesh.find({ user: req.user._id }).populate("workouts");
+    const seshes = await Sesh.find({ user: req.user._id }).populate(
+      "exercises"
+    );
     res.status(200).json(seshes);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
-
 const createSesh = async (req, res) => {
   try {
-    const { title, date, workouts } = req.body;
+    const { title, date, exercise } = req.body;
     const newSesh = new Sesh({
       title,
       date,
-      workouts,
-      user: req.user._id,  // link Sesh to logged-in user -taken from .protect middleware
+      exercise,
+      user: req.user._id, // link Sesh to logged-in user -taken from .protect middleware
     });
 
     const savedSesh = await newSesh.save(); // save the new Sesh to the database for immediate UI update
@@ -81,42 +75,43 @@ const createSesh = async (req, res) => {
   }
 };
 
-const editWorkoutInSesh = async (req, res) => {
+const editExerciseInSesh = async (req, res) => {
   try {
-    // get the associated IDs and updated data from params/body (placeheld in the RTK mutation call)
-    const { seshId, workoutId } = req.params;
-    const workoutData = req.body;
+    const { seshId, exerciseId } = req.params;
+    const exerciseData = req.body;
 
-    // Find and update the workout
-    const updatedWorkout = await Workout.findByIdAndUpdate(
-      workoutId,
-      workoutData,
-      { new: true } // new: true returns the updated document
+    const updatedExercise = await Exercise.findByIdAndUpdate(
+      exerciseId,
+      exerciseData,
+      { new: true }
     );
 
-    if (!updatedWorkout) {
-      return res.status(404).json({ message: "Workout not found" });
+    if (!updatedExercise) {
+      return res.status(404).json({ message: "Exercise not found" });
     }
 
-    // Return updated sesh with populated workouts - the revised workout will be included
-    const updatedSesh = await Sesh.findById(seshId).populate("workouts");
+    const updatedSesh = await Sesh.findById(seshId).populate("exercises");
     res.status(200).json(updatedSesh);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-}
+};
 
 const getSeshById = async (req, res) => {
   try {
-    const sesh = await Sesh.findById(req.params.id).populate("workouts"); // populate workouts  for the sesh
-    if (!sesh) {
-      return res.status(404).json({ message: "Sesh not found" });
-    }
+    const sesh = await Sesh.findById(req.params.id).populate("exercises");
+    if (!sesh) return res.status(404).json({ message: "Sesh not found" });
     res.status(200).json(sesh);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-}
+};
 
-export { getAllSeshes, createSesh, addWorkoutToSesh, deleteWorkoutFromSesh, getSeshById, editWorkoutInSesh };
-
+export {
+  getAllSeshes,
+  createSesh,
+  addExerciseToSesh,
+  deleteExerciseFromSesh,
+  getSeshById,
+  editExerciseInSesh,
+};

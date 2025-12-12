@@ -10,7 +10,7 @@ import Dashboard from "./pages/Dashboard";
 import PrivateRoute from "./components/private-route";
 import AllSeshes from "./components/all-seshes";
 import ViewSesh from "./components/view-sesh";
-import EditWorkout from "./components/edit-workout";
+import EditExercise from "./components/edit-exercise";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -28,7 +28,7 @@ const router = createBrowserRouter(
       <Route path="/users/dashboard" element={<Dashboard />}> {/* Always mount this */}
         <Route index element={<AllSeshes />} /> {/* Load all seshes by default */}
         <Route path="sesh/:id" element={<ViewSesh />} /> {/* Load this if the path is /sesh/id: */}
-        <Route path="sesh/:seshId/workout/:workoutId/edit" element={<EditWorkout />} />
+        <Route path="sesh/:seshId/exercise/:exerciseId/edit" element={<EditExercise />} />
       </Route>
     </Route>
 

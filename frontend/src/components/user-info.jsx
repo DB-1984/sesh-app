@@ -45,7 +45,7 @@ import { apiSlice } from "../slices/apiSlice";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { logoutUser } from "../slices/userSlice";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, useParams } from "react-router-dom";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 
@@ -55,6 +55,7 @@ export default function UserInfo() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
+  const { seshId, workoutId } = useParams();
 
   const handleLogout = () => {
     dispatch(logoutUser()); // handles redux state
@@ -71,6 +72,9 @@ export default function UserInfo() {
       .toUpperCase();
 
   const isNested = location.pathname !== "/users/dashboard";
+  const isEdit = /\/users\/dashboard\/sesh\/[^/]+\/workout\/[^/]+\/edit/.test(
+    location.pathname
+  );
 
   // Toggle the `.dark` class on the <html> element
   useEffect(() => {
@@ -90,7 +94,7 @@ export default function UserInfo() {
           checked={mode === "dark"}
           onCheckedChange={(checked) =>
             dispatch(setMode(checked ? "dark" : "light"))
-          } 
+          }
         />
         <Label htmlFor="theme-mode">
           {mode === "dark" ? "Dark Mode" : "Light Mode"}
@@ -112,6 +116,16 @@ export default function UserInfo() {
           onClick={() => navigate("/users/dashboard")}
         >
           Home
+        </Button>
+      )}
+
+      {isEdit && (
+        <Button
+          variant="outline"
+          className="w-50"
+          onClick={() => navigate(`/users/dashboard/sesh/${seshId}`)}
+        >
+          Back
         </Button>
       )}
 

@@ -1,13 +1,13 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { WorkoutForm } from "@/components/workout-form";
+import { ExerciseForm } from "@/components/exercise-form";
 import { Button } from "@/components/ui/button";
 import {
   useGetSeshByIdQuery,
-  useEditWorkoutMutation,
+  useEditExerciseMutation,
 } from "../slices/seshApiSlice";
 
-export default function EditWorkout() {
+export default function EditExercise() {
   const { seshId, workoutId } = useParams();
   const navigate = useNavigate();
 
@@ -40,17 +40,13 @@ export default function EditWorkout() {
 
   return (
     <>
-    <div className="flex flex-col gap-4 p-4 border">
-      <Button variant="outline"  className="w-50" onClick={() => navigate(`/users/dashboard/sesh/${seshId}`)}>
-        Back
-      </Button>
-
-      <WorkoutForm
-        defaultValues={workout}
-        onSubmit={onSubmit}
-        title="Edit Workout"
-        submitLabel="Save Changes"
-      />
+      <div className="flex flex-col gap-4 p-4 border">
+        <WorkoutForm
+          defaultValues={workout}
+          onSubmit={onSubmit}
+          title="Edit Workout"
+          submitLabel="Save Changes"
+        />
       </div>
     </>
   );

@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const workoutSchema = new mongoose.Schema(
+const exerciseSchema = new mongoose.Schema(
   {
      exercise: {
       type: String,
@@ -32,6 +32,6 @@ const workoutSchema = new mongoose.Schema(
   }
 );
 
-const Workout = mongoose.model("Workout", workoutSchema);
+const Workout = mongoose.model("Exercise", exerciseSchema);
 
 export default Workout;

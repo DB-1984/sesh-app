@@ -12,11 +12,11 @@ export function SeshCard({ sesh, onDelete }) {
         <div className="flex flex-col gap-1">
           <p>{new Date(sesh.date).toLocaleDateString()}</p>
           <p className="text-sm opacity-70">
-            {sesh.workouts?.length > 0
-              ? `${sesh.workouts.length} ${
-                  sesh.workouts.length === 1 ? "Workout" : "Workouts"
+            {sesh.exercises?.length > 0
+              ? `${sesh.exercises.length} ${
+                  sesh.exercises.length === 1 ? "Exercise" : "Exercises"
                 }`
-              : "No Workouts"}
+              : "No Exercises"}
           </p>
         </div>
 

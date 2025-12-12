@@ -4,55 +4,59 @@ import { SESH_URL } from "../constants"; // "/api/seshes"
 export const seshApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getSeshes: builder.query({
-      query: () => SESH_URL,          // GET /api/seshes
-      providesTags: ["Sesh"],        // tag for caching - keyed to userInfo._id in all-seshes.jsx
-    }),  
+      query: () => SESH_URL,
+      providesTags: ["Sesh"],
+    }),
     addSesh: builder.mutation({
       query: (newSesh) => ({
-        url: SESH_URL,                // POST /api/seshes
+        url: SESH_URL,
         method: "POST",
         body: newSesh,
       }),
-      invalidatesTags: ["Sesh"],     // invalidate cache after adding
+      invalidatesTags: ["Sesh"],
     }),
     deleteSesh: builder.mutation({
       query: (id) => ({
-        url: `${SESH_URL}/${id}`,     // DELETE /api/seshes/:id
+        url: `${SESH_URL}/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: ["Sesh"],     // triggers refetch for getSeshes
+      invalidatesTags: ["Sesh"],
     }),
-    addWorkout: builder.mutation({
-      query: ({ seshId, workout }) => ({
-        url: `${SESH_URL}/${seshId}/workouts`,
+
+    // ✅ Renamed from addWorkout → addExercise
+    addExercise: builder.mutation({
+      query: ({ seshId, exercise }) => ({
+        url: `${SESH_URL}/${seshId}/exercises`, // updated path
         method: "POST",
-        body: workout,
+        body: exercise,
       }),
       invalidatesTags: ["Sesh"],
     }),
-    deleteWorkout: builder.mutation({
-      query: ({ seshId, workout }) => ({
-        url: `${SESH_URL}/${seshId}/workouts`,
+
+    // ✅ Renamed from deleteWorkout → deleteExercise
+    deleteExercise: builder.mutation({
+      query: ({ seshId, exercise }) => ({
+        url: `${SESH_URL}/${seshId}/exercises`, // updated path
         method: "DELETE",
-        body: workout,
+        body: exercise,
       }),
       invalidatesTags: ["Sesh"],
     }),
+
     getSeshById: builder.query({
-      query: (id) => `${SESH_URL}/${id}`, // fetch /sesh/:id
-      providesTags: (result, error, id) => [{ type: "Sesh", id }], // cache tracking
+      query: (id) => `${SESH_URL}/${id}`,
+      providesTags: (result, error, id) => [{ type: "Sesh", id }],
     }),
-    editWorkout: builder.mutation({
-    // We have to find the sesh, then the related workout from the id array of associated workouts to that sesh:
-    // pass the workout id to identify which workout to edit in the database
-    // pass the updated workout data created in edit-workout component level state
-    query: ({ seshId, workoutId, updatedWorkout }) => ({
-      url: `${SESH_URL}/${seshId}/workouts/${workoutId}`,
-      method: "PUT",
-      body: updatedWorkout,
+
+    // ✅ Renamed from editWorkout → editExercise
+    editExercise: builder.mutation({
+      query: ({ seshId, exerciseId, updatedExercise }) => ({
+        url: `${SESH_URL}/${seshId}/exercises/${exerciseId}`, // updated path
+        method: "PUT",
+        body: updatedExercise,
+      }),
+      invalidatesTags: ["Sesh"],
     }),
-    invalidatesTags: ["Sesh"],
-  }),
   }),
 });
 
@@ -61,7 +65,7 @@ export const {
   useAddSeshMutation,
   useGetSeshByIdQuery,
   useDeleteSeshMutation,
-  useAddWorkoutMutation,
-  useDeleteWorkoutMutation,
-  useEditWorkoutMutation
+  useAddExerciseMutation,
+  useDeleteExerciseMutation,
+  useEditExerciseMutation,
 } = seshApiSlice;
