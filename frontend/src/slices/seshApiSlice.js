@@ -4,9 +4,15 @@ import { SESH_URL } from "../constants"; // "/api/seshes"
 export const seshApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getSeshes: builder.query({
-      query: () => SESH_URL,
+      query: ({ userId, date } = {}) => {
+        let url = `${SESH_URL}?user=${userId}`;
+        if (date) {
+          url += `&date=${date}`; // append date query param if provided
+        }
+        return url;
+      },
       providesTags: ["Sesh"],
-    }),
+    }),    
     addSesh: builder.mutation({
       query: (newSesh) => ({
         url: SESH_URL,
@@ -22,7 +28,6 @@ export const seshApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Sesh"],
     }),
-
     // ✅ Renamed from addWorkout → addExercise
     addExercise: builder.mutation({
       query: ({ seshId, exercise }) => ({

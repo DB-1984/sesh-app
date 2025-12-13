@@ -1,45 +1,6 @@
-/**
- * @file UserInfo.jsx
- * @description
- * A presentational component that displays the currently authenticated user's
- * basic account information (name, avatar initials, and logo) and provides a
- * logout action. It integrates with Redux for state management and RTK Query
- * for API cache handling.
- *
- * ───────────────────────────────────────────────
- * 📦 Data Flow:
- * - Reads `userInfo` from Redux state (userSlice).
- * - On logout:
- *    1. Dispatches `logoutUser()` to clear auth state from Redux.
- *    2. Dispatches `apiSlice.util.resetApiState()` to clear RTK Query cache.
- *    3. Navigates the user back to the home page.
- *
- * 🧭 Responsibilities:
- * - Render user initials in an avatar (derived from full name).
- * - Show the app logo for visual context.
- * - Provide a single, predictable logout entry point.
- *
- * 🚫 Not Responsible For:
- * - Authenticating users (handled by login flow elsewhere).
- * - Fetching or mutating user data (comes from Redux already).
- *
- * 📡 Dependencies:
- * - Redux state: userInfo (from userSlice)
- * - RTK Query API slice (for cache reset)
- * - React Router for navigation
- *
- * 🧰 UI Components Used:
- * - Card, CardTitle, Avatar, AvatarFallback, Button
- *
- * @example
- * // Used in a dashboard layout:
- * <UserInfo />
- */
-
-// components/UserInfo.jsx
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
-import { setMode } from "../slices/modeSlice"; // or themeSlice
+import { setMode } from "../slices/modeSlice";
 import { Card, CardTitle } from "@/components/ui/card";
 import { apiSlice } from "../slices/apiSlice";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -48,8 +9,16 @@ import { logoutUser } from "../slices/userSlice";
 import { useNavigate, useLocation, useParams } from "react-router-dom";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { CalendarIcon } from "lucide-react";
+import { format } from "date-fns";
 
-export default function UserInfo() {
+export default function UserInfo({ selectedDate, onDateChange }) {
   const { userInfo } = useSelector((state) => state.user);
   const { mode } = useSelector((state) => state.mode);
   const dispatch = useDispatch();
@@ -58,9 +27,8 @@ export default function UserInfo() {
   const { seshId, workoutId } = useParams();
 
   const handleLogout = () => {
-    dispatch(logoutUser()); // handles redux state
-    const root = document.documentElement;
-    dispatch(apiSlice.util.resetApiState()); // clears cached data
+    dispatch(logoutUser());
+    dispatch(apiSlice.util.resetApiState());
     navigate("/");
   };
 
@@ -79,15 +47,13 @@ export default function UserInfo() {
   // Toggle the `.dark` class on the <html> element
   useEffect(() => {
     const root = document.documentElement;
-    if (mode === "dark") {
-      root.classList.add("dark");
-    } else {
-      root.classList.remove("dark");
-    }
+    if (mode === "dark") root.classList.add("dark");
+    else root.classList.remove("dark");
   }, [mode]);
 
   return (
-    <Card className="flex flex-col items-center p-4 bg-transparent border-none shadow-none text-inherit">
+    <Card className="flex flex-col items-center p-6 bg-transparent border-none shadow-none text-inherit">
+      {/* Theme toggle */}
       <div className="flex items-center space-x-2 p-4">
         <Switch
           id="theme-mode"
@@ -101,6 +67,7 @@ export default function UserInfo() {
         </Label>
       </div>
 
+      {/* Avatar and user info */}
       <span className="logo-text mx-auto text-4xl font-bold text-foreground">
         Sesh
       </span>
@@ -109,10 +76,11 @@ export default function UserInfo() {
       </Avatar>
       <CardTitle>{userInfo?.name}</CardTitle>
 
+      {/* Navigation buttons */}
       {isNested && (
         <Button
           variant="outline"
-          className="mt-2 w-50"
+          className="mt-2"
           onClick={() => navigate("/users/dashboard")}
         >
           Home
@@ -122,16 +90,50 @@ export default function UserInfo() {
       {isEdit && (
         <Button
           variant="outline"
-          className="w-50"
+          className="mt-2"
           onClick={() => navigate(`/users/dashboard/sesh/${seshId}`)}
         >
           Back
         </Button>
       )}
 
-      <Button variant="outline" className="w-50" onClick={handleLogout}>
+      <Button variant="outline" className="mt-2" onClick={handleLogout}>
         Log out
       </Button>
+
+      {!isNested && (
+        <div className="mt-4 flex flex-col items-center">
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                variant="outline"
+                className="w-full flex items-center justify-between"
+              >
+                {selectedDate ? format(selectedDate, "PPP") : "Select Date"}
+                <CalendarIcon className="ml-2 h-4 w-4" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0">
+              <Calendar
+                mode="single"
+                selected={selectedDate}
+                onSelect={onDateChange}
+                initialFocus
+              />
+            </PopoverContent>
+          </Popover>
+          <p className="mt-1 text-sm text-gray-500">Search by date</p>
+        </div>
+      )}
+      {selectedDate && (
+        <Button
+          variant="outline"
+          className="mt-2"
+          onClick={() => onDateChange(null)}
+        >
+          Show All Records
+        </Button>
+      )}
     </Card>
   );
 }

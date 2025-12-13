@@ -2,13 +2,38 @@ import { Button } from "@/components/ui/button";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import { SeshCard } from "./sesh-card";
-import { useGetSeshesQuery, useAddSeshMutation } from "../slices/seshApiSlice";
+import { useOutletContext } from "react-router-dom";
+import { format } from "date-fns";
+import {
+  useGetSeshesQuery,
+  useAddSeshMutation,
+  useDeleteSeshMutation,
+} from "../slices/seshApiSlice";
 
 export default function AllSeshes() {
   const { userInfo } = useSelector((state) => state.user);
+  const { selectedDate } = useOutletContext();
 
-  const { data: seshes = [], isLoading, isError } = useGetSeshesQuery(userInfo._id);
+  // Skip fetching if userInfo is not yet available
+  const shouldSkip = !userInfo?._id;
+
+  // Convert date to ISO string if selectedDate exists
+  const dateString = selectedDate
+    ? format(selectedDate, "yyyy-MM-dd")
+    : undefined;
+
+  const {
+    data: seshes = [],
+    isLoading,
+    isError,
+  } = useGetSeshesQuery(
+    { userId: userInfo?._id, date: dateString },
+    { skip: shouldSkip }
+  );
+
   const [addSesh, { isLoading: addSeshLoading }] = useAddSeshMutation();
+
+  const [deleteSesh] = useDeleteSeshMutation();
 
   const handleAddSesh = async () => {
     try {
@@ -24,8 +49,13 @@ export default function AllSeshes() {
     }
   };
 
-  const handleDelete = (id) => {
-    console.log("Delete sesh with id:", id);
+  const handleDelete = async (id) => {
+    try {
+      await deleteSesh(id).unwrap();
+      toast.success("Sesh deleted!");
+    } catch (err) {
+      toast.error(err?.data?.message || "Failed to delete Sesh");
+    }
   };
 
   if (isLoading) return <p>Loading seshes...</p>;
@@ -33,9 +63,6 @@ export default function AllSeshes() {
 
   return (
     <div className="flex flex-col md:flex-row gap-6">
-      {/* Sidebar / user panel */}
-
-      {/* Seshes grid */}
       <section className="flex-1 p-4 flex flex-col">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {seshes.map((sesh) => (

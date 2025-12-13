@@ -25,6 +25,24 @@ const addExerciseToSesh = async (req, res) => {
   }
 };
 
+const deleteSesh = async (req, res) => {
+  try {
+    const sesh = await Sesh.findById(req.params.id);
+    if (!sesh) return res.status(404).json({ message: "Sesh not found" });
+
+    // Delete all exercises linked to this Sesh
+    await Exercise.deleteMany({ _id: { $in: sesh.exercises } });
+
+    // Delete the Sesh itself
+    await sesh.deleteOne();
+
+    res.status(200).json({ message: "Sesh deleted" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
 const deleteExerciseFromSesh = async (req, res) => {
   try {
     const { seshId } = req.params;
@@ -50,14 +68,32 @@ const deleteExerciseFromSesh = async (req, res) => {
 
 const getAllSeshes = async (req, res) => {
   try {
-    const seshes = await Sesh.find({ user: req.user._id }).populate(
-      "exercises"
-    );
+    // Always filter by logged-in user
+    const query = { user: req.user._id };
+
+    // Optional date filtering
+    if (req.query.date) {
+      const parsedDate = new Date(req.query.date);
+
+      if (!isNaN(parsedDate.getTime())) {
+        const start = new Date(parsedDate);
+        start.setHours(0, 0, 0, 0);
+
+        const end = new Date(parsedDate);
+        end.setHours(23, 59, 59, 999);
+
+        query.date = { $gte: start, $lte: end }; // mongo DB talk...
+      }
+    }
+
+    const seshes = await Sesh.find(query).populate("exercises");
     res.status(200).json(seshes);
   } catch (error) {
+    console.error(error);
     res.status(500).json({ message: error.message });
   }
 };
+
 const createSesh = async (req, res) => {
   try {
     const { title, date, exercise } = req.body;
@@ -111,6 +147,7 @@ export {
   getAllSeshes,
   createSesh,
   addExerciseToSesh,
+  deleteSesh,
   deleteExerciseFromSesh,
   getSeshById,
   editExerciseInSesh,
