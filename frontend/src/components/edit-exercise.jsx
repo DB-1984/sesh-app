@@ -8,43 +8,43 @@ import {
 } from "../slices/seshApiSlice";
 
 export default function EditExercise() {
-  const { seshId, workoutId } = useParams();
+  const { seshId, exerciseId } = useParams();
   const navigate = useNavigate();
 
   // ✅ Hooks always at top level
   const { data: sesh, isLoading } = useGetSeshByIdQuery(seshId);
-  const [editWorkout] = useEditWorkoutMutation();
+  const [editExercise] = useEditExerciseMutation();
 
-  // Compute workout after hooks
-  const workout = sesh?.workouts?.find((w) => w._id === workoutId);
+  // Compute exercise after hooks
+  const exercise = sesh?.exercises?.find((w) => w._id === exerciseId);
 
   // Early returns for loading / missing data
   if (isLoading || !sesh) return <p>Loading...</p>;
-  if (!workout) return <p>Workout not found.</p>;
+  if (!exercise) return <p>Exercise not found.</p>;
 
   // Submit handler
   const onSubmit = async (formValues) => {
     try {
-      await editWorkout({
+      await editExercise({
         seshId,
-        workoutId,
-        updatedWorkout: formValues,
+        exerciseId,
+        updatedexercise: formValues,
       }).unwrap();
 
-      toast.success("Workout updated!");
+      toast.success("Exercise updated!");
       navigate(-1);
     } catch (err) {
-      toast.error(err?.data?.message || "Failed to update workout");
+      toast.error(err?.data?.message || "Failed to update exercise");
     }
   };
 
   return (
     <>
-      <div className="flex flex-col gap-4 p-4 border">
-        <WorkoutForm
-          defaultValues={workout}
+      <div className="flex flex-col gap-4 p-4">
+        <ExerciseForm
+          defaultValues={exercise}
           onSubmit={onSubmit}
-          title="Edit Workout"
+          title="Edit Exercise"
           submitLabel="Save Changes"
         />
       </div>

@@ -1,5 +1,5 @@
 /**
- * WORKOUT FORM COMPONENT
+ * exercise FORM COMPONENT
  *
  * Supports both creating a new workout AND editing an existing workout.
  * Pre-fills fields when defaultValues change (e.g., after API load).
@@ -15,7 +15,7 @@ import { useForm } from "react-hook-form";
 export function ExerciseForm({
   onSubmit,
   defaultValues,
-  title = "Add Workout",
+  title = "Add Exercise",
   submitLabel = "Save Exercise",
 }) {
   // Initialize form with initial values
@@ -31,7 +31,7 @@ export function ExerciseForm({
   // Called when form is submitted
   const handleSubmit = async (values) => {
     await onSubmit(values);     // pass values to parent
-    // If adding a workout, reset back to blank defaults
+    // If adding a exercise, reset back to blank defaults
     // In edit mode, parent can navigate away instead
   };
 

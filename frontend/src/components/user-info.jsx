@@ -24,7 +24,7 @@ export default function UserInfo({ selectedDate, onDateChange }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
-  const { seshId, workoutId } = useParams();
+  const { seshId, exerciseId } = useParams();
 
   const handleLogout = () => {
     dispatch(logoutUser());
@@ -40,7 +40,7 @@ export default function UserInfo({ selectedDate, onDateChange }) {
       .toUpperCase();
 
   const isNested = location.pathname !== "/users/dashboard";
-  const isEdit = /\/users\/dashboard\/sesh\/[^/]+\/workout\/[^/]+\/edit/.test(
+  const isEdit = /\/users\/dashboard\/sesh\/[^/]+\/exercise\/[^/]+\/edit/.test(
     location.pathname
   );
 
@@ -74,13 +74,13 @@ export default function UserInfo({ selectedDate, onDateChange }) {
       <Avatar className="w-20 h-20 mb-4">
         <AvatarFallback>{getInitials(userInfo?.name)}</AvatarFallback>
       </Avatar>
-      <CardTitle>{userInfo?.name}</CardTitle>
+      <CardTitle className="mb-6">{userInfo?.name}</CardTitle>
 
       {/* Navigation buttons */}
       {isNested && (
         <Button
           variant="outline"
-          className="mt-2"
+          className="mt-2 w-75"
           onClick={() => navigate("/users/dashboard")}
         >
           Home
@@ -90,14 +90,17 @@ export default function UserInfo({ selectedDate, onDateChange }) {
       {isEdit && (
         <Button
           variant="outline"
-          className="mt-2"
+          className="mt-2 w-75"
           onClick={() => navigate(`/users/dashboard/sesh/${seshId}`)}
         >
           Back
         </Button>
       )}
 
-      <Button variant="outline" className="mt-2" onClick={handleLogout}>
+      <Button
+        className="mt-2 w-75 bg-gray-400 hover:bg-gray-500 text-white"
+        onClick={handleLogout}
+      >
         Log out
       </Button>
 
@@ -107,7 +110,7 @@ export default function UserInfo({ selectedDate, onDateChange }) {
             <PopoverTrigger asChild>
               <Button
                 variant="outline"
-                className="w-full flex items-center justify-between"
+                className="w-75 flex items-center justify-between"
               >
                 {selectedDate ? format(selectedDate, "PPP") : "Select Date"}
                 <CalendarIcon className="ml-2 h-4 w-4" />

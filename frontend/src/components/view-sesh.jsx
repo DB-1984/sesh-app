@@ -20,8 +20,12 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import { useGetSeshesQuery, useAddExerciseMutation, useDeleteExerciseMutation } from "../slices/seshApiSlice";
-import { ExerciseForm } from "@/components/exercise-form"; 
+import {
+  useGetSeshesQuery,
+  useAddExerciseMutation,
+  useDeleteExerciseMutation,
+} from "../slices/seshApiSlice";
+import { ExerciseForm } from "@/components/exercise-form";
 import { Button } from "@/components/ui/button";
 
 export default function ViewSesh() {
@@ -52,7 +56,7 @@ export default function ViewSesh() {
 
       setCurrentSesh({
         ...currentSesh,
-        exercises: currentSesh.exercises.filter(e => e._id !== exercise._id),
+        exercises: currentSesh.exercises.filter((e) => e._id !== exercise._id),
       });
     } catch (err) {
       toast.error(err?.data?.message || "Failed to delete exercise");
@@ -60,12 +64,14 @@ export default function ViewSesh() {
   };
 
   return (
-    <div className="flex flex-col gap-4 p-4 border">
+    <div className="flex flex-col gap-4 p-4">
       {/* Session title input */}
       <input
         type="text"
         value={currentSesh.title}
-        onChange={(e) => setCurrentSesh({ ...currentSesh, title: e.target.value })}
+        onChange={(e) =>
+          setCurrentSesh({ ...currentSesh, title: e.target.value })
+        }
         className="border p-2 rounded w-full"
       />
 
@@ -82,14 +88,23 @@ export default function ViewSesh() {
               <li key={exercise._id} className="flex flex-col py-3">
                 <div className="flex items-center justify-between">
                   <span>
-                    {exercise.exercise} — {exercise.sets}x{exercise.reps} @ {exercise.weight}kg, rest {exercise.rest}s
+                    {exercise.exercise} — {exercise.sets}x{exercise.reps} @{" "}
+                    {exercise.weight}kg, rest {exercise.rest}s
                   </span>
 
                   <div className="flex gap-2">
-                    <Link to={`/users/dashboard/sesh/${currentSesh._id}/exercise/${exercise._id}/edit`}>
-                      <Button size="sm" variant="outline">Edit</Button>
+                    <Link
+                      to={`/users/dashboard/sesh/${currentSesh._id}/exercise/${exercise._id}/edit`}
+                    >
+                      <Button size="sm" variant="outline">
+                        Edit
+                      </Button>
                     </Link>
-                    <Button size="sm" variant="destructive" onClick={() => handleDeleteExercise(exercise)}>
+                    <Button
+                      size="sm"
+                      variant="destructive"
+                      onClick={() => handleDeleteExercise(exercise)}
+                    >
                       Delete
                     </Button>
                   </div>
@@ -97,7 +112,9 @@ export default function ViewSesh() {
 
                 {/* Optional exercise comments */}
                 {exercise.comments && (
-                  <p className="text-sm text-gray-500 mt-1 ml-2">{exercise.comments}</p>
+                  <p className="text-sm text-gray-500 mt-1 ml-2">
+                    {exercise.comments}
+                  </p>
                 )}
               </li>
             ))}
@@ -117,13 +134,17 @@ export default function ViewSesh() {
             comments: "",
           }}
           onSubmit={async (data) => {
-            try {
-              await addExercise({ seshId: currentSesh._id, exercise: data }).unwrap();
+            try { 
+              // verify a new exercise from the db (and therefore an exercise._id)
+              const newExercise = await addExercise({
+                seshId: currentSesh._id,
+                exercise: data,
+              }).unwrap();
               toast.success("Exercise added!");
 
               setCurrentSesh({
                 ...currentSesh,
-                exercises: [...currentSesh.exercises, data],
+                exercises: [...currentSesh.exercises, newExercise], // now it has _id
               });
             } catch (err) {
               toast.error(err?.data?.message || "Failed to add exercise");
