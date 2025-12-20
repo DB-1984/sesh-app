@@ -17,6 +17,8 @@ export default function AllSeshes() {
   // Skip fetching if userInfo is not yet available
   const shouldSkip = !userInfo?._id;
 
+  // Because we gave a context prop to Outlet in Dashboard, representing the selected date (which is the only mutable value as onDateChange is a fixed function), the all-seshes component, responsible for results, can redisplay the correct seshes using the hook (which is a modified version of our get all seshes query, handling a parameter), and just pass 'undefined' if none is set
+
   // Convert date to ISO string if selectedDate exists
   const dateString = selectedDate
     ? format(selectedDate, "yyyy-MM-dd")
@@ -63,7 +65,7 @@ export default function AllSeshes() {
 
   return (
     <div className="flex flex-col md:flex-row gap-6">
-      <section className="flex-1 p-4 flex flex-col">
+      <section className="flex-1 p-6 flex flex-col">
         {seshes.length > 0 ? (
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

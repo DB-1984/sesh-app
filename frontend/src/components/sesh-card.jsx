@@ -8,7 +8,7 @@ export function SeshCard({ sesh, onDelete }) {
       <CardHeader>
         <CardTitle>{sesh.title}</CardTitle>
       </CardHeader>
-      <CardContent className="flex justify-between items-center">
+      <CardContent className="flex justify-between flex-wrap gap-4 items-center">
         <div className="flex flex-col gap-1">
           <p>{new Date(sesh.date).toLocaleDateString()}</p>
           <p className="text-sm opacity-70">

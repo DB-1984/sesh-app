@@ -52,7 +52,7 @@ export default function UserInfo({ selectedDate, onDateChange }) {
   }, [mode]);
 
   return (
-    <Card className="flex flex-col items-center p-6 bg-transparent border-none shadow-none text-inherit">
+    <Card className="flex flex-col items-center bg-transparent border-none shadow-none text-inherit">
       {/* Theme toggle */}
       <div className="flex items-center space-x-2 p-4">
         <Switch

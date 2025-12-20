@@ -5,17 +5,17 @@ import UserInfo from "../components/user-info";
 export default function Dashboard() {
   const [selectedDate, setSelectedDate] = useState(null); // null defaults to prevent errors
 
-  return (
-    <div className="grid lg:grid-cols-3 gap-6 p-6">
-      {/* Left column = user info */}
-      <UserInfo
-      // use of the props requires both a value here, and definition of props in the user-info component itself
-        selectedDate={selectedDate}
-        onDateChange={setSelectedDate}
-      />
+// All the logic for the date changing is contained in userInfo, but becuase outlet shows this component throughout the app, we have to set null defaults in Dashboard
 
-      {/* Right column = seshes or outlet content */}
-      <div className="lg:col-span-2 flex flex-col gap-4">
+  return (
+    <div className="grid lg:grid-cols-2 gap-2 min-h-screen p-6">
+      {/* Left column = centered user info */}
+      <div className="flex items-center justify-center">
+        <UserInfo selectedDate={selectedDate} onDateChange={setSelectedDate} />
+      </div>
+
+      {/* Right column = seshes / outlet */}
+      <div className="flex flex-col gap-4">
         <Outlet context={{ selectedDate }} />
       </div>
     </div>
