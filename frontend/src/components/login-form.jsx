@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { LogIn } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -45,6 +46,12 @@ export function LoginForm() {
       className="flex flex-col gap-6"
     >
       <h1 className="text-2xl font-bold text-center mb-6">Log In</h1>
+      <div className="space-y-2 text-center">
+        <p className="text-sm text-muted-foreground">
+          Track your training. Build consistency. One sesh at a time.
+        </p>
+      </div>
+
       <div className="grid gap-6">
         <div className="grid gap-3">
           <Label htmlFor="email">Email</Label>
@@ -68,8 +75,33 @@ export function LoginForm() {
             <p className="text-red-500">{errors.password.message}</p>
           )}
         </div>
-        <Button type="submit" className="w-full" disabled={isLoading}>
-          {isLoading ? "Logging in..." : "Login"}
+        <Button
+          type="submit"
+          disabled={isLoading}
+          className="
+    w-full
+    transition-all
+    duration-200
+    ease-out
+    hover:translate-y-[-1px]
+    hover:shadow-md
+    active:translate-y-[1px]
+    active:shadow-sm
+    disabled:opacity-70
+    disabled:pointer-events-none
+  "
+        >
+          {isLoading ? (
+            <span className="flex items-center justify-center gap-2">
+              <span className="h-4 w-4 animate-spin rounded-full border-2 border-background border-t-transparent" />
+              Signing you in…
+            </span>
+          ) : (
+            <span className="flex items-center justify-center gap-2">
+              <LogIn className="h-4 w-4" />
+              Log in
+            </span>
+          )}
         </Button>
       </div>
       <div className="text-center text-sm">
