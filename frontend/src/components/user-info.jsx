@@ -4,7 +4,7 @@ import { setMode } from "../slices/modeSlice";
 import { apiSlice } from "../slices/apiSlice";
 import { logoutUser } from "../slices/userSlice";
 import { useNavigate, useLocation, useParams } from "react-router-dom";
-
+import { ArrowLeft } from "lucide-react";
 import { Card, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -67,6 +67,14 @@ export default function UserInfo({
       .join("")
       .toUpperCase();
 
+  const handleBack = () => {
+    if (window.history.length > 1) {
+      navigate(-1);
+    } else {
+      navigate("/users/dashboard");
+    }
+  };
+
   /* -------------------------------
      Layout
   --------------------------------*/
@@ -117,9 +125,18 @@ export default function UserInfo({
               </span>
             </div>
           </div>
-
           {/* Date filter */}
-          {!isNested && (
+          {isNested ? (
+            <Button
+              size="sm"
+              variant="secondary"
+              onClick={handleBack}
+              className="flex items-center gap-2"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Back
+            </Button>
+          ) : (
             <Popover>
               <PopoverTrigger asChild>
                 <Button
@@ -143,11 +160,10 @@ export default function UserInfo({
               </PopoverContent>
             </Popover>
           )}
-
           {/* Logout */}
           <Button
             size="sm"
-            variant="secondary"
+            variant="default"
             className="w-full sm:w-auto"
             onClick={handleLogout}
           >

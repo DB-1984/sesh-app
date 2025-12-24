@@ -8,7 +8,7 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="border-b">
+      <header>
         <div className="mx-auto max-w-7xl px-6 py-4">
           <UserInfo
             variant="header"
