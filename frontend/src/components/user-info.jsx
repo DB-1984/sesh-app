@@ -88,12 +88,17 @@ export default function UserInfo({
       <div
         className={
           isHeader
-            ? "grid gap-6 sm:grid-cols-[1fr_auto] sm:items-center"
+            ? "grid gap-6 items-center md:grid-cols-[1fr_auto] md:items-center"
             : "flex flex-col items-center gap-4"
         }
       >
         {/* LEFT: identity */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 justify-center md:justify-start text-center md:text-left">
+          <a href="/" className="flex items-center gap-2 font-medium">
+            <span className="logo-text mx-auto text-4xl font-bold text-foreground">
+              Sesh
+            </span>
+          </a>
           <Avatar className="h-10 w-10">
             <AvatarFallback>{getInitials(userInfo?.name)}</AvatarFallback>
           </Avatar>
@@ -106,10 +111,10 @@ export default function UserInfo({
           </div>
         </div>
         {/* RIGHT: controls */}
-        <div className="flex w-full flex-col gap-4 sm:w-auto sm:flex-row sm:items-center sm:gap-2">
+        <div className="flex w-full flex-col gap-4 md:w-auto md:flex-row md:items-center md:gap-4">
           {/* Theme */}
-          <div className="flex items-center justify-between sm:justify-start gap-2">
-            <Label htmlFor="theme-mode" className="text-sm sm:hidden">
+          <div className="flex items-center justify-center gap-2">
+            <Label htmlFor="theme-mode" className="text-sm">
               Theme
             </Label>
             <div className="flex items-center gap-2">
@@ -129,7 +134,7 @@ export default function UserInfo({
           {isNested ? (
             <Button
               size="sm"
-              variant="secondary"
+              variant="outline"
               onClick={handleBack}
               className="flex items-center gap-2"
             >

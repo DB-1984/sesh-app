@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@500;600;700&display=swap');
 
 @import "tailwindcss";
 @import "tw-animate-css";
@@ -29,8 +30,33 @@
   border-radius: 0 !important;
 }
 
+.app-bg {
+  background:
+    radial-gradient(800px circle at 10% 10%, hsl(220 80% 95%), transparent 40%),
+    radial-gradient(600px circle at 90% 20%, hsl(340 70% 95%), transparent 40%),
+    radial-gradient(700px circle at 50% 90%, hsl(160 70% 95%), transparent 40%);
+}
+
+.dark .app-bg {
+  background:
+    radial-gradient(900px circle at 15% 15%, hsl(220 30% 18%), transparent 45%),
+    radial-gradient(700px circle at 85% 20%, hsl(260 30% 16%), transparent 50%),
+    radial-gradient(800px circle at 50% 90%, hsl(180 25% 14%), transparent 55%),
+    linear-gradient(hsl(220 20% 10%), hsl(220 20% 8%));
+}
+
 .border-right{
   border-right: 1px solid #1d1d1d
+}
+
+:root {
+  --font-body: Inter, system-ui, sans-serif;
+  --font-heading: "DM Sans", Inter, system-ui, sans-serif;
+}
+
+/* optional but recommended */
+h1, h2, h3 {
+  letter-spacing: -0.02em;
 }
 
 @theme inline {
