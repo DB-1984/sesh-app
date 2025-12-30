@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
-import { setMode } from "../slices/modeSlice";
+import { setMode, resetMode } from "../slices/modeSlice";
 import { apiSlice } from "../slices/apiSlice";
 import { logoutUser } from "../slices/userSlice";
 import { useNavigate, useLocation, useParams } from "react-router-dom";
@@ -56,6 +56,7 @@ export default function UserInfo({
 
   const handleLogout = () => {
     dispatch(logoutUser());
+    dispatch(resetMode()); // resets mode to light
     dispatch(apiSlice.util.resetApiState());
     navigate("/");
   };
