@@ -2,9 +2,12 @@ import { Outlet } from "react-router-dom";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import UserInfo from "../components/user-info";
+import { useLocation } from "react-router-dom";
 
 export default function Dashboard() {
   const [selectedDate, setSelectedDate] = useState(null);
+  const location = useLocation();
+  const isDashboard = location.pathname === "/users/dashboard";
 
   return (
     <div className="min-h-screen app-bg bg-background">
@@ -16,7 +19,7 @@ export default function Dashboard() {
             selectedDate={selectedDate}
             onDateChange={setSelectedDate}
           />
-          {selectedDate && (
+          {selectedDate && isDashboard && (
             <Button
               variant="ghost"
               size="sm"
