@@ -138,10 +138,7 @@ export default function ViewSesh() {
               No exercises yet — add your first one below.
             </p>
           )}
-          <div className="mt-6 rounded-xl border bg-muted/40 p-4">
-            <h3 className="mb-4 font-heading font-semibold tracking-tight">
-              Add exercise
-            </h3>
+          <div className="mt-6 rounded-xl border p-4">
             {/* ExerciseForm component */}
             <ExerciseForm
               defaultValues={{

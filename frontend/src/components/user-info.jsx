@@ -3,13 +3,14 @@ import { useEffect } from "react";
 import { setMode, resetMode } from "../slices/modeSlice";
 import { apiSlice } from "../slices/apiSlice";
 import { logoutUser } from "../slices/userSlice";
-import { useNavigate, useLocation, useParams } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { Card, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+
 import { Calendar } from "@/components/ui/calendar";
 import {
   Popover,
@@ -31,7 +32,6 @@ export default function UserInfo({
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
-  const { seshId } = useParams();
 
   const isHeader = variant === "header";
   const isNested = location.pathname !== "/users/dashboard";
@@ -95,11 +95,14 @@ export default function UserInfo({
       >
         {/* LEFT: identity */}
         <div className="flex items-center gap-3 justify-center md:justify-start text-center md:text-left">
-          <a href="/" className="flex items-center gap-2 font-medium">
+          <Link
+            to={userInfo ? "/users/dashboard" : "/"}
+            className="flex items-center gap-2 font-medium"
+          >
             <span className="logo-text mx-auto text-4xl font-bold text-foreground">
               Sesh
             </span>
-          </a>
+          </Link>
           <Avatar className="h-10 w-10">
             <AvatarFallback>{getInitials(userInfo?.name)}</AvatarFallback>
           </Avatar>

@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
+import { Dumbbell } from "lucide-react";
 
 export function ExerciseForm({
   onSubmit,
@@ -30,7 +31,7 @@ export function ExerciseForm({
 
   // Called when form is submitted
   const handleSubmit = async (values) => {
-    await onSubmit(values);     // pass values to parent
+    await onSubmit(values); // pass values to parent
     // If adding a exercise, reset back to blank defaults
     // In edit mode, parent can navigate away instead
   };
@@ -39,15 +40,45 @@ export function ExerciseForm({
     <form onSubmit={form.handleSubmit(handleSubmit)}>
       <Card className="w-full border-none bg-none rounded-none shadow-none mx-auto">
         <CardHeader>
-          <CardTitle>{title}</CardTitle>
+          <CardTitle>
+            <div className="flex items-center gap-2">
+              <Dumbbell className="h-4 w-4" /> {title}
+            </div>
+          </CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
-          <Input {...form.register("exercise", { required: true })} placeholder="Exercise" />
-          <Input {...form.register("weight", { required: true, valueAsNumber: true })} type="number" placeholder="Weight (kg)" />
-          <Input {...form.register("reps", { required: true, valueAsNumber: true })} type="number" placeholder="Reps" />
-          <Input {...form.register("sets", { required: true, valueAsNumber: true })} type="number" placeholder="Sets" />
-          <Input {...form.register("rest", { required: true, valueAsNumber: true })} type="number" placeholder="Rest (seconds)" />
-          <Textarea {...form.register("comments")} placeholder="Comments" rows={3} />
+          <Input
+            {...form.register("exercise", { required: true })}
+            placeholder="Exercise"
+          />
+          <Input
+            {...form.register("weight", {
+              required: true,
+              valueAsNumber: true,
+            })}
+            type="number"
+            placeholder="Weight (kg)"
+          />
+          <Input
+            {...form.register("reps", { required: true, valueAsNumber: true })}
+            type="number"
+            placeholder="Reps"
+          />
+          <Input
+            {...form.register("sets", { required: true, valueAsNumber: true })}
+            type="number"
+            placeholder="Sets"
+          />
+          <Input
+            {...form.register("rest", { required: true, valueAsNumber: true })}
+            type="number"
+            placeholder="Rest (seconds)"
+          />
+          <Textarea
+            {...form.register("comments")}
+            placeholder="Comments"
+            rows={3}
+          />
           <Button type="submit" className="w-full">
             {submitLabel}
           </Button>

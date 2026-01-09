@@ -1,5 +1,6 @@
 import { Outlet } from "react-router-dom";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
 import UserInfo from "../components/user-info";
 
 export default function Dashboard() {
@@ -15,6 +16,15 @@ export default function Dashboard() {
             selectedDate={selectedDate}
             onDateChange={setSelectedDate}
           />
+          {selectedDate && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setSelectedDate(null)}
+            >
+              Clear date
+            </Button>
+          )}
         </div>
       </header>
 
