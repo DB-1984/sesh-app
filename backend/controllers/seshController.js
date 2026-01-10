@@ -133,6 +133,33 @@ const editExerciseInSesh = async (req, res) => {
   }
 };
 
+// Rename a Sesh
+const renameSesh = async (req, res) => {
+  try {
+    const sesh = await Sesh.findById(req.params.id);
+    if (!sesh) return res.status(404).json({ message: "Sesh not found" });
+
+    // Optional: ensure the logged-in user owns this sesh
+    if (sesh.user.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ message: "Not authorized" });
+    }
+
+    // Update the title
+    const { title } = req.body;
+    if (!title || title.trim() === "") {
+      return res.status(400).json({ message: "Title cannot be empty" });
+    }
+
+    sesh.title = title.trim();
+    const updatedSesh = await sesh.save();
+
+    res.status(200).json(updatedSesh);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
 const getSeshById = async (req, res) => {
   try {
     const sesh = await Sesh.findById(req.params.id).populate("exercises");
@@ -151,4 +178,5 @@ export {
   deleteExerciseFromSesh,
   getSeshById,
   editExerciseInSesh,
+  renameSesh,
 };

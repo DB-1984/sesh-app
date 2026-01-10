@@ -12,7 +12,47 @@ export const seshApiSlice = apiSlice.injectEndpoints({
         return url;
       },
       providesTags: ["Sesh"],
-    }),    
+    }),
+    // Provides 'live' feedback to the UI as data is saved, using a blur() event asa trigger
+    // (clicking off focus for the input)
+    renameSesh: builder.mutation({
+      query: ({ id, title }) => ({
+        url: `${SESH_URL}/${id}`, // ensure correct backend route
+        method: "PATCH",
+        body: { title },
+      }),
+      // Optimistic update: instantly update cached UI getSeshes data befor DB response
+      async onQueryStarted(
+        { id, title },
+        { dispatch, queryFulfilled, getState }
+      ) {
+        // Grab the current userId from state (so the cache key matches)
+        const userId = getState().user.userInfo._id;
+
+        const patchResult = dispatch(
+          // We're performing an **optimistic update** on the cached list of sessions.
+          // Since this mutation affects session data fetched by `getSeshes`,
+          // we treat that query cache as a "dependent" that needs updating immediately.
+          apiSlice.util.updateQueryData(
+            "getSeshes", // The name of the query whose cache we want to patch
+            { userId }, // Must match the query args used when `getSeshes` was called, for security
+            // and for integrity of the data being updated - data is an object with keys, so we need
+            // to be sure we edit the correct key's data
+            (draft) => {
+              // Immer-powered callback for safely mutating the cached data - draft is the data beign edited
+              const sesh = draft.find((s) => s._id === id); // Locate the session by ID in the cache
+              if (sesh) sesh.title = title; // Update the title instantly for immediate UI feedback
+            }
+          )
+        );
+
+        try {
+          await queryFulfilled; // wait for server response
+        } catch {
+          patchResult.undo(); // rollback if server errors
+        }
+      },
+    }),
     addSesh: builder.mutation({
       query: (newSesh) => ({
         url: SESH_URL,
@@ -73,4 +113,5 @@ export const {
   useAddExerciseMutation,
   useDeleteExerciseMutation,
   useEditExerciseMutation,
+  useRenameSeshMutation,
 } = seshApiSlice;

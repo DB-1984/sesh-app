@@ -8,6 +8,7 @@ import {
   deleteExerciseFromSesh,
   editExerciseInSesh,
   getSeshById,
+  renameSesh,
 } from "../controllers/seshController.js";
 
 const router = express.Router();
@@ -16,7 +17,11 @@ const router = express.Router();
 router.route("/").get(protect, getAllSeshes).post(protect, createSesh);
 
 // GET a single sesh by ID
-router.route("/:id").get(protect, getSeshById).delete(protect, deleteSesh);
+router
+  .route("/:id")
+  .get(protect, getSeshById)
+  .delete(protect, deleteSesh)
+  .patch(protect, renameSesh);
 
 // Add / Delete exercises in a sesh
 router

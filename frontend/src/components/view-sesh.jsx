@@ -1,22 +1,3 @@
-/**
- * VIEW SESH COMPONENT
- *
- * Purpose:
- * - Displays a single session (sesh) with its title, date, and exercises.
- * - Allows users to delete exercises or add new exercises via the ExerciseForm component.
- *
- * Features & Integration:
- * - Uses React Router's `useParams` to get the session ID from the URL.
- * - Fetches seshes from the backend via `useGetSeshesQuery`.
- * - Adds new exercises via `useAddExerciseMutation`.
- * - Deletes exercises via `useDeleteExerciseMutation`.
- * - Passes `defaultValues` and `onSubmit` to ExerciseForm for controlled form behavior.
- * - Displays comments for each exercise if available.
- *
- * Props:
- * - None. Component derives its data entirely from the URL and Redux query hooks.
- */
-
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -24,9 +5,11 @@ import {
   useGetSeshesQuery,
   useAddExerciseMutation,
   useDeleteExerciseMutation,
+  useRenameSeshMutation,
 } from "../slices/seshApiSlice";
 import { ExerciseForm } from "@/components/exercise-form";
 import { Button } from "@/components/ui/button";
+import { Pencil } from "lucide-react";
 
 export default function ViewSesh() {
   const { id } = useParams(); // session ID from URL
@@ -35,6 +18,7 @@ export default function ViewSesh() {
   const [deleteExercise] = useDeleteExerciseMutation();
 
   const [currentSesh, setCurrentSesh] = useState(null);
+  const [renameSesh] = useRenameSeshMutation(); // only take the function (no isLoading, isError)
 
   // Fetch the current sesh based on URL param
   useEffect(() => {
@@ -63,22 +47,46 @@ export default function ViewSesh() {
     }
   };
 
+  const handleRename = async () => {
+    if (!currentSesh?.title?.trim()) return;
+    // preserve existing
+
+    try {
+      await renameSesh({
+        id: currentSesh._id, // this data
+        title: currentSesh.title.trim(), // this value
+      }).unwrap(); // fulfil promise
+      toast.success("New title saved!");
+    } catch (err) {
+      console.error("Failed to rename sesh", err);
+    }
+  };
+
   return (
     <div className="mx-auto w-full max-w-3xl flex flex-col gap-6 p-4">
       <div className="flex flex-col gap-4 p-4">
         {/* Session title input */}
-        <input
-          type="text"
-          value={currentSesh.title}
-          onChange={(e) =>
-            setCurrentSesh({ ...currentSesh, title: e.target.value })
-          }
-          className="
-    text-xl font-heading font-semibold tracking-tight
-    bg-transparent border-none px-0
-    focus-visible:ring-0 focus-visible:outline-none
-  "
-        />
+        <div className="relative inline-block">
+          {/* Pencil icon */}
+          <Pencil className="absolute left-0 top-1/2 -translate-y-1/2 text-muted-foreground h-4 w-4" />
+
+          {/* Input */}
+          <input
+            type="text"
+            value={currentSesh.title}
+            onChange={(e) =>
+              setCurrentSesh({ ...currentSesh, title: e.target.value })
+            }
+            onBlur={handleRename}
+            className="
+      text-xl font-heading font-semibold tracking-tight
+      bg-transparent border-none pl-6
+      focus-visible:ring-0 focus-visible:outline-none
+      cursor-text
+    "
+            title="Click to rename session"
+          />
+        </div>
 
         {/* Session date */}
         <p className="text-sm text-muted-foreground">
