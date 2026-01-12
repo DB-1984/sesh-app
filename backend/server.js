@@ -5,7 +5,6 @@ import cookieParser from "cookie-parser";
 import userRoutes from "./routes/userRoutes.js";
 import seshRoutes from "./routes/seshRoutes.js";
 import connectDB from "./utils/conn.js";
-import cors from "cors";
 
 dotenv.config(); // load .env first
 
@@ -19,12 +18,6 @@ connectDB()
   .catch((err) => console.error("MongoDB connection error:", err));
 
 // middleware
-app.use(
-  cors({
-    origin: "https://sesh-frontend.onrender.com", // your frontend URL
-    credentials: true,
-  })
-);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser()); // parse cookies
