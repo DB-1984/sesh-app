@@ -45,8 +45,8 @@ export function SignupForm() {
   };
 
   return (
-    <section className="h-screen flex items-center justify-center">
-      <div className="w-full max-w-md bg-background p-8 rounded-md">
+    <section className="flex items-center justify-center">
+      <div className="w-full max-w-md">
         <h1 className="text-2xl font-bold text-center mb-6">Create Account</h1>
 
         <form

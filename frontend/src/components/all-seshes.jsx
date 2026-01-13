@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import { SeshCard } from "./sesh-card";
+import { Loader2 } from "lucide-react";
 import { useOutletContext } from "react-router-dom";
 import { format } from "date-fns";
 import {
@@ -60,8 +61,22 @@ export default function AllSeshes() {
     }
   };
 
-  if (isLoading) return <p>Loading seshes...</p>;
-  if (isError) return <p>Failed to load seshes</p>;
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-12 text-muted-foreground">
+        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+        <span>Loading seshes…</span>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="flex items-center justify-center py-12 text-destructive">
+        Failed to load seshes
+      </div>
+    );
+  }  
 
   return (
     <div className="flex flex-col md:flex-row gap-6">
