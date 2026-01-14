@@ -11,8 +11,7 @@ export default function EditExercise() {
   const { seshId, exerciseId } = useParams();
   const navigate = useNavigate();
 
-  // ✅ Hooks always at top level
-  const { data: sesh, isLoading } = useGetSeshByIdQuery(seshId);
+  const { data: sesh, isLoading, isError } = useGetSeshByIdQuery(seshId);
   const [editExercise] = useEditExerciseMutation();
 
   // Compute exercise after hooks
@@ -21,6 +20,23 @@ export default function EditExercise() {
   // Early returns for loading / missing data
   if (isLoading || !sesh) return <p>Loading...</p>;
   if (!exercise) return <p>Exercise not found.</p>;
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-12 text-muted-foreground">
+        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+        <span>Loading exercises</span>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="flex items-center justify-center py-12 text-destructive">
+        Failed to load exercises
+      </div>
+    );
+  }
 
   // Submit handler
   const onSubmit = async (formValues) => {

@@ -76,7 +76,7 @@ export default function AllSeshes() {
         Failed to load seshes
       </div>
     );
-  }  
+  }
 
   return (
     <div className="flex flex-col md:flex-row gap-6">

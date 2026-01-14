@@ -10,7 +10,7 @@ export default function Dashboard() {
   const isDashboard = location.pathname === "/users/dashboard";
 
   return (
-    <div className="min-h-screen app-bg bg-background">
+    <div className="min-h-[100dvh] app-bg bg-background">
       {/* Header */}
       <header>
         <div className="mx-auto max-w-7xl px-6 py-4">

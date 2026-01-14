@@ -5,12 +5,12 @@ import { Provider } from "react-redux";
 import { store } from "./store.js";
 import "./index.css";
 import App from "./App.jsx";
-import LoginRegisterPage from "./pages/LoginRegisterPage";
-import Dashboard from "./pages/Dashboard";
-import PrivateRoute from "./components/private-route";
-import AllSeshes from "./components/all-seshes";
-import ViewSesh from "./components/view-sesh";
-import EditExercise from "./components/edit-exercise";
+import LoginRegisterPage from "./pages/LoginRegisterPage.jsx";
+import Dashboard from "./pages/Dashboard.jsx";
+import PrivateRoute from "./components/private-route.jsx";
+import AllSeshes from "./components/all-seshes.jsx";
+import ViewSesh from "./components/view-sesh.jsx";
+import EditExercise from "./components/edit-exercise.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
