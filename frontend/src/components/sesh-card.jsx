@@ -23,7 +23,7 @@ export function SeshCard({ sesh, onDelete }) {
         </CardTitle>
       </CardHeader>
 
-      <CardContent className="flex justify-between items-center flex-wrap gap-4">
+      <CardContent className="flex flex-col gap-4">
         {/* Meta */}
         <div className="flex flex-col gap-2 text-sm text-muted-foreground">
           <div className="flex items-center gap-2">
