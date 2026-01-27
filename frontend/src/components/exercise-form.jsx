@@ -38,7 +38,7 @@ export function ExerciseForm({
 
   return (
     <form onSubmit={form.handleSubmit(handleSubmit)}>
-      <Card className="w-full border-none bg-none rounded-none shadow-none mx-auto">
+      <Card className="w-full max-w-3xl border-none bg-none rounded shadow-none mx-auto">
         <CardHeader>
           <CardTitle>
             <div className="flex items-center gap-2">

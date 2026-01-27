@@ -9,7 +9,7 @@ import {
 } from "../slices/seshApiSlice";
 import { ExerciseForm } from "@/components/exercise-form";
 import { Button } from "@/components/ui/button";
-import { Pencil } from "lucide-react";
+import { Loader2 } from "lucide-react";
 
 export default function ViewSesh() {
   const { id } = useParams();
@@ -34,8 +34,14 @@ export default function ViewSesh() {
     if (isError) toast.error("Failed to load session");
   }, [isError]);
 
-  if (isLoading) return <p>Loading...</p>;
-  if (!currentSesh) return <p>Session not found.</p>;
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-12 text-muted-foreground">
+        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+        <span>Loading sesh</span>
+      </div>
+    );
+  }
 
   const handleDeleteExercise = async (exercise) => {
     try {
@@ -72,8 +78,6 @@ export default function ViewSesh() {
         {/* Title row */}
         <div className="flex items-center gap-2">
           <div className="relative inline-flex items-center">
-            <Pencil className="absolute left-0 top-1/2 -translate-y-1/2 text-muted-foreground h-4 w-4" />
-
             <input
               id="sesh-title"
               type="text"
@@ -92,7 +96,7 @@ export default function ViewSesh() {
               onBlur={handleRename}
               className="
                 text-xl font-heading font-semibold tracking-tight
-                bg-transparent border-none pl-6 pr-1
+                bg-transparent border-none pr-1
                 focus-visible:ring-0 focus-visible:outline-none
                 cursor-text
               "
@@ -103,7 +107,7 @@ export default function ViewSesh() {
             type="button"
             variant="link"
             size="sm"
-            className="h-auto p-0 text-muted-foreground hover:text-foreground"
+            className="px-3 py-1 text-sm border border-border rounded-full hover:bg-muted transition-colors"
             onClick={() => document.getElementById("sesh-title")?.focus()}
           >
             Edit

@@ -11,6 +11,7 @@ import PrivateRoute from "./components/private-route.jsx";
 import AllSeshes from "./components/all-seshes.jsx";
 import ViewSesh from "./components/view-sesh.jsx";
 import EditExercise from "./components/edit-exercise.jsx";
+import { HelmetProvider } from "react-helmet-async";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -39,9 +40,11 @@ const router = createBrowserRouter(
 );
 
 createRoot(document.getElementById("root")).render(
+  <HelmetProvider>
   <React.StrictMode>
     <Provider store={store}>
       <RouterProvider router={router} />
     </Provider>
   </React.StrictMode>
+  </ HelmetProvider>
 );

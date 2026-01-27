@@ -9,18 +9,17 @@ export function SeshCard({ sesh, onDelete }) {
   return (
     <Card
       className="
-        group relative
-        w-full
-        transition-all duration-200
-        hover:-translate-y-0.5
-        hover:shadow-lg
-        dark:hover:shadow-black/30
-      "
+    group relative
+    w-full
+    bg-white dark:bg-gray-800
+    transition-all duration-200
+    hover:-translate-y-0.5
+    hover:shadow-lg
+    dark:hover:shadow-black/30
+    "
     >
       <CardHeader className="pb-2">
-        <CardTitle className="tracking-tight">
-          {sesh.title}
-        </CardTitle>
+        <CardTitle className="tracking-tight">{sesh.title}</CardTitle>
       </CardHeader>
 
       <CardContent className="flex flex-col gap-4">
@@ -28,27 +27,29 @@ export function SeshCard({ sesh, onDelete }) {
         <div className="flex flex-col gap-2 text-sm text-muted-foreground">
           <div className="flex items-center gap-2">
             <Calendar className="h-4 w-4" />
-            <span>
-              {new Date(sesh.date).toLocaleDateString()}
-            </span>
+            <span>{new Date(sesh.date).toLocaleDateString()}</span>
           </div>
 
           <div className="flex items-center gap-2">
             <Dumbbell className="h-4 w-4" />
             <span>
               {exerciseCount > 0
-                ? `${exerciseCount} ${exerciseCount === 1 ? "Exercise" : "Exercises"}`
+                ? `${exerciseCount} ${
+                    exerciseCount === 1 ? "Exercise" : "Exercises"
+                  }`
                 : "No exercises yet"}
             </span>
           </div>
         </div>
 
         {/* Actions */}
-        <div className="
+        <div
+          className="
           flex gap-2 shrink-0
           opacity-70 group-hover:opacity-100
           transition-opacity
-        ">
+        "
+        >
           <Link to={`sesh/${sesh._id}`}>
             <Button variant="outline" size="sm">
               <Eye className="mr-2 h-4 w-4" />

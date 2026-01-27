@@ -79,32 +79,37 @@ export default function AllSeshes() {
   }
 
   return (
-    <div className="flex flex-col md:flex-row gap-6">
-      <section className="flex-1 p-6 flex flex-col">
-        {seshes.length > 0 ? (
-          <>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {seshes.map((sesh) => (
-                <SeshCard key={sesh._id} sesh={sesh} onDelete={handleDelete} />
-              ))}
-            </div>
+    <div className="p-6">
+      {isLoading ? (
+        <div className="flex items-center justify-center py-12 text-muted-foreground">
+          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          <span>Loading seshes…</span>
+        </div>
+      ) : isError ? (
+        <div className="flex items-center justify-center py-12 text-destructive">
+          Failed to load seshes
+        </div>
+      ) : seshes.length === 0 ? (
+        <p className="text-center text-gray-500 mt-4">
+          No sessions found for this date.
+        </p>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {seshes.map((sesh) => (
+            <SeshCard key={sesh._id} sesh={sesh} onDelete={handleDelete} />
+          ))}
 
-            <div className="mt-6">
-              <Button
-                onClick={handleAddSesh}
-                className="w-full md:w-auto px-4 py-2 bg-background text-foreground border border-border rounded hover:bg-card hover:text-card-foreground transition-colors duration-200"
-                disabled={addSeshLoading}
-              >
-                {addSeshLoading ? "Adding..." : "Add New Sesh"}
-              </Button>
-            </div>
-          </>
-        ) : (
-          <p className="text-center text-gray-500 mt-4">
-            No sessions found for this date.
-          </p>
-        )}
-      </section>
+          {/* Floating Add button */}
+          <div className="fixed bottom-4 right-4 z-50">
+            <Button
+              onClick={handleAddSesh}
+              className="px-4 py-5 bg-black text-white border border-black rounded-2xl font-medium shadow-sm hover:shadow-md active:scale-[0.98] transition-all duration-200"
+            >
+              {addSeshLoading ? "Adding..." : "+ Add New Sesh"}
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

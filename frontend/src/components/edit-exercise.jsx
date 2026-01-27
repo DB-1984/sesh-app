@@ -6,6 +6,7 @@ import {
   useGetSeshByIdQuery,
   useEditExerciseMutation,
 } from "../slices/seshApiSlice";
+import { Loader2 } from "lucide-react";
 
 export default function EditExercise() {
   const { seshId, exerciseId } = useParams();
@@ -16,10 +17,6 @@ export default function EditExercise() {
 
   // Compute exercise after hooks
   const exercise = sesh?.exercises?.find((w) => w._id === exerciseId);
-
-  // Early returns for loading / missing data
-  if (isLoading || !sesh) return <p>Loading...</p>;
-  if (!exercise) return <p>Exercise not found.</p>;
 
   if (isLoading) {
     return (
