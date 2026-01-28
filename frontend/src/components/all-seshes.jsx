@@ -73,15 +73,6 @@ export default function AllSeshes() {
 
   return (
     <div className="p-8">
-      <div className="flex items-center gap-4 mb-8 pb-0">
-        <Ellipsis
-          strokeWidth={5}
-          className="h-6 w-6 cursor-pointer hover:text-black transition-colors"
-        />
-        <h1 className="text-3xl text-center font-black tracking-tight">
-          Latest Seshes
-        </h1>
-      </div>
       {seshes.length === 0 ? (
         <p className="text-center text-gray-500 mt-4">
           No sessions found for this date.

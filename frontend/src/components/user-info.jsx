@@ -17,7 +17,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, Ellipsis, Pencil } from "lucide-react";
 import { format } from "date-fns";
 
 export default function UserInfo({ selectedDate, onDateChange }) {
@@ -31,9 +31,8 @@ export default function UserInfo({ selectedDate, onDateChange }) {
   const isHeader = true;
   // const isHeader = variant === "header";
   const isNested = location.pathname !== "/users/dashboard";
-  const isEdit = /\/users\/dashboard\/sesh\/[^/]+\/exercise\/[^/]+\/edit/.test(
-    location.pathname
-  );
+  const isEdit = location.pathname.includes("/sesh/");
+  const isDash = location.pathname.startsWith("/users/dashboard");
 
   /* -------------------------------
      Effects
@@ -102,16 +101,36 @@ export default function UserInfo({ selectedDate, onDateChange }) {
           <Avatar className="h-10 w-10">
             <AvatarFallback>{getInitials(userInfo?.name)}</AvatarFallback>
           </Avatar>
-
           <div className="min-w-0">
             <CardTitle className="text-base truncate">
               {userInfo?.name}
             </CardTitle>
-            <p className="text-sm text-muted-foreground">Your sessions</p>
           </div>
         </div>
         {/* RIGHT: controls */}
         <div className="flex w-full flex-col gap-4 md:w-auto md:flex-row md:items-center md:gap-4">
+          {isEdit && isNested && (
+            <div className="flex justify-center items-center gap-4 pb-0">
+              <Pencil
+                size={16}
+                strokeWidth={5}
+                className="cursor-pointer text-sm hover:text-black transition-colors"
+              />
+              <h1 className="text-lg font-black tracking-tight">View / Edit</h1>
+            </div>
+          )}
+          {isDash && !isNested && (
+            <div className="flex justify-center items-center gap-4 pb-0">
+              <Ellipsis
+                size={16}
+                strokeWidth={5}
+                className="h-6 w-6 cursor-pointer hover:text-black transition-colors"
+              />
+              <h1 className="text-lg font-black tracking-tight">
+                Latest Seshes
+              </h1>
+            </div>
+          )}
           {/* Theme */}
           <div className="flex items-center justify-center gap-2">
             <Label htmlFor="theme-mode" className="text-sm">
@@ -136,7 +155,7 @@ export default function UserInfo({ selectedDate, onDateChange }) {
               size="sm"
               variant="outline"
               onClick={handleBack}
-              className="flex items-center gap-2"
+              className="flex items-center gap-2 w-auto shrink-0"
             >
               <ArrowLeft className="h-4 w-4" />
               Back
@@ -148,12 +167,7 @@ export default function UserInfo({ selectedDate, onDateChange }) {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="
-                    w-1/2           
-                    md:w-64       
-                    lg:w-auto       
-                    px-6 py-2
-                  "
+                    className="flex items-center gap-2 w-auto shrink-0"
                   >
                     {selectedDate
                       ? format(selectedDate, "PPP")
@@ -175,12 +189,7 @@ export default function UserInfo({ selectedDate, onDateChange }) {
           {/* Logout */}
           <div className="flex justify-center">
             <Button
-              className="
-    w-1/2           
-    md:w-64       
-    lg:w-auto       
-    px-6 py-2
-  "
+              className="flex align-center items-center w-25 gap-2"
               onClick={handleLogout}
             >
               Log out

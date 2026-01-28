@@ -12,7 +12,7 @@ export function SeshCard({ sesh, onDelete }) {
     flex flex-col justify-around
     w-full min-w-[320px] 
     h-full p-8
-    bg-white/80 dark:bg-gray-800/80  /* Use standard colors with opacity */
+    bg-white/60 dark:bg-gray-800/80  /* Use standard colors with opacity */
     backdrop-blur-md                /* This makes the translucency look premium */
     rounded-2xl shadow-md 
     transition-shadow duration-200
