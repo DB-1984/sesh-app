@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import { SeshCard } from "./sesh-card";
-import { Loader2, Dumbbell, ArrowLeft, ArrowRight } from "lucide-react";
+import { Loader2, Dumbbell, ArrowLeft, Ellipsis } from "lucide-react";
 import { useOutletContext } from "react-router-dom";
 import { format } from "date-fns";
 import {
@@ -72,17 +72,13 @@ export default function AllSeshes() {
   }
 
   return (
-    <div className="p-6">
-      <div className="flex items-center justify-center gap-4 mt-2 mb-8 pb-8">
-        <ArrowLeft
+    <div className="p-8">
+      <div className="flex items-center gap-4 mb-8 pb-0">
+        <Ellipsis
           strokeWidth={5}
           className="h-6 w-6 cursor-pointer hover:text-black transition-colors"
         />
-        <ArrowRight
-          strokeWidth={5}
-          className="h-6 w-6 cursor-pointer hover:text-black transition-colors"
-        />
-        <h1 className="logo-text text-3xl text-center font-black tracking-tight">
+        <h1 className="text-3xl text-center font-black tracking-tight">
           Latest Seshes
         </h1>
       </div>
@@ -106,9 +102,9 @@ export default function AllSeshes() {
       <div className="fixed bottom-4 right-4 z-50">
         <Button
           onClick={handleAddSesh}
-          className="px-4 py-5 bg-black text-white border border-black rounded-2xl font-medium shadow-sm hover:shadow-md active:scale-[0.98] transition-all duration-200"
+          className="p-8 bg-black/90 text-white border border-black rounded-4xl font-black shadow-sm hover:shadow-md active:scale-[0.98] transition-all duration-200"
         >
-          {addSeshLoading ? "Adding..." : "+ Add New Sesh"}
+          {addSeshLoading ? "Adding..." : "+ New Sesh"}
         </Button>
       </div>
     </div>

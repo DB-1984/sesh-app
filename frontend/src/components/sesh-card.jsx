@@ -43,7 +43,7 @@ export function SeshCard({ sesh, onDelete }) {
         {/* Action Buttons - These will now stay at the bottom */}
         <div className="flex flex-col gap-3 mt-auto">
           <Link to={`sesh/${sesh._id}`} className="w-full">
-            <Button className="w-full bg-cyan-600 text-white hover:bg-cyan-700 h-12">
+            <Button className="w-full bg-cyan-500 text-white hover:bg-cyan-700 h-12">
               <Eye className="mr-2 h-4 w-4" />
               View / Edit
             </Button>

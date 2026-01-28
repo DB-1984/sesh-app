@@ -20,7 +20,7 @@ export default function LoginRegisterPage({ mode = "login" }) {
           </a>
         </div>
         <div className="flex flex-1 items-center justify-center">
-          <div className="w-full w-full max-w-md bg-background p-8 shadow-lg rounded-lg">
+          <div className="w-full max-w-sm bg-background p-8 shadow-lg rounded-lg">
             <FormComponent />
           </div>
         </div>
