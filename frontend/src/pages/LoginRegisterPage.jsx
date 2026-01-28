@@ -20,13 +20,13 @@ export default function LoginRegisterPage({ mode = "login" }) {
           </a>
         </div>
         <div className="flex flex-1 items-center justify-center">
-          <div className="w-full w-full max-w-xs bg-background p-8 rounded-sm">
+          <div className="w-full w-full max-w-md bg-background p-8 shadow-lg rounded-lg">
             <FormComponent />
           </div>
         </div>
       </div>
       <div className="bg-zinc-900 relative hidden lg:flex items-center justify-center p-8">
-        <span className="logo-text-large text-4xl font-bold text-foreground">
+        <span className="logo-text-large text-4xl font-bold animate-bounce text-foreground">
           Sesh
         </span>
       </div>

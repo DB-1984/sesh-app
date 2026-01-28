@@ -46,27 +46,43 @@ export function SignupForm() {
 
   return (
     <section className="flex items-center justify-center">
-      <div className="w-full max-w-md">
-        <h1 className="text-2xl font-bold text-center mb-6">Create Account</h1>
-
+      <div className="w-full max-w-md rounded-xl bg-card p-6">
+        <div className="flex items-center gap-3 pb-4">
+          <span className="logo-text flex h-10 w-10 items-center justify-center rounded-full bg-zinc-900 text-white text-2xl font-bold">
+            S
+          </span>
+          <h1 className="text-2xl font-semibold tracking-tight">Sign Up</h1>
+        </div>
         <form
           onSubmit={handleSubmit(submitHandler)}
-          className="flex flex-col gap-4"
+          className="flex flex-col gap-5"
         >
-          <div>
-            <label htmlFor="name">Name</label>
+          {/* Name */}
+          <div className="flex flex-col gap-1.5">
+            <label
+              htmlFor="name"
+              className="text-xs font-semibold text-muted-foreground"
+            >
+              Name
+            </label>
             <Input
               id="name"
               placeholder="Your name"
               {...register("name", { required: "Name is required" })}
             />
             {errors.name && (
-              <p className="text-red-500">{errors.name.message}</p>
+              <p className="text-xs text-destructive">{errors.name.message}</p>
             )}
           </div>
 
-          <div>
-            <label htmlFor="email">Email</label>
+          {/* Email */}
+          <div className="flex flex-col gap-1.5">
+            <label
+              htmlFor="email"
+              className="text-xs font-semibold text-muted-foreground"
+            >
+              Email
+            </label>
             <Input
               id="email"
               type="email"
@@ -74,12 +90,18 @@ export function SignupForm() {
               {...register("email", { required: "Email is required" })}
             />
             {errors.email && (
-              <p className="text-red-500">{errors.email.message}</p>
+              <p className="text-xs text-destructive">{errors.email.message}</p>
             )}
           </div>
 
-          <div>
-            <label htmlFor="password">Password</label>
+          {/* Password */}
+          <div className="flex flex-col gap-1.5">
+            <label
+              htmlFor="password"
+              className="text-xs font-semibold text-muted-foreground"
+            >
+              Password
+            </label>
             <Input
               id="password"
               type="password"
@@ -87,46 +109,56 @@ export function SignupForm() {
               {...register("password", { required: "Password is required" })}
             />
             {errors.password && (
-              <p className="text-red-500">{errors.password.message}</p>
+              <p className="text-xs text-destructive">
+                {errors.password.message}
+              </p>
             )}
           </div>
 
-          <div>
-            <label htmlFor="confirmPassword">Confirm Password</label>
+          {/* Confirm password */}
+          <div className="flex flex-col gap-1.5">
+            <label
+              htmlFor="confirmPassword"
+              className="text-xs font-semibold text-muted-foreground"
+            >
+              Confirm password
+            </label>
             <Input
               id="confirmPassword"
               type="password"
-              placeholder="Confirm Password"
+              placeholder="Confirm password"
               {...register("confirmPassword", {
                 required: "Please confirm password",
               })}
             />
             {errors.confirmPassword && (
-              <p className="text-red-500">{errors.confirmPassword.message}</p>
+              <p className="text-xs text-destructive">
+                {errors.confirmPassword.message}
+              </p>
             )}
           </div>
 
+          {/* Submit */}
           <Button
             type="submit"
             className="
-         w-full
-         transition-all
-         duration-200
-         ease-out
-         hover:translate-y-[-1px]
-         hover:shadow-md
-         active:translate-y-[1px]
-         active:shadow-sm
-         disabled:opacity-70
-         disabled:pointer-events-none
-       "
+              mt-2 w-full gap-2
+              transition-all duration-200 ease-out
+              hover:-translate-y-0.5 hover:shadow-md
+              active:translate-y-0 active:shadow-sm
+              disabled:pointer-events-none disabled:opacity-70
+            "
           >
-            <UserRoundPlus />
-            {isLoading ? "Creating..." : "Sign Up"}
+            <UserRoundPlus className="h-4 w-4" />
+            {isLoading ? "Creating…" : "Sign up"}
           </Button>
-          <p className="text-center text-sm mt-4">
+
+          <p className="pt-2 text-center text-sm text-muted-foreground">
             Already have an account?{" "}
-            <a href="/users/login" className="underline">
+            <a
+              href="/users/login"
+              className="font-medium underline-offset-4 hover:underline"
+            >
               Log in
             </a>
           </p>

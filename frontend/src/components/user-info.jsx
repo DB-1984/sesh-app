@@ -20,11 +20,7 @@ import {
 import { CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
 
-export default function UserInfo({
-  selectedDate,
-  onDateChange,
-  variant = "sidebar", // "sidebar" | "header"
-}) {
+export default function UserInfo({ selectedDate, onDateChange }) {
   const { userInfo } = useSelector((state) => state.user);
   const { mode } = useSelector((state) => state.mode);
 
@@ -32,7 +28,8 @@ export default function UserInfo({
   const navigate = useNavigate();
   const location = useLocation();
 
-  const isHeader = variant === "header";
+  const isHeader = true;
+  // const isHeader = variant === "header";
   const isNested = location.pathname !== "/users/dashboard";
   const isEdit = /\/users\/dashboard\/sesh\/[^/]+\/exercise\/[^/]+\/edit/.test(
     location.pathname
@@ -145,38 +142,50 @@ export default function UserInfo({
               Back
             </Button>
           ) : (
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="w-full sm:w-auto justify-between"
-                >
-                  {selectedDate
-                    ? format(selectedDate, "PPP")
-                    : "Filter by date"}
-                  <CalendarIcon className="h-4 w-4 ml-2" />
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0">
-                <Calendar
-                  mode="single"
-                  selected={selectedDate}
-                  onSelect={onDateChange}
-                  initialFocus
-                />
-              </PopoverContent>
-            </Popover>
+            <div className="flex justify-center">
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="
+                    w-1/2           
+                    md:w-64       
+                    lg:w-auto       
+                    px-6 py-2
+                  "
+                  >
+                    {selectedDate
+                      ? format(selectedDate, "PPP")
+                      : "Filter by date"}
+                    <CalendarIcon className="h-4 w-4 ml-2" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0">
+                  <Calendar
+                    mode="single"
+                    selected={selectedDate}
+                    onSelect={onDateChange}
+                    initialFocus
+                  />
+                </PopoverContent>
+              </Popover>
+            </div>
           )}
           {/* Logout */}
-          <Button
-            size="sm"
-            variant="default"
-            className="w-full sm:w-auto"
-            onClick={handleLogout}
-          >
-            Log out
-          </Button>
+          <div className="flex justify-center">
+            <Button
+              className="
+    w-1/2           
+    md:w-64       
+    lg:w-auto       
+    px-6 py-2
+  "
+              onClick={handleLogout}
+            >
+              Log out
+            </Button>
+          </div>
         </div>
       </div>
     </Card>

@@ -3,13 +3,18 @@ import { SESH_URL } from "../constants"; // "/api/seshes"
 
 export const seshApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
+    // seshApiSlice.js
     getSeshes: builder.query({
       query: ({ userId, date } = {}) => {
         let url = `${SESH_URL}?user=${userId}`;
-        if (date) {
-          url += `&date=${date}`; // append date query param if provided
-        }
+        if (date) url += `&date=${date}`;
         return url;
+      },
+      // Add this to sort by date (Latest first)
+      transformResponse: (response) => {
+        return [...response].sort(
+          (a, b) => new Date(b.date) - new Date(a.date)
+        );
       },
       providesTags: ["Sesh"],
     }),
