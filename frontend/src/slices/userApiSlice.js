@@ -15,6 +15,13 @@ export const userApiSlice = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
+    getProfile: builder.query({
+      query: () => ({
+        url: `${USERS_URL}/profile`,
+        method: "GET",
+      }),
+      keepUnusedDataFor: 5, // Keeps it fresh
+    }),
     login: builder.mutation({
       query: (data) => ({
         url: `${USERS_URL}/login`, // → /api/users/login
@@ -25,5 +32,5 @@ export const userApiSlice = apiSlice.injectEndpoints({
   }),
 });
 
-// These hooks are automatically generated for use inside React components
-export const { useRegisterMutation, useLoginMutation } = userApiSlice;
+export const { useRegisterMutation, useLoginMutation, useGetProfileQuery } =
+  userApiSlice;

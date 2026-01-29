@@ -12,39 +12,34 @@ import { store } from "./store.js";
 import "./index.css";
 import App from "./App.jsx";
 import LoginRegisterPage from "./pages/LoginRegisterPage.jsx";
+import Header from "./components/Header.jsx";
+import PrivateRoute from "./components/PrivateRoute.jsx";
+import AllSeshes from "./components/AllSeshes.jsx";
+import ViewSesh from "./components/ViewSesh.jsx";
+import EditExercise from "./components/EditExercise.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
-import PrivateRoute from "./components/private-route.jsx";
-import AllSeshes from "./components/all-seshes.jsx";
-import ViewSesh from "./components/view-sesh.jsx";
-import EditExercise from "./components/edit-exercise.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route element={<App />}>
-      {/* Public routes - the /users/ is preserved but loads the LoginRegisterPage 
-      with the correct component based on the Route prop 'mode' */}
-
-      {/*“The LoginRegisterPage is dynamic based on the mode prop, which is determined 
-      by the route that matches the current URL.” */}
       <Route path="/users/login" element={<LoginRegisterPage mode="login" />} />
       <Route
         path="/users/register"
         element={<LoginRegisterPage mode="register" />}
       />
-
       {/* Private routes */}
       <Route element={<PrivateRoute />}>
-        <Route path="/users/dashboard" element={<Dashboard />}>
-          {" "}
-          {/* Always mount this */}
-          <Route index element={<AllSeshes />} />{" "}
-          {/* Load all seshes by default */}
-          <Route path="sesh/:id" element={<ViewSesh />} />{" "}
-          {/* Load this if the path is /sesh/id: */}
+        {/* Header acts as the Layout for the entire /users prefix */}
+        <Route path="/users" element={<Header />}>
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="all-seshes" element={<AllSeshes />} />
+          <Route path="sesh/:id" element={<ViewSesh />} />
           <Route
             path="sesh/:seshId/exercise/:exerciseId/edit"
             element={<EditExercise />}
           />
+          {/* Default to dashboard if someone just goes to /users */}
+          <Route index element={<Navigate to="dashboard" replace />} />
         </Route>
       </Route>
 

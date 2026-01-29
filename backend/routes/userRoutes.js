@@ -1,9 +1,16 @@
 import express from "express";
-import { login, register } from "../controllers/userController.js";
+import { protect } from "../utils/protect.js";
+
+import {
+  login,
+  register,
+  updateUserProfile,
+} from "../controllers/userController.js";
 
 const router = express.Router();
 
 router.route("/login").post(login);
 router.route("/register").post(register);
+router.route("/profile").put(protect, updateUserProfile);
 
 export default router;

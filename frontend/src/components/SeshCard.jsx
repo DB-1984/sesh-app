@@ -10,8 +10,7 @@ export function SeshCard({ sesh, onDelete }) {
     <Card
       className="
     flex flex-col justify-around
-    w-full min-w-[320px] 
-    h-full p-8
+    h-full p-4
     bg-white/60 dark:bg-gray-800/80  /* Use standard colors with opacity */
     backdrop-blur-md                /* This makes the translucency look premium */
     rounded-2xl shadow-md 
@@ -19,20 +18,20 @@ export function SeshCard({ sesh, onDelete }) {
   "
     >
       {/* Card Header */}
-      <CardHeader className="pb-0 gap-6">
-        <CardTitle className="text-3xl logo-text font-normal tracking-tight">
+      <CardHeader className="pb-0 gap-2">
+        <CardTitle className="text-2xl pt-4 font-black tracking-tight">
           {sesh.title}
         </CardTitle>
-        <p className="text-md tracking-tight font-medium mt-1">
+        <p className="text-md tracking-tight font-medium">
           {new Date(sesh.date).toLocaleDateString()}
         </p>
-        <span className="flex logo-text items-center text-md text-zinc-600 gap-2">
+        <span className="flex items-center text-sm text-zinc-800 gap-2">
           {exerciseCount > 0 ? (
             <>
               {exerciseCount} {exerciseCount === 1 ? "Exercise" : "Exercises"}
             </>
           ) : (
-            "No exercises yet"
+            "No exercises yet..."
           )}
         </span>
       </CardHeader>
@@ -43,7 +42,7 @@ export function SeshCard({ sesh, onDelete }) {
         {/* Action Buttons - These will now stay at the bottom */}
         <div className="flex flex-col gap-3 mt-auto">
           <Link to={`sesh/${sesh._id}`} className="w-full">
-            <Button className="w-full bg-cyan-500 text-white hover:bg-cyan-700 h-12">
+            <Button className="w-full bg-zinc-200 text-black border hover:bg-white-700 h-12">
               <Eye className="mr-2 h-4 w-4" />
               View / Edit
             </Button>

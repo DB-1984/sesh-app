@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
-import { SeshCard } from "./sesh-card";
+import { SeshCard } from "@/components/SeshCard";
 import { Loader2, Dumbbell, ArrowLeft, Ellipsis } from "lucide-react";
 import { useOutletContext } from "react-router-dom";
 import { format } from "date-fns";
@@ -72,32 +72,41 @@ export default function AllSeshes() {
   }
 
   return (
-    <div className="p-8">
+    <div className="relative px-6 py-8">
+      <h1 className="text-3xl logo-text pb-8 font-black tracking-tight">
+        Latest Seshes
+      </h1>
       {seshes.length === 0 ? (
-        <p className="text-center text-gray-500 mt-4">
+        <p className="mt-4 text-center text-muted-foreground">
           No sessions found for this date.
         </p>
       ) : (
-        <div className="overflow-x-auto pb-4">
-          <div className="flex gap-6 min-w-max pb-8">
-            {seshes.map((sesh) => (
-              <div key={sesh._id} className="flex-shrink-0 min-w-[300px]">
-                <SeshCard sesh={sesh} onDelete={handleDelete} />
-              </div>
-            ))}
-          </div>
-        </div>
+        <section
+          aria-label="Training sessions"
+          className="
+            grid gap-6
+            grid-cols-[repeat(auto-fit,minmax(280px,1fr))]
+          "
+        >
+          {seshes.map((sesh) => (
+            <SeshCard key={sesh._id} sesh={sesh} onDelete={handleDelete} />
+          ))}
+        </section>
       )}
 
       {/* Floating Add button */}
-      <div className="fixed bottom-4 right-4 z-50">
-        <Button
-          onClick={handleAddSesh}
-          className="p-8 bg-black/90 text-white border border-black rounded-4xl font-black shadow-sm hover:shadow-md active:scale-[0.98] transition-all duration-200"
-        >
-          {addSeshLoading ? "Adding..." : "+ New Sesh"}
-        </Button>
-      </div>
+      <Button
+        onClick={handleAddSesh}
+        className="
+          fixed bottom-4 right-4 z-50
+          rounded-2xl bg-black/90 px-8 py-6
+          font-black text-white
+          shadow-md transition-all
+          hover:shadow-lg active:scale-[0.98]
+        "
+      >
+        {addSeshLoading ? "Adding…" : "+ New Sesh"}
+      </Button>
     </div>
   );
 }

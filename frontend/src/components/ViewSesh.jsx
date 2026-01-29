@@ -7,7 +7,7 @@ import {
   useDeleteExerciseMutation,
   useRenameSeshMutation,
 } from "../slices/seshApiSlice";
-import { ExerciseForm } from "@/components/exercise-form";
+import { ExerciseForm } from "@/components/ExerciseForm";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 

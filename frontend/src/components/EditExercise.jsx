@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { ExerciseForm } from "@/components/exercise-form";
+import { ExerciseForm } from "@/components/ExerciseForm";
 import { Button } from "@/components/ui/button";
 import {
   useGetSeshByIdQuery,

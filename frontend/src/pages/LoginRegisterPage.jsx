@@ -1,5 +1,5 @@
-import { LoginForm } from "@/components/login-form";
-import { SignupForm } from "@/components/signup-form";
+import { LoginForm } from "@/components/LoginForm";
+import { SignupForm } from "@/components/SignupForm";
 
 export default function LoginRegisterPage({ mode = "login" }) {
   // Use a mode prop to determine which form to show with a nested component - passed from the Route in main.tsx

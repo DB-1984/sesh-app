@@ -28,38 +28,77 @@ const login = async (req, res) => {
 };
 
 const register = async (req, res, next) => {
-        
-        try {
-          const { name, email, password } = req.body;
-      
-          // check if user already exists
-          const userExists = await User.findOne({ email });
-      
-          if (userExists) {
-            return res.status(400).json({ message: 'User already exists' });
-          }
-      
-          const user = await User.create({
-            name,
-            email,
-            password
-          });
-      
-          if (user) {
-            generateToken(res, user._id); // assuming this sets a cookie or header
-            return res.status(201).json({
-              _id: user._id,
-              name: user.name,
-              email: user.email
-            });
-          } else {
-            return res.status(400).json({ message: 'Invalid user data' });
-          }
-        } catch (error) {
-          next(error); // pass errors to your error handling middleware
-        }
-      };
-      
+  try {
+    const { name, email, password } = req.body;
 
-export { register, login };
+    // check if user already exists
+    const userExists = await User.findOne({ email });
 
+    if (userExists) {
+      return res.status(400).json({ message: "User already exists" });
+    }
+
+    const user = await User.create({
+      name,
+      email,
+      password,
+    });
+
+    if (user) {
+      generateToken(res, user._id); // assuming this sets a cookie or header
+      return res.status(201).json({
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+      });
+    } else {
+      return res.status(400).json({ message: "Invalid user data" });
+    }
+  } catch (error) {
+    next(error); // pass errors to your error handling middleware
+  }
+};
+
+// userController.js
+const updateUserProfile = async (req, res) => {
+  try {
+    // 1. Find the user using the ID attached by your 'protect' middleware
+    const user = await User.findById(req.user._id);
+
+    if (user) {
+      // 2. Update core fields (fallback to existing values if not provided)
+      user.name = req.body.name || user.name;
+      user.email = req.body.email || user.email;
+
+      // 3. Update fitness stats
+      if (req.body.weight) user.weight = req.body.weight;
+      if (req.body.height) user.height = req.body.height;
+      if (req.body.goal) user.goal = req.body.goal;
+
+      // 4. Save the changes (this also triggers the 'bmi' virtual calculation)
+      const updatedUser = await user.save();
+
+      // 5. Send back the fresh data (including BMI)
+      res.status(200).json({
+        _id: updatedUser._id,
+        name: updatedUser.name,
+        email: updatedUser.email,
+        weight: updatedUser.weight,
+        height: updatedUser.height,
+        bmi: updatedUser.bmi, // The virtual we added to the model
+        goal: updatedUser.goal,
+      });
+    } else {
+      res.status(404).json({ message: "User not found" });
+    }
+  } catch (error) {
+    // 6. If the database fails or something explodes, catch it here
+    console.error("Update Error:", error);
+    res.status(500).json({
+      message: "Server error updating profile",
+      error: error.message,
+    });
+  }
+};
+
+export { register, login, updateUserProfile };

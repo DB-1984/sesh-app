@@ -34,10 +34,14 @@
 .app-bg {
   background: radial-gradient(
       1200px circle at 30% 10%,
-      hsl(0deg 0% 90.37%),
+      hsl(0deg 0% 100%),
       transparent 60%
     ),
-    radial-gradient(1000px circle at 90% 20%, hsl(200 80% 70%), transparent 60%),
+    radial-gradient(
+      1000px circle at 90% 20%,
+      hsl(0deg 0% 100%),
+      transparent 60%
+    ),
     radial-gradient(1100px circle at 50% 90%, hsl(210 10% 85%), transparent 60%);
 }
 
@@ -181,18 +185,6 @@ h3 {
   }
   body {
     @apply bg-background text-foreground;
-  }
-}
-
-@keyframes bounce {
-  0%,
-  100% {
-    transform: translateY(-25%);
-    animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
-  }
-  50% {
-    transform: none;
-    animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
   }
 }
 
