@@ -65,22 +65,11 @@ export default function Header() {
     (lastLocation && lastLocation !== location.pathname);
 
   const handleBack = () => {
-    // 1. Check if the referrer is within our app
-    if (lastLocation && lastLocation.includes("/users/")) {
-      navigate(lastLocation);
-    }
-    // 2. If no internal referrer (direct link/refresh), go to logical parent
-    else {
-      if (location.pathname.includes("/sesh/")) {
-        navigate("/users/all-seshes");
-      } else {
-        navigate("/users/dashboard");
-      }
-    }
-
-    // Optional: Clear the date if heading back to dashboard
-    if (location.pathname === "/users/all-seshes") {
-      setSelectedDate(null);
+    if (window.history.state && window.history.state.idx > 0) {
+      navigate(-1);
+    } else {
+      // Fallback if they refreshed the page
+      navigate("/users/dashboard");
     }
   };
 

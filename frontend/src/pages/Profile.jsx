@@ -17,11 +17,10 @@ import { setUserInfo } from "../slices/userSlice";
 export default function ProfilePage() {
   const dispatch = useDispatch();
   const { state } = useLocation(); // sent from signup via navigate()
-  const stateUserInfo = state?.userInfo;
+  const initialUserInfo = state?.userInfo;
+  const { data, isLoading, isError, error } = useGetProfileQuery();
 
-  // Fetch current user profile
-  const { data: hookUserInfo, isLoading, isError } = useGetProfileQuery();
-  const userInfo = hookUserInfo || stateUserInfo;
+  const userInfo = data ?? initialUserInfo;
 
   // Update mutation
   const [updateProfile, { isLoading: isUpdating }] = useUpdateProfileMutation();
@@ -31,7 +30,7 @@ export default function ProfilePage() {
     register,
     handleSubmit,
     reset,
-    watch,
+    watch, // not used but will respond to onChange
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -84,6 +83,14 @@ export default function ProfilePage() {
     return (
       <div className="flex items-center justify-center py-12 text-destructive">
         Failed to load profile
+      </div>
+    );
+  }
+
+  if (!userInfo) {
+    return (
+      <div className="flex items-center justify-center py-12 text-muted-foreground">
+        Profile unavailable
       </div>
     );
   }

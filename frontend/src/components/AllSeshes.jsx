@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import { SeshCard } from "@/components/SeshCard";
@@ -7,7 +6,6 @@ import { useOutletContext } from "react-router-dom";
 import { format } from "date-fns";
 import {
   useGetSeshesQuery,
-  useAddSeshMutation,
   useDeleteSeshMutation,
 } from "../slices/seshApiSlice";
 
@@ -29,21 +27,7 @@ export default function AllSeshes() {
     { skip: shouldSkip }
   );
 
-  const [addSesh, { isLoading: addSeshLoading }] = useAddSeshMutation();
   const [deleteSesh] = useDeleteSeshMutation();
-
-  const handleAddSesh = async () => {
-    try {
-      const newSesh = await addSesh({
-        title: "New Sesh",
-        date: new Date().toISOString(),
-        exercises: [],
-      }).unwrap();
-      toast.success(`Sesh "${newSesh.title}" created!`);
-    } catch (err) {
-      toast.error(err?.data?.message || "Failed to create sesh");
-    }
-  };
 
   const handleDelete = async (id) => {
     try {
@@ -93,20 +77,6 @@ export default function AllSeshes() {
           ))}
         </section>
       )}
-
-      {/* Floating Add button */}
-      <Button
-        onClick={handleAddSesh}
-        className="
-          fixed bottom-4 right-4 z-50
-          rounded-2xl bg-black/90 px-8 py-6
-          font-black text-white
-          shadow-md transition-all
-          hover:shadow-lg active:scale-[0.98]
-        "
-      >
-        {addSeshLoading ? "Adding…" : "+ New Sesh"}
-      </Button>
     </div>
   );
 }
