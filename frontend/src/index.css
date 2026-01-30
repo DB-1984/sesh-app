@@ -32,28 +32,23 @@
 }
 
 /* Light mode mesh */
+
 .app-bg {
-  background:
-    radial-gradient(
-      900px circle at 10% 10%,
-      hsl(200 90% 85%),
-      transparent 60%
-    ),
-    radial-gradient(
-      800px circle at 85% 15%,
-      hsl(190 70% 88%),
-      transparent 55%
-    ),
-    radial-gradient(
-      1000px circle at 50% 80%,
-      hsl(210 20% 92%),
-      transparent 65%
-    ),
-    linear-gradient(
-      180deg,
-      hsl(0 0% 98%),
-      hsl(0 0% 96%)
-    );
+  background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+  background-size: 400% 400%;
+  animation: gradient 15s ease infinite;
+}
+
+@keyframes gradient {
+  0% {
+      background-position: 0% 50%;
+  }
+  50% {
+      background-position: 100% 50%;
+  }
+  100% {
+      background-position: 0% 50%;
+  }
 }
 
 
