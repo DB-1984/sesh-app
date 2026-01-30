@@ -14,13 +14,13 @@ export default function LoginRegisterPage({ mode = "login" }) {
       <div className="flex flex-col gap-4 p-6 app-bg md:p-10">
         <div className="flex justify-center gap-2 md:justify-start">
           <a href="/" className="flex items-center gap-2 font-medium">
-            <span className="logo-text mx-auto text-4xl font-bold text-foreground">
+            <span className="mx-auto text-4xl font-bold logo-text text-foreground">
               Sesh
             </span>
           </a>
         </div>
         <div className="flex flex-1 items-center justify-center">
-          <div className="w-full max-w-sm bg-background p-8 shadow-lg rounded-lg">
+          <div className="w-full max-w-xs bg-background p-8 shadow-lg rounded-lg">
             <FormComponent />
           </div>
         </div>

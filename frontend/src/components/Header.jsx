@@ -128,7 +128,7 @@ export default function Header() {
       : "U";
 
   return (
-    <div className="min-h-[100dvh] px-6 app-bg bg-background">
+    <div className="min-h-[100dvh] px-6 bg-background">
       <header
         ref={headerRef}
         className="fixed top-0 left-0 w-full z-50 bg-white/70 dark:bg-gray-900/70 backdrop-blur-sm shadow-sm border-b"

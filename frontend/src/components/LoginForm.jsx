@@ -53,9 +53,9 @@ export function LoginForm() {
               <span className="logo-text flex h-10 w-10 items-center justify-center rounded-full bg-zinc-900 text-white text-2xl font-bold">
                 S
               </span>
-              <h1 className="text-2xl font-semibold tracking-tight">Log in</h1>
+              <h1 className="text-2xl logo-text tracking-tight">Log in</h1>
             </div>
-            <p className="mt-1 text-sm text-muted-foreground logo-text">
+            <p className="mt-1 text-muted-foreground text-sm">
               Track your training. Build consistency. One sesh at a time.
             </p>
           </div>

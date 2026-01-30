@@ -18,6 +18,7 @@ import AllSeshes from "./components/AllSeshes.jsx";
 import ViewSesh from "./components/ViewSesh.jsx";
 import EditExercise from "./components/EditExercise.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
+import Profile from "./pages/Profile.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -32,6 +33,7 @@ const router = createBrowserRouter(
         {/* Header acts as the Layout for the entire /users prefix */}
         <Route path="/users" element={<Header />}>
           <Route path="dashboard" element={<Dashboard />} />
+          <Route path="profile" element={<Profile />} />
           <Route path="all-seshes" element={<AllSeshes />} />
           <Route path="sesh/:id" element={<ViewSesh />} />
           <Route

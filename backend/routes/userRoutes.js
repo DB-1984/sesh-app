@@ -5,12 +5,16 @@ import {
   login,
   register,
   updateUserProfile,
+  getUserProfile,
 } from "../controllers/userController.js";
 
 const router = express.Router();
 
 router.route("/login").post(login);
 router.route("/register").post(register);
-router.route("/profile").put(protect, updateUserProfile);
+router
+  .route("/profile")
+  .put(protect, updateUserProfile)
+  .get(protect, getUserProfile);
 
 export default router;

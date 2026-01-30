@@ -2,16 +2,10 @@ import jwt from "jsonwebtoken";
 import User from "../models/userModel.js";
 
 const protect = async (req, res, next) => {
-  console.log("Cookies received:", req.cookies);
-
   let token;
 
   try {
     token = req.cookies.jwt;
-
-    if (token) {
-      console.log("Token found in cookies");
-    }
 
     if (!token) {
       return res.status(401).json({ message: "Not authorized, no token" });

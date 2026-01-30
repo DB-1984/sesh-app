@@ -1,53 +1,57 @@
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 
-const userSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-  },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  password: {
-    type: String,
-    required: true,
-  },
-  weight: {
-    type: Number, // Storing as a number makes math (like BMI/Wilks) easier
-    default: 0,
-  },
-  height: {
-    type: Number,
-    default: 0,
-  },
-  goal: {
-    type: String,
-    enum: ["Strength", "Hypertrophy", "Endurance", "General"], // Restricts input to these choices
-    default: "General",
-  },
-  bio: {
-    type: String,
-    maxLength: 250,
-  },
-  unitPreference: {
+const userSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+    },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    password: {
+      type: String,
+      required: true,
+    },
     weight: {
-      type: Number,
-      default: 0, // kg
+      type: Number, // Storing as a number makes math (like BMI/Wilks) easier
+      default: 0,
     },
     height: {
       type: Number,
-      default: 0, // cm
+      default: 0,
+    },
+    goal: {
+      type: String,
+      enum: ["Strength", "Hypertrophy", "Endurance", "General"], // Restricts input to these choices
+      default: "General",
+    },
+    bio: {
+      type: String,
+      maxLength: 250,
+    },
+    unitPreference: {
+      weight: {
+        type: Number,
+        default: 0, // kg
+      },
+      height: {
+        type: Number,
+        default: 0, // cm
+      },
     },
   },
-  timestamps: true,
-  toJSON: { virtuals: true }, // Ensure virtuals show up in API responses
-  toObject: { virtuals: true },
-});
+  {
+    timestamps: true,
+    toJSON: { virtuals: true }, // Ensure virtuals show up in API responses
+    toObject: { virtuals: true },
+  }
+);
 
-// Virtual field in Mongoose
+// Virtual field in Mongoose - calcualted at runtime, like you might have for a static method
 userSchema.virtual("bmi").get(function () {
   if (!this.weight || !this.height) return 0;
 

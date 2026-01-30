@@ -74,7 +74,7 @@ export default function AllSeshes() {
   return (
     <div className="relative px-6 py-8">
       <h1 className="text-3xl logo-text pb-8 font-black tracking-tight">
-        Latest Seshes
+        Seshes
       </h1>
       {seshes.length === 0 ? (
         <p className="mt-4 text-center text-muted-foreground">

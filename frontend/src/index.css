@@ -31,29 +31,50 @@
   border-radius: 0 !important;
 }
 
+/* Light mode mesh */
 .app-bg {
-  background: radial-gradient(
-      1200px circle at 30% 10%,
-      hsl(0deg 0% 100%),
-      transparent 60%
+  background-color: hsl(0 0% 100%); /* base white */
+  background-image: radial-gradient(
+      800px circle at 20% 20%,
+      rgba(255, 255, 255, 0.8),
+      transparent 70%
     ),
     radial-gradient(
-      1000px circle at 90% 20%,
-      hsl(0deg 0% 100%),
-      transparent 60%
+      1000px circle at 80% 30%,
+      rgba(200, 200, 200, 0.5),
+      transparent 70%
     ),
-    radial-gradient(1100px circle at 50% 90%, hsl(210 10% 85%), transparent 60%);
+    radial-gradient(
+      1200px circle at 50% 90%,
+      rgba(0, 0, 0, 0.1),
+      transparent 70%
+    );
+  background-size: cover;
+  background-position: 0 0, 0 0, 0 0;
+  background-repeat: no-repeat;
 }
 
+/* Dark mode mesh */
 .dark .app-bg {
-  background: radial-gradient(
-      1300px circle at 15% 15%,
-      hsl(210 25% 18%),
-      transparent 65%
+  background-color: hsl(210 10% 10%); /* base dark */
+  background-image: radial-gradient(
+      800px circle at 20% 20%,
+      rgba(255, 255, 255, 0.8),
+      transparent 70%
     ),
-    radial-gradient(1100px circle at 85% 20%, hsl(200 40% 16%), transparent 65%),
-    radial-gradient(1200px circle at 50% 90%, hsl(210 10% 14%), transparent 65%),
-    linear-gradient(hsl(210 10% 10%), hsl(210 15% 8%));
+    radial-gradient(
+      1000px circle at 80% 30%,
+      rgb(242 242 242 / 50%),
+      transparent 70%
+    ),
+    radial-gradient(
+      1200px circle at 50% 90%,
+      rgba(0, 0, 0, 0.1),
+      transparent 70%
+    );
+  background-size: cover;
+  background-position: 0 0, 0 0, 0 0;
+  background-repeat: no-repeat;
 }
 
 .border-right {

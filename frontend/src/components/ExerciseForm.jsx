@@ -29,15 +29,8 @@ export function ExerciseForm({
     }
   }, [defaultValues, form]);
 
-  // Called when form is submitted
-  const handleSubmit = async (values) => {
-    await onSubmit(values); // pass values to parent
-    // If adding a exercise, reset back to blank defaults
-    // In edit mode, parent can navigate away instead
-  };
-
   return (
-    <form onSubmit={form.handleSubmit(handleSubmit)}>
+    <form onSubmit={form.handleSubmit(onSubmit)}>
       <Card className="w-full max-w-3xl border-none bg-none rounded shadow-none mx-auto">
         <CardHeader>
           <CardTitle>

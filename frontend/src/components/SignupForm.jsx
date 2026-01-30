@@ -5,7 +5,10 @@ import { Input } from "@/components/ui/input";
 import { toast } from "react-toastify";
 import { UserRoundPlus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useRegisterMutation } from "@/slices/userApiSlice.js";
+import {
+  useRegisterMutation,
+  useLoginMutation,
+} from "@/slices/userApiSlice.js";
 import { setUserInfo } from "../slices/userSlice";
 
 //in the signup form, we gather data with the useForm hook, which is
@@ -17,6 +20,7 @@ export function SignupForm() {
   const navigate = useNavigate();
 
   const [registerUser, { isLoading }] = useRegisterMutation();
+  const [login, { isLoadingLogin }] = useLoginMutation();
 
   const {
     register, // useForm registration of inputs, not RTK
@@ -36,9 +40,18 @@ export function SignupForm() {
         email: data.email,
         password: data.password,
       }).unwrap();
-      dispatch(setUserInfo(res));
-      toast.success("Account created!");
-      navigate("/users/login");
+
+      // Immediately log in
+      const loginRes = await login({
+        email: data.email,
+        password: data.password,
+      }).unwrap();
+
+      dispatch(setUserInfo(loginRes)); // Redux state
+
+      toast.success("Account created! Please update your profile.");
+      // pass State object through navigate() to /profile page has it
+      navigate("/users/profile", { state: { userInfo: loginRes } });
     } catch (err) {
       toast.error(err?.data?.message || "Registration failed");
     }
@@ -47,12 +60,19 @@ export function SignupForm() {
   return (
     <section className="flex items-center justify-center">
       <div className="w-full max-w-md rounded-xl bg-card p-6">
-        <div className="flex items-center gap-3 pb-4">
-          <span className="logo-text flex h-10 w-10 items-center justify-center rounded-full bg-zinc-900 text-white text-2xl font-bold">
-            S
-          </span>
-          <h1 className="text-2xl font-semibold tracking-tight">Sign Up</h1>
+        <div className="flex flex-col gap-2 pb-4">
+          <div className="flex items-center gap-3">
+            <span className="logo-text flex h-10 w-10 items-center justify-center rounded-full bg-zinc-900 text-white text-2xl font-bold">
+              S
+            </span>
+            <h1 className="text-2xl logo-text tracking-tight">Sign Up</h1>
+          </div>
+
+          <p className="text-sm mt-1 text-muted-foreground">
+            Create your account to start tracking your training.
+          </p>
         </div>
+
         <form
           onSubmit={handleSubmit(submitHandler)}
           className="flex flex-col gap-5"
@@ -63,7 +83,7 @@ export function SignupForm() {
               htmlFor="name"
               className="text-xs font-semibold text-muted-foreground"
             >
-              Name
+              Full Name
             </label>
             <Input
               id="name"

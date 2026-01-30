@@ -59,6 +59,31 @@ const register = async (req, res, next) => {
   }
 };
 
+const getUserProfile = async (req, res) => {
+  try {
+    // req.user._id comes from your 'protect' middleware
+    const user = await User.findById(req.user._id);
+
+    if (user) {
+      res.status(200).json({
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        weight: user.weight,
+        height: user.height,
+        bmi: user.bmi,
+        goal: user.goal,
+        bio: user.bio || "",
+      });
+    } else {
+      res.status(404).json({ message: "User not found" });
+    }
+  } catch (err) {
+    console.error("Get Profile Error:", err);
+    res.status(500).json({ message: "Server error fetching profile" });
+  }
+};
+
 // userController.js
 const updateUserProfile = async (req, res) => {
   try {
@@ -101,4 +126,4 @@ const updateUserProfile = async (req, res) => {
   }
 };
 
-export { register, login, updateUserProfile };
+export { register, login, updateUserProfile, getUserProfile };
