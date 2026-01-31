@@ -57,7 +57,7 @@ export default function AllSeshes() {
 
   return (
     <div className="relative px-6 py-8">
-      <h1 className="text-3xl logo-text pb-8 font-black tracking-tight">
+      <h1 className="text-2xl logo-text rounded bg-muted/50 mb-8 p-3 font-black tracking-tight uppercase">
         Seshes
       </h1>
       {seshes.length === 0 ? (
@@ -66,11 +66,13 @@ export default function AllSeshes() {
         </p>
       ) : (
         <section
-          aria-label="Training sessions"
           className="
-            grid gap-6
-            grid-cols-[repeat(auto-fit,minmax(280px,1fr))]
-          "
+          grid gap-6
+          /* Change auto-fit to auto-fill to prevent stretching */
+          grid-cols-[repeat(auto-fill,minmax(280px,1fr))]
+          /* Or just cap the width of the whole section */
+          max-w-5xl
+        "
         >
           {seshes.map((sesh) => (
             <SeshCard key={sesh._id} sesh={sesh} onDelete={handleDelete} />

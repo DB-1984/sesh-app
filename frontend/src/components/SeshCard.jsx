@@ -9,13 +9,15 @@ export function SeshCard({ sesh, onDelete }) {
   return (
     <Card
       className="
-    flex flex-col justify-around
-    h-full p-4
-    bg-white/60 dark:bg-gray-800/80  /* Use standard colors with opacity */
-    backdrop-blur-md                /* This makes the translucency look premium */
-    rounded-2xl shadow-md 
-    transition-shadow duration-200
-  "
+        flex flex-col justify-around
+        h-full p-4
+        bg-white/60 dark:bg-gray-800/80
+        backdrop-blur-md                
+        rounded-2xl shadow-md 
+        transition-shadow duration-200
+        /* ADD THESE TWO LINES */
+        max-w-sm w-full mx-auto
+      "
     >
       {/* Card Header */}
       <CardHeader className="pb-0 gap-2">

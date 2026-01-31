@@ -96,100 +96,105 @@ export default function ProfilePage() {
   }
 
   return (
-    <main className="max-w-3xl mx-auto px-6 pt-24 pb-10">
-      <Card className="rounded-xl border shadow-sm">
-        <CardHeader>
-          <CardTitle className="logo-text text-3xl">Update Profile</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <form
-            className="flex flex-col gap-4"
-            onSubmit={handleSubmit(onSubmit)}
-          >
-            {/* Name */}
-            <div>
-              <Label htmlFor="name">Name</Label>
-              <Input
-                id="name"
-                placeholder="Your Name"
-                {...register("name", { required: "Name is required" })}
-              />
-              {errors.name && (
-                <p className="text-xs text-destructive">
-                  {errors.name.message}
-                </p>
-              )}
-            </div>
-
-            {/* Email (disabled) */}
-            <div>
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                {...register("email", { required: "Email is required" })}
-                disabled
-              />
-            </div>
-
-            {/* Password */}
-            <div>
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                placeholder="Enter new password"
-                {...register("password")}
-              />
-            </div>
-
-            {/* Weight & Height */}
-            <div className="grid grid-cols-2 gap-4">
+    <div className="relative px-6 py-8">
+      <h1 className="text-2xl logo-text rounded bg-muted/50 mb-8 p-3 font-black tracking-tight">
+        Profile
+      </h1>
+      <main className="max-w-3xl mx-auto px-6 pt- pb-10">
+        <Card className="rounded-xl border shadow-sm">
+          <CardHeader>
+            <CardTitle className="logo-text text-3xl">Update Profile</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <form
+              className="flex flex-col gap-4"
+              onSubmit={handleSubmit(onSubmit)}
+            >
+              {/* Name */}
               <div>
-                <Label htmlFor="weight">Weight (kg)</Label>
+                <Label htmlFor="name">Name</Label>
                 <Input
-                  id="weight"
-                  type="number"
-                  {...register("weight", { valueAsNumber: true })}
+                  id="name"
+                  placeholder="Your Name"
+                  {...register("name", { required: "Name is required" })}
+                />
+                {errors.name && (
+                  <p className="text-xs text-destructive">
+                    {errors.name.message}
+                  </p>
+                )}
+              </div>
+
+              {/* Email (disabled) */}
+              <div>
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  {...register("email", { required: "Email is required" })}
+                  disabled
                 />
               </div>
+
+              {/* Password */}
               <div>
-                <Label htmlFor="height">Height (cm)</Label>
+                <Label htmlFor="password">Password</Label>
                 <Input
-                  id="height"
-                  type="number"
-                  {...register("height", { valueAsNumber: true })}
+                  id="password"
+                  type="password"
+                  placeholder="Enter new password"
+                  {...register("password")}
                 />
               </div>
-            </div>
 
-            {/* Goal */}
-            <div>
-              <Label htmlFor="goal">Goal</Label>
-              <select id="goal" {...register("goal")}>
-                <option value="Strength">Strength</option>
-                <option value="Hypertrophy">Hypertrophy</option>
-                <option value="Endurance">Endurance</option>
-                <option value="General">General</option>
-              </select>
-            </div>
+              {/* Weight & Height */}
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="weight">Weight (kg)</Label>
+                  <Input
+                    id="weight"
+                    type="number"
+                    {...register("weight", { valueAsNumber: true })}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="height">Height (cm)</Label>
+                  <Input
+                    id="height"
+                    type="number"
+                    {...register("height", { valueAsNumber: true })}
+                  />
+                </div>
+              </div>
 
-            {/* Bio */}
-            <div>
-              <Label htmlFor="bio">Bio</Label>
-              <textarea
-                id="bio"
-                placeholder="A short bio about you"
-                {...register("bio")}
-                className="w-full border rounded px-2 py-1 mt-1"
-              />
-            </div>
+              {/* Goal */}
+              <div>
+                <Label htmlFor="goal">Goal</Label>
+                <select id="goal" {...register("goal")}>
+                  <option value="Strength">Strength</option>
+                  <option value="Hypertrophy">Hypertrophy</option>
+                  <option value="Endurance">Endurance</option>
+                  <option value="General">General</option>
+                </select>
+              </div>
 
-            <Button type="submit" disabled={isUpdating} className="mt-4">
-              {isUpdating ? "Updating…" : "Update Profile"}
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
-    </main>
+              {/* Bio */}
+              <div>
+                <Label htmlFor="bio">Bio</Label>
+                <textarea
+                  id="bio"
+                  placeholder="A short bio about you"
+                  {...register("bio")}
+                  className="w-full border rounded px-2 py-1 mt-1"
+                />
+              </div>
+
+              <Button type="submit" disabled={isUpdating} className="mt-4">
+                {isUpdating ? "Updating…" : "Update Profile"}
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
+      </main>
+    </div>
   );
 }
