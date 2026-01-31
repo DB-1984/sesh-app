@@ -3,7 +3,6 @@ import { Outlet, useLocation, useNavigate, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { format } from "date-fns";
 import { ArrowLeft, CalendarIcon } from "lucide-react";
-import { useGetProfileQuery } from "../slices/userApiSlice";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Switch } from "@/components/ui/switch";
@@ -21,14 +20,17 @@ import { setMode, resetMode } from "../slices/modeSlice";
 import { logoutUser } from "../slices/userSlice";
 
 export default function Header() {
-  // Define user from store js as
+  // Define user from store js
   const { userInfo } = useSelector((state) => state.user);
+
   // Check current mode
   const { mode } = useSelector((state) => state.mode);
+
   // Utils..
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
+
   // Ensure these are defined so Outlet context isn't undefined
   const [selectedDate, setSelectedDate] = useState(null);
   const [headerHeight, setHeaderHeight] = useState(0);
@@ -38,12 +40,6 @@ export default function Header() {
   const isAllSeshes = location.pathname === "/users/all-seshes";
   const showCalendar = isDashboard || isAllSeshes;
 
-  // 1. Get the "Fresh" data from the DB
-  const { data: profile, isLoading } = useGetProfileQuery();
-
-  // 2. Fallback to the Redux "Login" state if the profile is still loading
-  // 'profile' takes precedence in the OR operation
-  const currentUser = profile || userInfo; // <<< from store.js imported above
   // Used to track current path value
   const prevPathRef = useRef(null);
 
@@ -65,14 +61,20 @@ export default function Header() {
     (lastLocation && lastLocation !== location.pathname);
 
   const handleBack = () => {
+    // If we are on the filtered page, clear the filter as we go back
+    if (location.pathname === "/users/all-seshes") {
+      setSelectedDate(null);
+      navigate("/users/dashboard");
+      return; // Exit early
+    }
+
+    // Standard back logic for everything else
     if (window.history.state && window.history.state.idx > 0) {
       navigate(-1);
     } else {
-      // Fallback if they refreshed the page
       navigate("/users/dashboard");
     }
   };
-
   // Theme Sync - for tailwind's CSS to fire
   useEffect(() => {
     const root = document.documentElement;
@@ -240,7 +242,6 @@ export default function Header() {
             selectedDate,
             setSelectedDate,
             isDashboard,
-            userInfo: currentUser,
           }}
         />
       </main>

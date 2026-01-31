@@ -1,12 +1,13 @@
 import { useOutletContext, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
 import { Button } from "@/components/ui/button";
 import { useAddSeshMutation } from "../slices/seshApiSlice";
 
 const Dashboard = () => {
   const [addSesh, { isLoading: addSeshLoading }] = useAddSeshMutation();
 
-  const { userInfo } = useOutletContext();
+  const { userInfo } = useSelector((state) => state.user);
   const navigate = useNavigate();
 
   const handleAddSesh = async () => {
