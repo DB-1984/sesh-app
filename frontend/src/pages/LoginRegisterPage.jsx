@@ -12,20 +12,31 @@ export default function LoginRegisterPage({ mode = "login" }) {
   return (
     <div className="grid min-h-svh lg:grid-cols-2">
       <div className="flex flex-col gap-4 p-6 app-bg md:p-10">
-        <div className="flex justify-center gap-2 md:justify-start">
-          <a href="/" className="flex items-center gap-2 font-medium">
-            <span className="mx-auto text-4xl font-bold logo-text text-foreground">
+        {/* Desktop logo (lg and up only) */}
+        <div className="hidden lg:flex justify-center md:justify-start">
+          <a href="/" className="flex items-center font-medium">
+            <span className="text-4xl font-bold logo-text text-foreground">
               Sesh
             </span>
           </a>
         </div>
+
         <div className="flex flex-1 items-center justify-center">
-          <div className="w-full max-w-xs bg-background p-8 shadow-lg rounded-lg">
-            <FormComponent />
+          <div className="flex flex-col items-center gap-3">
+            {/* Mobile logo (below lg only) */}
+            <span className="block lg:hidden text-3xl font-bold logo-text animate-bounce">
+              Sesh
+            </span>
+
+            <div className="w-full max-w-xs bg-background p-8 shadow-lg rounded-lg">
+              <FormComponent />
+            </div>
           </div>
         </div>
       </div>
-      <div className="bg-zinc-900 relative hidden lg:flex items-center justify-center p-8">
+
+      {/* Right panel (desktop only) */}
+      <div className="relative hidden lg:flex items-center justify-center bg-zinc-900 p-8">
         <span className="logo-text-large text-4xl font-bold animate-bounce text-foreground">
           Sesh
         </span>
