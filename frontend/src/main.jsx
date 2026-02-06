@@ -18,6 +18,7 @@ import AllSeshes from "./components/AllSeshes.jsx";
 import ViewSesh from "./components/ViewSesh.jsx";
 import EditExercise from "./components/EditExercise.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
+import DashboardStats from "./components/DashboardStats.jsx";
 import Profile from "./pages/Profile.jsx";
 
 const router = createBrowserRouter(
@@ -32,7 +33,12 @@ const router = createBrowserRouter(
       <Route element={<PrivateRoute />}>
         {/* Header acts as the Layout for the entire /users prefix */}
         <Route path="/users" element={<Header />}>
-          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="dashboard" element={<Dashboard />}>
+            {/* The 'index' is the default left panel (Stats) */}
+            <Route index element={<DashboardStats />} />
+            {/* This will render the Profile in that same spot */}
+            <Route path="profile" element={<Profile />} />
+          </Route>
           <Route path="profile" element={<Profile />} />
           <Route path="all-seshes" element={<AllSeshes />} />
           <Route path="sesh/:id" element={<ViewSesh />} />

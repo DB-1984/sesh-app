@@ -1,12 +1,22 @@
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
+import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import {
+  Loader2,
+  User,
+  Mail,
+  Lock,
+  Scale,
+  Ruler,
+  Target,
+  ChevronLeft,
+  Settings2,
+} from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Loader2 } from "lucide-react";
 import {
   useGetProfileQuery,
   useUpdateProfileMutation,
@@ -36,12 +46,8 @@ export default function ProfilePage() {
     },
   });
 
-  // Populate form by merging Auth (userInfo) and Database (profileData)
   useEffect(() => {
-    // If we have profileData, it's the most accurate.
-    // Otherwise, fallback to userInfo (Auth state).
     const source = profileData || userInfo;
-
     if (source) {
       reset({
         name: source.name || "",
@@ -53,144 +59,160 @@ export default function ProfilePage() {
         targets: source.targets || "",
       });
     }
-  }, [profileData, userInfo, reset]); // Watch BOTH here
+  }, [profileData, userInfo, reset]);
 
   const onSubmit = async (data) => {
     try {
       const updated = await updateProfile(data).unwrap();
       dispatch(setUserInfo(updated));
       toast.success("Profile updated!");
-      reset({ ...data, password: "" }); // clear password after update
+      reset({ ...data, password: "" });
     } catch (err) {
       toast.error(err?.data?.message || "Failed to update profile");
     }
   };
 
-  if (isLoading) {
+  if (isLoading)
     return (
-      <div className="flex items-center justify-center py-12 text-muted-foreground">
-        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-        <span>Loading profile</span>
+      <div className="flex flex-col items-center justify-center py-20 text-zinc-500">
+        <Loader2 className="h-8 w-8 animate-spin mb-4" />
+        <span className="font-black uppercase tracking-widest text-xs">
+          Syncing Profile
+        </span>
       </div>
     );
-  }
-
-  if (isError) {
-    return (
-      <div className="flex items-center justify-center py-12 text-destructive">
-        Failed to load profile
-      </div>
-    );
-  }
-
-  if (!userInfo) {
-    return (
-      <div className="flex items-center justify-center py-12 text-muted-foreground">
-        Profile unavailable
-      </div>
-    );
-  }
 
   return (
-    <div className="relative px-6 py-8">
-      <h1 className="text-2xl logo-text rounded bg-muted/50 mb-8 p-3 font-black tracking-tight">
-        Profile
-      </h1>
-      <main className="max-w-3xl mx-auto px-6 pt- pb-10">
-        <Card className="rounded-xl border shadow-sm">
-          <CardHeader>
-            <CardTitle className="logo-text text-3xl">Update Profile</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <form
-              className="flex flex-col gap-4"
-              onSubmit={handleSubmit(onSubmit)}
+    <>
+      {/* Header Area */}
+      <div className="flex items-center justify-between mb-12">
+        <div className="flex items-center gap-3">
+          <Settings2 className="h-6 w-6" />
+          <h2 className="text-4xl font-black tracking-tight">Profile</h2>
+        </div>
+      </div>
+
+      <form onSubmit={handleSubmit(onSubmit)} className="flex-1 space-y-10">
+        {/* Account Section */}
+        <section className="space-y-6">
+          <p className="text-2xl font-black tracking-tighter border-b border-zinc-100 dark:border-zinc-900 pb-2">
+            Account
+          </p>
+
+          <div className="space-y-4">
+            <div className="grid gap-2">
+              <Label className="text-sm tracking-tighter font-bold text-zinc-800 flex items-center gap-1">
+                <User className="h-3 w-3" /> Full Name
+              </Label>
+              <Input
+                {...register("name", { required: "Name is required" })}
+                className="bg-zinc-50 dark:bg-zinc-900 border-none font-bold text-lg h-12 focus-visible:ring-black dark:focus-visible:ring-white"
+              />
+            </div>
+
+            <div className="grid gap-2">
+              <Label className="text-sm tracking-tighter font-bold text-zinc-800 flex items-center gap-1">
+                <Mail className="h-3 w-3" /> Email Address
+              </Label>
+              <Input
+                disabled
+                {...register("email")}
+                className="bg-zinc-100/50 dark:bg-zinc-900/50 border-none font-bold text-lg h-12 opacity-60"
+              />
+            </div>
+
+            <div className="grid gap-2">
+              <Label className="text-sm tracking-tighter font-bold text-zinc-800 flex items-center gap-1">
+                <Lock className="h-3 w-3" /> Password
+              </Label>
+              <Input
+                type="password"
+                placeholder="••••••••"
+                {...register("password")}
+                className="bg-zinc-50 dark:bg-zinc-900 border-none font-bold text-lg h-12 focus-visible:ring-black"
+              />
+            </div>
+          </div>
+        </section>
+
+        {/* Biometrics Section */}
+        <section className="space-y-6">
+          <p className="text-2xl font-black tracking-tighter border-b border-zinc-100 dark:border-zinc-900 pb-2">
+            Biometrics
+          </p>
+
+          <div className="grid grid-cols-2 gap-6">
+            <div className="grid gap-2">
+              <Label className="text-[10px] font-black text-zinc-500 uppercase flex items-center gap-1">
+                <Scale className="h-3 w-3" /> Weight (kg)
+              </Label>
+              <Input
+                type="number"
+                {...register("weight", {
+                  setValueAs: (v) => (v === "" ? undefined : parseFloat(v)),
+                })}
+                className="bg-zinc-50 dark:bg-zinc-900 border-none font-bold text-lg h-12"
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label className="text-[10px] font-black text-zinc-500 uppercase flex items-center gap-1">
+                <Ruler className="h-3 w-3" /> Height (cm)
+              </Label>
+              <Input
+                type="number"
+                {...register("height", {
+                  setValueAs: (v) => (v === "" ? undefined : parseFloat(v)),
+                })}
+                className="bg-zinc-50 dark:bg-zinc-900 border-none font-bold text-lg h-12"
+              />
+            </div>
+          </div>
+        </section>
+
+        {/* Goal Section */}
+        <section className="space-y-6">
+          <p className="text-2xl font-black tracking-tighter border-b border-zinc-100 dark:border-zinc-900 pb-2">
+            Objective
+          </p>
+
+          <div className="grid gap-2">
+            <Label className="text-[10px] font-black text-zinc-500 uppercase flex items-center gap-1">
+              <Target className="h-3 w-3" /> Current Goal
+            </Label>
+            <select
+              {...register("goal")}
+              className="flex h-12 w-full rounded-md bg-zinc-50 dark:bg-zinc-900 px-3 py-1 font-bold text-lg ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black dark:focus-visible:ring-white disabled:cursor-not-allowed disabled:opacity-50 appearance-none"
             >
-              {/* Name */}
-              <div>
-                <Label htmlFor="name">Name</Label>
-                <Input
-                  id="name"
-                  placeholder="Your Name"
-                  {...register("name", { required: "Name is required" })}
-                />
-                {errors.name && (
-                  <p className="text-xs text-destructive">
-                    {errors.name.message}
-                  </p>
-                )}
-              </div>
+              <option value="Strength">Strength</option>
+              <option value="Hypertrophy">Hypertrophy</option>
+              <option value="Endurance">Endurance</option>
+              <option value="General">General</option>
+            </select>
+          </div>
 
-              {/* Email (disabled) */}
-              <div>
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  {...register("email", { required: "Email is required" })}
-                  disabled
-                />
-              </div>
+          <div className="grid gap-2">
+            <Label className="text-[10px] font-black text-zinc-500 uppercase flex items-center gap-1">
+              <Target className="h-3 w-3" /> Specific Targets
+            </Label>
+            <textarea
+              {...register("targets")}
+              placeholder="e.g. 100kg Bench, 5km under 20 mins..."
+              className="flex min-h-[100px] w-full rounded-md bg-zinc-50 dark:bg-zinc-900 px-3 py-3 font-medium text-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black dark:focus-visible:ring-white border-none"
+            />
+          </div>
+        </section>
 
-              {/* Password */}
-              <div>
-                <Label htmlFor="password">Password</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="Enter new password"
-                  {...register("password")}
-                />
-              </div>
-
-              {/* Weight & Height */}
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="weight">Weight (kg)</Label>
-                  <Input
-                    id="weight"
-                    type="number"
-                    {...register("weight", { valueAsNumber: true })}
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="height">Height (cm)</Label>
-                  <Input
-                    id="height"
-                    type="number"
-                    {...register("height", { valueAsNumber: true })}
-                  />
-                </div>
-              </div>
-
-              {/* Goal */}
-              <div>
-                <Label htmlFor="goal">Goal</Label>
-                <select id="goal" {...register("goal")}>
-                  <option value="Strength">Strength</option>
-                  <option value="Hypertrophy">Hypertrophy</option>
-                  <option value="Endurance">Endurance</option>
-                  <option value="General">General</option>
-                </select>
-              </div>
-
-              {/* Targets */}
-              <div>
-                <Label htmlFor="targets">Targets</Label>
-                <textarea
-                  id="targets"
-                  placeholder="List your fitness targets"
-                  {...register("targets")}
-                  className="w-full border rounded px-2 py-1 mt-1"
-                />
-              </div>
-
-              <Button type="submit" disabled={isUpdating} className="mt-4">
-                {isUpdating ? "Updating…" : "Update Profile"}
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
-      </main>
-    </div>
+        {/* Submit Area */}
+        <div className="pt-8">
+          <Button
+            type="submit"
+            disabled={isUpdating}
+            className="w-full py-8 rounded-2xl bg-black dark:bg-white text-white dark:text-black font-black text-xl shadow-xl hover:scale-[1.01] transition-all disabled:opacity-50"
+          >
+            {isUpdating ? <Loader2 className="animate-spin" /> : "SAVE CHANGES"}
+          </Button>
+        </div>
+      </form>
+    </>
   );
 }

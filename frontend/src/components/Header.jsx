@@ -87,7 +87,7 @@ export default function Header() {
   useEffect(() => {
     if (headerRef.current) {
       const updateHeight = () =>
-        setHeaderHeight(headerRef.current.offsetHeight + 10);
+        setHeaderHeight(headerRef.current.offsetHeight);
       updateHeight();
       const ro = new ResizeObserver(updateHeight);
       ro.observe(headerRef.current);
@@ -119,10 +119,10 @@ export default function Header() {
       : "U";
 
   return (
-    <div className="min-h-[100dvh] px-6 bg-background">
+    <div className="min-h-[100dvh] bg-background">
       <header
         ref={headerRef}
-        className="fixed top-0 left-0 w-full z-50 bg-white/70 dark:bg-gray-900/70 backdrop-blur-sm shadow-sm border-b"
+        className="fixed top-0 p-3 left-0 w-full z-50 bg-white/70 dark:bg-gray-900/70 backdrop-blur-sm shadow-sm border-b"
       >
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
@@ -137,7 +137,7 @@ export default function Header() {
                 <Avatar className="h-8 w-8">
                   <AvatarFallback>{getInitials(userInfo?.name)}</AvatarFallback>
                 </Avatar>
-                <span className="text-sm font-medium hidden lg:block">
+                <span className="text-sm font-bold hidden lg:block">
                   {userInfo?.name}
                 </span>
               </div>
@@ -154,9 +154,7 @@ export default function Header() {
             {/* Right: Controls */}
             <div className="flex items-center justify-between md:justify-end gap-3 w-full md:w-auto">
               <div className="flex items-center gap-2 bg-gray-100/50 dark:bg-gray-800/50 px-2 py-1 rounded-md">
-                <Label className="text-[10px] uppercase font-bold text-muted-foreground">
-                  Theme
-                </Label>
+                <Label className="text-sm font-normal">Theme</Label>
                 <Switch
                   checked={mode === "dark"}
                   onCheckedChange={(checked) =>
@@ -172,7 +170,7 @@ export default function Header() {
                     size="sm"
                     variant="outline"
                     onClick={handleBack}
-                    className="h-8 text-xs gap-1"
+                    className="h-8 text-sm gap-1"
                   >
                     <ArrowLeft className="h-3 w-3" /> Back
                   </Button>
@@ -185,7 +183,7 @@ export default function Header() {
                         <Button
                           variant="outline"
                           size="sm"
-                          className="h-8 text-xs gap-1"
+                          className="h-8 text-sm gap-1"
                         >
                           <span className="hidden sm:inline">
                             {selectedDate
@@ -213,7 +211,7 @@ export default function Header() {
                         variant="ghost"
                         size="sm"
                         onClick={() => setSelectedDate(null)}
-                        className="h-8 px-2 text-xs text-destructive"
+                        className="h-8 px-2 text-sm text-destructive"
                       >
                         Clear
                       </Button>
@@ -225,7 +223,7 @@ export default function Header() {
                   size="sm"
                   variant="destructive"
                   onClick={handleLogout}
-                  className="hidden md:flex h-8 text-xs"
+                  className="hidden md:flex h-8 text-sm"
                 >
                   Log out
                 </Button>
@@ -235,7 +233,7 @@ export default function Header() {
         </div>
       </header>
 
-      <main style={{ paddingTop: `${headerHeight}px` }} className="pb-10">
+      <main style={{ paddingTop: `${headerHeight}px` }}>
         {/* Supply datepicker context to nested Router Routes after /user */}
         <Outlet
           context={{
