@@ -1,64 +1,54 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { format } from "date-fns";
+import { Trash2, ChevronRight, Clock, Dumbbell } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Calendar, Dumbbell, Eye, Trash2 } from "lucide-react";
 
-export function SeshCard({ sesh, onDelete }) {
-  const exerciseCount = sesh.exercises?.length || 0;
-
+export const SeshCard = ({ sesh, onDelete }) => {
   return (
-    <Card
-      className="
-        flex flex-col justify-around
-        h-full p-4
-        bg-white/60 dark:bg-gray-800/80
-        backdrop-blur-md                
-        rounded-2xl shadow-md 
-        transition-shadow duration-200
-        /* ADD THESE TWO LINES */
-        max-w-sm w-full mx-auto
-      "
-    >
-      {/* Card Header */}
-      <CardHeader className="pb-0 gap-2">
-        <CardTitle className="text-2xl pt-4 font-black tracking-tight">
-          {sesh.title}
-        </CardTitle>
-        <p className="text-md tracking-tight font-medium">
-          {new Date(sesh.date).toLocaleDateString()}
-        </p>
-        <span className="flex items-center text-sm text-zinc-800 gap-2">
-          {exerciseCount > 0 ? (
-            <>
-              {exerciseCount} {exerciseCount === 1 ? "Exercise" : "Exercises"}
-            </>
-          ) : (
-            "No exercises yet..."
-          )}
-        </span>
-      </CardHeader>
-
-      {/* Card Body */}
-      {/* Card Body */}
-      <CardContent className="flex flex-col flex-1 pb-6">
-        {/* Action Buttons - These will now stay at the bottom */}
-        <div className="flex flex-col gap-3 mt-auto">
-          <Link to={`sesh/${sesh._id}`} className="w-full">
-            <Button className="w-full bg-zinc-200 text-black border hover:bg-white-700 h-12">
-              <Eye className="mr-2 h-4 w-4" />
-              View / Edit
-            </Button>
-          </Link>
-          <Button
-            variant="destructive"
-            className="w-full h-12"
-            onClick={() => onDelete(sesh._id)}
-          >
-            <Trash2 className="mr-2 h-4 w-4" />
-            Delete
-          </Button>
+    <div className="group relative flex items-center justify-between p-5 bg-white dark:bg-zinc-900 border-2 border-zinc-200 dark:border-zinc-800 rounded-2xl hover:border-black dark:hover:border-white transition-all shadow-sm">
+      <Link
+        to={`/users/sesh/${sesh._id}`}
+        className="flex-1 flex items-center gap-4"
+      >
+        {/* Date Icon */}
+        <div className="flex flex-col items-center justify-center h-12 w-12 rounded-xl bg-zinc-100 dark:bg-zinc-800 group-hover:bg-black group-hover:text-white dark:group-hover:bg-white dark:group-hover:text-black transition-colors">
+          <span className="text-[10px] font-black uppercase leading-none">
+            {format(new Date(sesh.date), "MMM")}
+          </span>
+          <span className="text-xl font-black leading-none">
+            {format(new Date(sesh.date), "dd")}
+          </span>
         </div>
-      </CardContent>
-    </Card>
+
+        {/* Info */}
+        <div className="flex flex-col">
+          <h3 className="font-black text-lg leading-tight uppercase tracking-tight text-black dark:text-white">
+            {sesh.title || "Untitled Sesh"}
+          </h3>
+          <div className="flex items-center gap-3 mt-1">
+            <span className="flex items-center gap-1 text-xs font-bold text-zinc-500">
+              <Dumbbell className="h-3 w-3" /> {sesh.exercises?.length || 0}{" "}
+              Exercises
+            </span>
+            <span className="flex items-center gap-1 text-xs font-bold text-zinc-500">
+              <Clock className="h-3 w-3" /> {format(new Date(sesh.date), "p")}
+            </span>
+          </div>
+        </div>
+      </Link>
+
+      {/* Actions */}
+      <div className="flex items-center gap-2">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => onDelete(sesh._id)}
+          className="text-zinc-300 hover:text-destructive hover:bg-destructive/10 transition-colors"
+        >
+          <Trash2 className="h-4 w-4" />
+        </Button>
+        <ChevronRight className="h-5 w-5 text-zinc-300 group-hover:text-black dark:group-hover:text-white transition-transform group-hover:translate-x-1" />
+      </div>
+    </div>
   );
-}
+};

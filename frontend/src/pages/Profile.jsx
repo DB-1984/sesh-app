@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
-import { useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -16,21 +15,14 @@ import { setUserInfo } from "../slices/userSlice";
 
 export default function ProfilePage() {
   const dispatch = useDispatch();
-  const { state } = useLocation(); // sent from signup via navigate()
-  const initialUserInfo = state?.userInfo;
-  const { data, isLoading, isError, error } = useGetProfileQuery();
-
-  const userInfo = data ?? initialUserInfo;
-
-  // Update mutation
+  const { userInfo } = useSelector((state) => state.user);
+  const { data: profileData, isLoading, isError } = useGetProfileQuery();
   const [updateProfile, { isLoading: isUpdating }] = useUpdateProfileMutation();
 
-  // React Hook Form
   const {
     register,
     handleSubmit,
     reset,
-    watch, // not used but will respond to onChange
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -40,24 +32,28 @@ export default function ProfilePage() {
       weight: "",
       height: "",
       goal: "General",
-      bio: "",
+      targets: "",
     },
   });
 
-  // Populate form when userInfo arrives
+  // Populate form by merging Auth (userInfo) and Database (profileData)
   useEffect(() => {
-    if (userInfo) {
+    // If we have profileData, it's the most accurate.
+    // Otherwise, fallback to userInfo (Auth state).
+    const source = profileData || userInfo;
+
+    if (source) {
       reset({
-        name: userInfo.name || "",
-        email: userInfo.email || "",
+        name: source.name || "",
+        email: source.email || "",
         password: "",
-        weight: userInfo.weight || "",
-        height: userInfo.height || "",
-        goal: userInfo.goal || "General",
-        bio: userInfo.bio || "",
+        weight: source.weight || "",
+        height: source.height || "",
+        goal: source.goal || "General",
+        targets: source.targets || "",
       });
     }
-  }, [userInfo, reset]);
+  }, [profileData, userInfo, reset]); // Watch BOTH here
 
   const onSubmit = async (data) => {
     try {
@@ -177,13 +173,13 @@ export default function ProfilePage() {
                 </select>
               </div>
 
-              {/* Bio */}
+              {/* Targets */}
               <div>
-                <Label htmlFor="bio">Bio</Label>
+                <Label htmlFor="targets">Targets</Label>
                 <textarea
-                  id="bio"
-                  placeholder="A short bio about you"
-                  {...register("bio")}
+                  id="targets"
+                  placeholder="List your fitness targets"
+                  {...register("targets")}
                   className="w-full border rounded px-2 py-1 mt-1"
                 />
               </div>

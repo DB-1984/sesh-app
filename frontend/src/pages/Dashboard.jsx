@@ -7,34 +7,49 @@ import {
   Scale,
   Activity,
   CalendarIcon,
-  History,
   ArrowRight,
   KeyRound,
+  Dumbbell,
+  Loader2,
+  History,
 } from "lucide-react";
 
-// UI Components
-import { StatCard } from "../components/StatCard";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
+import { Label } from "@/components/ui/label";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { SeshCard } from "@/components/SeshCard";
 
-// API Slices
-import { useAddSeshMutation } from "../slices/seshApiSlice";
+import {
+  useAddSeshMutation,
+  useGetSeshesQuery,
+  useDeleteSeshMutation,
+} from "../slices/seshApiSlice";
 import { useGetProfileQuery } from "../slices/userApiSlice";
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const { userInfo } = useSelector((state) => state.user);
-
-  // Pulling the stable UI state from the Header/Outlet context
   const { selectedDate, setSelectedDate } = useOutletContext();
 
   const { data: profile, isLoading: profileLoading } = useGetProfileQuery();
+
+  const dateString = selectedDate
+    ? format(selectedDate, "yyyy-MM-dd")
+    : undefined;
+  const { data: allSeshes = [], isLoading: seshesLoading } = useGetSeshesQuery(
+    { userId: userInfo?._id, date: dateString },
+    { skip: !userInfo?._id }
+  );
+
+  const latestSeshes = allSeshes.slice(0, 5);
+
   const [addSesh, { isLoading: addSeshLoading }] = useAddSeshMutation();
+  const [deleteSesh] = useDeleteSeshMutation();
 
   const handleAddSesh = async () => {
     try {
@@ -43,146 +58,165 @@ const Dashboard = () => {
         date: new Date().toISOString(),
         exercises: [],
       }).unwrap();
-      toast.success(`Sesh "${newSesh.title}" created!`);
+      toast.success(`Sesh created!`);
       navigate(`/users/sesh/${newSesh._id}`);
     } catch (err) {
-      toast.error(err?.data?.message || "Failed to create sesh");
+      toast.error("Failed to create sesh");
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      await deleteSesh(id).unwrap();
+      toast.success("Sesh deleted!");
+    } catch (err) {
+      toast.error("Failed to delete Sesh");
     }
   };
 
   return (
-    <div className="relative px-4 py-8">
-      {/* Grid Layout */}
-      <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 items-start">
-        {/* 1. Overview Card */}
-        <StatCard
-          title="Dashboard"
-          subtitle={userInfo?.email}
-          icon={User}
-          footer={
-            <Button
-              asChild
-              variant="ghost"
-              className="w-full justify-between font-semibold p-0 h-auto hover:bg-transparent text-black dark:text-white"
-            >
-              <Link
-                to="/users/profile"
-                className="flex items-center justify-between group text-black dark:text-white"
-              >
-                {" "}
-                <span className="font-semibold hover:underline tracking-tight">
-                  Update Health Data{" "}
-                </span>
-                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-              </Link>
-            </Button>
-          }
-        >
-          <div className="font-black mb-4 text-lg dark:text-white">
-            {userInfo?.name || "User"}
-          </div>
-          <p className="text-sm pb-4 text-normal text-black dark:text-white">
-            View your health data, or click 'Update Health Data' to update your
-            profile.
-          </p>
-          <div className="grid grid-cols-2 gap-4 border-t border-zinc-200 dark:border-zinc-700 pt-4">
-            <div>
-              <p className="flex items-center gap-1 text-[10px] font-bold text-black dark:text-white">
-                <Scale className="h-3 w-3" /> Weight
-              </p>
-              <p className="text-xl font-black text-black dark:text-white">
-                {profileLoading ? "..." : `${profile?.weight || "--"} kg`}
-              </p>
-            </div>
-            <div>
-              <p className="flex items-center gap-1 text-[10px] font-bold text-black dark:text-white">
-                <Scale className="h-3 w-3" /> Goal
-              </p>
-              <p className="text-xl font-black text-black dark:text-white">
-                {userInfo?.goal && (
-                  <p className="text-[11px] font-bold text-black">
-                    <p className="text-xl font-black text-black dark:text-white">
-                      {userInfo.goal}
-                    </p>
-                  </p>
-                )}{" "}
-              </p>
-            </div>
-            <div>
-              <p className="flex items-center gap-1 text-[10px] font-bold text-black dark:text-white">
-                <Activity className="h-3 w-3" /> BMI
-              </p>
-              <p className="text-xl font-black text-black dark:text-white">
-                {profileLoading ? "..." : profile?.bmi || "--"}
-              </p>
-            </div>
-          </div>
-        </StatCard>
+    <div className="grid min-h-[calc(100vh-64px)] lg:grid-cols-2 overflow-hidden">
+      {/* LEFT PANEL: The Identity Side (Static) */}
+      <div className="flex flex-col p-8 md:p-12 bg-white dark:bg-zinc-950 border-r border-zinc-200 dark:border-zinc-800 overflow-y-auto">
+        <div className="mb-12">
+          <h1 className="text-4xl font-black tracking-tighter mb-1">
+            Dashboard
+          </h1>
+        </div>
 
-        {/* 2. Calendar Filter Card */}
-        <StatCard
-          title="Quick Filter"
-          icon={CalendarIcon}
-          footer={<div className="h-2" />}
-        >
-          <p className="text-lg font-black mb-4 text-black dark:text-white">
-            Search completion date
-          </p>
-          <p className="text-sm pb-4 text-black dark:text-white">
-            Select from the calendar to see any/all seshes recorded for that
-            date.
-          </p>
+        <div className="flex-1 space-y-10">
+          <section>
+            <p className="text-2xl font-black tracking-tighter mb-1">
+              Current Objective
+            </p>
+            <p className="text-md font-normal tracking-tighter">
+              {profileLoading ? "..." : profile?.goal || "General"}
+            </p>
+          </section>
+
+          <section className="space-y-4">
+            {/* 1. Header stays at the top */}
+            <p className="text-2xl font-black tracking-tighter">Stats</p>
+
+            {/* 2. Flex/Grid container for the stats */}
+            <div className="grid grid-cols-2 gap-6">
+              {/* Body Weight */}
+              <div>
+                <p className="text-[10px] font-black uppercase text-zinc-400 flex items-center gap-1 mb-1">
+                  <Scale className="h-3 w-3" /> Body Weight
+                </p>
+                <p className="text-3xl font-black">
+                  {profileLoading ? "..." : `${profile?.weight || "--"}kg`}
+                </p>
+              </div>
+
+              {/* BMI Index */}
+              <div>
+                <p className="text-[10px] font-black uppercase text-zinc-400 flex items-center gap-1 mb-1">
+                  <Activity className="h-3 w-3" /> BMI Index
+                </p>
+                <p className="text-3xl font-black">
+                  {profileLoading ? "..." : profile?.bmi || "--"}
+                </p>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <p className="text-[10px] font-black uppercase text-zinc-400 mb-2">
+              Bio
+            </p>
+            <p className="text-zinc-600 dark:text-zinc-400 font-medium leading-relaxed italic">
+              "{profile?.bio || "No bio set. Update your profile to add one."}"
+            </p>
+          </section>
+        </div>
+
+        <div className="pt-8 mt-8 border-t border-zinc-100 dark:border-zinc-900 flex flex-col gap-4">
+          <Button
+            asChild
+            variant="link"
+            className="justify-start p-0 h-auto text-black dark:text-white font-black text-lg"
+          >
+            <Link to="/users/profile" className="flex items-center gap-2 group">
+              Update Health Data{" "}
+              <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
+            </Link>
+          </Button>
+        </div>
+      </div>
+
+      {/* RIGHT PANEL: The Activity Side (Capped at 5) */}
+      <div className="flex flex-col p-8 md:p-12 app-bg overflow-y-auto">
+        <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center gap-3">
+            <History className="h-6 w-6" />
+            <h2 className="text-2xl font-black tracking-tight uppercase">
+              Recent Activity
+            </h2>
+          </div>
+
           <Popover>
             <PopoverTrigger asChild>
               <Button
                 variant="outline"
-                className="w-full justify-start text-left font-black text-xs border-zinc-300 dark:border-zinc-600"
+                className="rounded-xl border-2 font-black bg-white/50 backdrop-blur-sm"
               >
                 <CalendarIcon className="mr-2 h-4 w-4" />
-                {selectedDate ? format(selectedDate, "PPP") : "Pick a date"}
+                {selectedDate ? format(selectedDate, "MMM dd") : "Filter"}
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-auto p-0" align="start">
+            <PopoverContent
+              className="w-auto p-0 rounded-2xl border-2"
+              align="end"
+            >
               <Calendar
                 mode="single"
                 selected={selectedDate}
                 onSelect={setSelectedDate}
-                initialFocus
               />
             </PopoverContent>
           </Popover>
-        </StatCard>
-
-        {/* 3. Navigation Links Column */}
-        <div className="grid gap-6">
-          <StatCard title="Security" icon={KeyRound}>
-            <Link
-              to="/users/password"
-              className="flex items-center justify-between group text-black dark:text-white"
-            >
-              <span className="font-semibold hover:underline tracking-tight">
-                Reset Password
-              </span>
-              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-            </Link>
-          </StatCard>
         </div>
-      </div>
 
-      {/* Floating Add button */}
-      <Button
-        onClick={handleAddSesh}
-        disabled={addSeshLoading}
-        className="
-          fixed bottom-6 right-6 z-50
-          rounded-2xl bg-black/80 dark:bg-white px-5 py-6
-          font-black text-white dark:text-black text-lg
-          shadow-xl transition-all
-          hover:shadow-2xl active:scale-95
-        "
-      >
-        {addSeshLoading ? "Adding…" : "+Sesh"}
-      </Button>
+        <div className="flex-1 space-y-4">
+          {seshesLoading ? (
+            <div className="flex justify-center py-20">
+              <Loader2 className="animate-spin" />
+            </div>
+          ) : latestSeshes.length === 0 ? (
+            <div className="text-center py-20 border-2 border-dashed border-zinc-300 dark:border-zinc-700 rounded-3xl">
+              <p className="font-bold text-zinc-500">No sessions found.</p>
+            </div>
+          ) : (
+            <>
+              {latestSeshes.map((sesh) => (
+                <SeshCard key={sesh._id} sesh={sesh} onDelete={handleDelete} />
+              ))}
+
+              {allSeshes.length > 5 && (
+                <Button
+                  asChild
+                  variant="ghost"
+                  className="w-full py-6 font-black text-zinc-500 hover:text-black dark:hover:text-white"
+                >
+                  <Link to="/users/all-seshes">
+                    VIEW ALL {allSeshes.length} SESSIONS
+                  </Link>
+                </Button>
+              )}
+            </>
+          )}
+        </div>
+
+        <Button
+          onClick={handleAddSesh}
+          disabled={addSeshLoading}
+          className="mt-8 w-full py-8 rounded-2xl bg-black dark:bg-white text-white dark:text-black font-black text-xl shadow-xl hover:scale-[1.01] transition-all"
+        >
+          {addSeshLoading ? "..." : "START NEW SESH"}
+        </Button>
+      </div>
     </div>
   );
 };

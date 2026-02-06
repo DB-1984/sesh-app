@@ -14,7 +14,8 @@ const userSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: true,
+      required: [true, "Password is required"],
+      minlength: [8, "Password must be at least 8 characters long"],
     },
     weight: {
       type: Number, // Storing as a number makes math (like BMI/Wilks) easier
@@ -29,7 +30,7 @@ const userSchema = new mongoose.Schema(
       enum: ["Strength", "Hypertrophy", "Endurance", "General"], // Restricts input to these choices
       default: "General",
     },
-    bio: {
+    targets: {
       type: String,
       maxLength: 250,
     },

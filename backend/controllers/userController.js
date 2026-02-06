@@ -38,6 +38,11 @@ const register = async (req, res, next) => {
       return res.status(400).json({ message: "User already exists" });
     }
 
+    if (req.body.password && req.body.password.length < 8) {
+      res.status(400);
+      throw new Error("Password must be at least 8 characters");
+    }
+
     const user = await User.create({
       name,
       email,
@@ -61,7 +66,6 @@ const register = async (req, res, next) => {
 
 const getUserProfile = async (req, res) => {
   try {
-    // req.user._id comes from your 'protect' middleware
     const user = await User.findById(req.user._id);
 
     if (user) {
@@ -73,7 +77,7 @@ const getUserProfile = async (req, res) => {
         height: user.height,
         bmi: user.bmi,
         goal: user.goal,
-        bio: user.bio || "",
+        targets: user.targets || "",
       });
     } else {
       res.status(404).json({ message: "User not found" });
@@ -96,9 +100,10 @@ const updateUserProfile = async (req, res) => {
       user.email = req.body.email || user.email;
 
       // 3. Update fitness stats
-      if (req.body.weight) user.weight = req.body.weight;
-      if (req.body.height) user.height = req.body.height;
-      if (req.body.goal) user.goal = req.body.goal;
+      if (req.body.weight !== undefined) user.weight = req.body.weight;
+      if (req.body.height !== undefined) user.height = req.body.height;
+      if (req.body.goal !== undefined) user.goal = req.body.goal;
+      if (req.body.targets !== undefined) user.targets = req.body.targets;
 
       // 4. Save the changes (this also triggers the 'bmi' virtual calculation)
       const updatedUser = await user.save();
@@ -110,6 +115,7 @@ const updateUserProfile = async (req, res) => {
         email: updatedUser.email,
         weight: updatedUser.weight,
         height: updatedUser.height,
+        targets: updatedUser.targets,
         bmi: updatedUser.bmi, // The virtual we added to the model
         goal: updatedUser.goal,
       });
