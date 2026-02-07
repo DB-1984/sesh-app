@@ -22,7 +22,7 @@ export const SeshCard = ({ sesh, onDelete }) => {
 
         {/* Info */}
         <div className="flex flex-col">
-          <h3 className="font-black text-lg leading-tight uppercase tracking-tight text-black dark:text-white">
+          <h3 className="font-black text-lg leading-tight tracking-tightest text-black dark:text-white">
             {sesh.title || "Untitled Sesh"}
           </h3>
           <div className="flex items-center gap-3 mt-1">

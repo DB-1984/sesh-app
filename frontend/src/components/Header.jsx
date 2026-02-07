@@ -14,11 +14,6 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-// Dark/Light mode reducers
-import { setMode, resetMode } from "../slices/modeSlice";
-// Logout reducer for clearing session
-import { logoutUser } from "../slices/userSlice";
-
 export default function Header() {
   // Define user from store js
   const { userInfo } = useSelector((state) => state.user);
@@ -102,12 +97,6 @@ export default function Header() {
     }
   }, [selectedDate, isDashboard, navigate]);
 
-  const handleLogout = () => {
-    dispatch(logoutUser()); // clean session
-    dispatch(resetMode()); // set back to Light
-    dispatch(apiSlice.util.resetApiState()); // clear RTK cache
-    navigate("/");
-  };
   // For Avatar
   const getInitials = (name = "") =>
     name
@@ -141,14 +130,6 @@ export default function Header() {
                   {userInfo?.name}
                 </span>
               </div>
-              <Button
-                size="sm"
-                variant="destructive"
-                onClick={handleLogout}
-                className="md:hidden h-8 text-xs"
-              >
-                Log out
-              </Button>
             </div>
 
             {/* Right: Controls */}
@@ -182,18 +163,18 @@ export default function Header() {
                       <PopoverTrigger asChild>
                         <Button
                           variant="outline"
-                          size="sm"
+                          size="lg"
                           className="h-8 text-sm gap-1"
                         >
                           <span className="hidden sm:inline">
                             {selectedDate
                               ? format(selectedDate, "MMM d")
-                              : "Filter Date"}
+                              : "Filter By Date"}
                           </span>
                           <span className="sm:hidden">
                             {selectedDate
                               ? format(selectedDate, "MM/dd")
-                              : "Filter"}
+                              : "Filter By Date"}
                           </span>
                           <CalendarIcon className="h-3 w-3" />
                         </Button>
@@ -218,15 +199,6 @@ export default function Header() {
                     )}
                   </div>
                 )}
-
-                <Button
-                  size="sm"
-                  variant="destructive"
-                  onClick={handleLogout}
-                  className="hidden md:flex h-8 text-sm"
-                >
-                  Log out
-                </Button>
               </div>
             </div>
           </div>

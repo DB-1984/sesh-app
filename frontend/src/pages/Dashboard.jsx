@@ -47,7 +47,7 @@ const Dashboard = () => {
     { skip: !userInfo?._id }
   );
 
-  const latestSeshes = allSeshes.slice(0, 3);
+  const latestSeshes = allSeshes.slice(0, 5);
 
   const [addSesh, { isLoading: addSeshLoading }] = useAddSeshMutation();
   const [deleteSesh] = useDeleteSeshMutation();
@@ -80,7 +80,7 @@ const Dashboard = () => {
     <div className="grid min-h-[calc(100vh-64px)] items-center lg:grid-cols-2 overflow-hidden">
       {" "}
       {/* LEFT PANEL: The Dynamic Side (Slimmer) */}
-      <div className="flex flex-col h-[calc(100vh-64px)] p-8 md:p-12 bg-white dark:bg-zinc-950 border-r border-zinc-200 dark:border-zinc-800 overflow-y-auto scroll-smooth">
+      <div className="flex flex-col h-[calc(100vh-64px)] p-4 md:p-12 bg-white dark:bg-zinc-950 border-r border-zinc-200 dark:border-zinc-800 overflow-y-auto scroll-smooth">
         <div className="w-full max-w-sm mx-auto">
           <Outlet context={{ profile, profileLoading }} />
         </div>
@@ -95,7 +95,7 @@ const Dashboard = () => {
         </div>
 
         {/* This inner div handles the scroll so the button can stay fixed */}
-        <div className="flex-1 space-y-4 overflow-y-auto pb-24 pr-2">
+        <div className="flex-1 space-y-4 overflow-y-auto pb-12 pr-2">
           {seshesLoading ? (
             <div className="flex justify-center py-20">
               <Loader2 className="animate-spin" />
@@ -130,9 +130,9 @@ const Dashboard = () => {
           <Button
             onClick={handleAddSesh}
             disabled={addSeshLoading}
-            className="py-8 rounded-2xl bg-black dark:bg-white text-white dark:text-black font-black text-xl shadow-xl hover:scale-[1.01] transition-all"
+            className="py-8 rounded-2xl bg-black dark:bg-white logo-text text-white dark:text-black font-black text-lg shadow-xl hover:scale-[1.01] transition-all"
           >
-            {addSeshLoading ? "..." : "+ ADD SESH"}
+            {addSeshLoading ? "..." : "+ Sesh"}
           </Button>
         </div>
       </div>
