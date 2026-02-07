@@ -5,6 +5,10 @@ import userRoutes from "./routes/userRoutes.js";
 import seshRoutes from "./routes/seshRoutes.js";
 import connectDB from "./utils/conn.js";
 import path from "path";
+import cors from "cors";
+import passport from "passport";
+import { configurePassport } from "./config/passport.js";
+import authGoogleRoutes from "./routes/authGoogle.js";
 
 dotenv.config();
 
@@ -19,7 +23,18 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL,
+    credentials: true,
+  })
+);
+
+configurePassport();
+app.use(passport.initialize());
+
 // API Routes
+app.use("/auth", authGoogleRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/seshes", seshRoutes);
 

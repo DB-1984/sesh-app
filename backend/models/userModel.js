@@ -3,53 +3,52 @@ import bcrypt from "bcryptjs";
 
 const userSchema = new mongoose.Schema(
   {
-    name: {
-      type: String,
-      required: true,
-    },
+    name: { type: String, required: true },
+
     email: {
       type: String,
       required: true,
       unique: true,
+      lowercase: true,
+      trim: true,
     },
+
+    provider: {
+      type: String,
+      enum: ["local", "google"],
+      default: "local",
+      required: true,
+    },
+
+    googleId: {
+      type: String,
+      index: true,
+      sparse: true, // allows many docs with no googleId, but indexes those that have it
+    },
+
     password: {
       type: String,
-      required: [true, "Password is required"],
+      required: function () {
+        return this.provider === "local";
+      },
       minlength: [8, "Password must be at least 8 characters long"],
+      select: false, // good practice so it doesn't leak in queries
     },
-    weight: {
-      type: Number, // Storing as a number makes math (like BMI/Wilks) easier
-      default: 0,
-    },
-    height: {
-      type: Number,
-      default: 0,
-    },
+
+    weight: { type: Number, default: 0 },
+    height: { type: Number, default: 0 },
     goal: {
       type: String,
-      enum: ["Strength", "Hypertrophy", "Endurance", "General"], // Restricts input to these choices
+      enum: ["Strength", "Hypertrophy", "Endurance", "General"],
       default: "General",
     },
-    targets: {
-      type: String,
-      maxLength: 250,
-    },
+    targets: { type: String, maxLength: 250 },
     unitPreference: {
-      weight: {
-        type: Number,
-        default: 0, // kg
-      },
-      height: {
-        type: Number,
-        default: 0, // cm
-      },
+      weight: { type: Number, default: 0 },
+      height: { type: Number, default: 0 },
     },
   },
-  {
-    timestamps: true,
-    toJSON: { virtuals: true }, // Ensure virtuals show up in API responses
-    toObject: { virtuals: true },
-  }
+  { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
 
 // Virtual field in Mongoose - calcualted at runtime, like you might have for a static method
