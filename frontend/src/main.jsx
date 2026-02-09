@@ -20,10 +20,12 @@ import EditExercise from "./components/EditExercise.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import DashboardStats from "./components/DashboardStats.jsx";
 import Profile from "./pages/Profile.jsx";
+import OAuthSuccess from "./pages/OAuthSuccess.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route element={<App />}>
+      <Route path="/oauth-success" element={<OAuthSuccess />} />
       <Route path="/users/login" element={<LoginRegisterPage mode="login" />} />
       <Route
         path="/users/register"

@@ -22,38 +22,44 @@ export function SignupForm() {
   const [registerUser, { isLoading }] = useRegisterMutation();
   const [login, { isLoadingLogin }] = useLoginMutation();
 
+  const handleGoogleLogin = () => {
+    // If we have a VITE_BACKEND_URL (Production), use it.
+    // Otherwise, use the local backend port (Development).
+    const backendUrl =
+      import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
+    window.location.href = `${backendUrl}/auth/google`;
+  };
+
   const {
     register, // useForm registration of inputs, not RTK
     handleSubmit,
     formState: { errors },
   } = useForm();
-
   const submitHandler = async (data) => {
     if (data.password !== data.confirmPassword) {
-      toast.error("Passwords do not match");
-      return;
+      return toast.error("Passwords do not match");
     }
 
     try {
+      // We unwrap so that the 'catch' block actually triggers on 400/500 errors
       const res = await registerUser({
         name: data.name,
         email: data.email,
         password: data.password,
       }).unwrap();
 
-      // Immediately log in
-      const loginRes = await login({
-        email: data.email,
-        password: data.password,
-      }).unwrap();
-
-      dispatch(setUserInfo(loginRes)); // Redux state
-
-      toast.success("Account created! Please update your profile.");
-      // pass State object through navigate() to /profile page has it
-      navigate("/users/profile", { state: { userInfo: loginRes } });
+      dispatch(setUserInfo(res));
+      toast.success("Welcome to Sesh!");
+      navigate("/users/dashboard");
     } catch (err) {
-      toast.error(err?.data?.message || "Registration failed");
+      // This logs the WHOLE error object so you can see where 'message' lives
+      console.error("Full Error Object:", err);
+
+      // Most common path for RTK Query + Express Error Middleware
+      const msg =
+        err?.data?.message || err?.data || "An unexpected error occurred";
+
+      toast.error(msg);
     }
   };
 
@@ -126,10 +132,16 @@ export function SignupForm() {
               id="password"
               type="password"
               placeholder="Password"
-              {...register("password", { required: "Password is required" })}
+              {...register("password", {
+                required: "Password is required",
+                minLength: {
+                  value: 8,
+                  message: "Password must be at least 8 characters",
+                },
+              })}
             />
             {errors.password && (
-              <p className="text-xs text-destructive">
+              <p className="text-xs text-destructive mt-1">
                 {errors.password.message}
               </p>
             )}
@@ -183,6 +195,13 @@ export function SignupForm() {
             </a>
           </p>
         </form>
+        <button
+          type="button"
+          onClick={handleGoogleLogin}
+          className="google-login-btn"
+        >
+          Sign in with Google
+        </button>
       </div>
     </section>
   );

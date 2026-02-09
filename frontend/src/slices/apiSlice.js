@@ -6,10 +6,10 @@ import { BASE_URL } from "../constants";
 // - `reducerPath` is just a namespace in Redux state ("api")
 export const apiSlice = createApi({
   reducerPath: "api",
-  baseQuery: fetchBaseQuery({ 
+  baseQuery: fetchBaseQuery({
     baseUrl: BASE_URL,
-    credentials: "include",   // 🔑 send cookies automatically
+    credentials: "include", // send cookies automatically
   }),
   tagTypes: ["Sesh", "User"],
-  endpoints: () => ({}), 
+  endpoints: () => ({}),
 });

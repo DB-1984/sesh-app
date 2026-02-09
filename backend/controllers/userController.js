@@ -7,8 +7,7 @@ const login = async (req, res) => {
     const { email, password } = req.body;
 
     // Look for a user with matching email
-    const user = await User.findOne({ email });
-
+    const user = await User.findOne({ email }).select("+password");
     // Verify password using model method
     if (user && (await user.matchPassword(password))) {
       generateToken(res, user._id); // writes JWT cookie/header
@@ -64,29 +63,37 @@ const register = async (req, res, next) => {
   }
 };
 
-const getUserProfile = async (req, res) => {
-  try {
-    const user = await User.findById(req.user._id);
-
-    if (user) {
-      res.status(200).json({
-        _id: user._id,
-        name: user.name,
-        email: user.email,
-        weight: user.weight,
-        height: user.height,
-        bmi: user.bmi,
-        goal: user.goal,
-        targets: user.targets || "",
-      });
-    } else {
-      res.status(404).json({ message: "User not found" });
-    }
-  } catch (err) {
-    console.error("Get Profile Error:", err);
-    res.status(500).json({ message: "Server error fetching profile" });
-  }
+const logoutUser = (req, res) => {
+  res.cookie("jwt", "", {
+    httpOnly: true,
+    expires: new Date(0), // Sets expiration to 1970 (instant deletion)
+  });
+  res.status(200).json({ message: "Logged out successfully" });
 };
+
+const getUserProfile = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id);
+
+  if (user) {
+    const wasNew = user.isNewUser;
+
+    // If they were new, flip it to false in the background
+    if (wasNew) {
+      user.isNewUser = false;
+      await user.save();
+    }
+
+    res.json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      isNewUser: wasNew, // Send the "Old" value so the frontend knows to toast
+    });
+  } else {
+    res.status(404);
+    throw new Error("User not found");
+  }
+});
 
 // userController.js
 const updateUserProfile = async (req, res) => {
@@ -132,4 +139,4 @@ const updateUserProfile = async (req, res) => {
   }
 };
 
-export { register, login, updateUserProfile, getUserProfile };
+export { register, login, updateUserProfile, getUserProfile, logoutUser };

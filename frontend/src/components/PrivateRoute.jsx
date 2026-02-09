@@ -1,18 +1,24 @@
 import { Navigate, Outlet } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector } from "react-redux"; // Import this
+import { useGetProfileQuery } from "../slices/userApiSlice";
 
 export default function PrivateRoute() {
-  const { userInfo } = useSelector((state) => state.user);
+  // 1. Check if we *think* we are logged in locally (from Redux)
+  const { userInfo: localUser } = useSelector((state) => state.user);
 
-  // RAW CHECK: Does the cookie/storage exist at all?
-  const hasStorage = localStorage.getItem("userInfo");
+  // 2. Only hit the server if we have a local user record
+  // This prevents the "401 Unauthorized" noise on the console after logout
+  const { data: serverUser, isLoading } = useGetProfileQuery(undefined, {
+    skip: !localUser,
+  });
 
-  // If Redux is empty AND the browser storage is empty, THEN they are logged out.
-  if (!userInfo && !hasStorage) {
-    return <Navigate to="/users/login" replace />;
-  }
+  if (isLoading) return <div>Loading...</div>;
 
-  // Otherwise, let them through.
-  // Redux will catch up and fill 'userInfo' in the next millisecond.
-  return <Outlet />;
+  // 3. If we have a local user AND the server confirmed it, show the page
+  // Otherwise, kick them back to login
+  return localUser && serverUser ? (
+    <Outlet />
+  ) : (
+    <Navigate to="/users/login" replace />
+  );
 }

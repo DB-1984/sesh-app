@@ -6,11 +6,13 @@ import {
   register,
   updateUserProfile,
   getUserProfile,
+  logoutUser,
 } from "../controllers/userController.js";
 
 const router = express.Router();
 
 router.route("/login").post(login);
+router.route("/logout").post(logoutUser);
 router.route("/register").post(register);
 router
   .route("/profile")

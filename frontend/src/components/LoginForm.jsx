@@ -20,6 +20,13 @@ export function LoginForm() {
   } = useForm();
   const [login, { isLoading }] = useLoginMutation();
 
+  const handleGoogleLogin = () => {
+    // Use the environment to decide the base URL
+    const backendBaseUrl =
+      import.meta.env.MODE === "development" ? "http://localhost:5000" : ""; // Empty string means use the current origin (Production)
+
+    window.location.href = `${backendBaseUrl}/auth/google`;
+  };
   const submitHandler = async (data) => {
     try {
       const user = await login(data).unwrap();
@@ -133,6 +140,9 @@ export function LoginForm() {
             </a>
           </p>
         </form>
+        <button onClick={handleGoogleLogin} className="google-login-btn">
+          Sign in with Google
+        </button>
       </div>
     </section>
   );

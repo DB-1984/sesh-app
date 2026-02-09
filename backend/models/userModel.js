@@ -35,6 +35,11 @@ const userSchema = new mongoose.Schema(
       select: false, // good practice so it doesn't leak in queries
     },
 
+    isNewUser: {
+      type: Boolean,
+      default: true,
+    },
+
     weight: { type: Number, default: 0 },
     height: { type: Number, default: 0 },
     goal: {

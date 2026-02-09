@@ -1,6 +1,6 @@
 import passport from "passport";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
-import User from "../models/User.js";
+import User from "../models/userModel.js";
 
 // Defines how Passport should handle Google OAuth (login / signup).
 // Passport is a singleton: this configuration mutates the shared Passport instance.

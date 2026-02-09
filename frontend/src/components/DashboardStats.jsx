@@ -1,4 +1,4 @@
-import { Link, useOutletContext } from "react-router-dom";
+import { Link, useOutletContext, useNavigate } from "react-router-dom";
 import {
   Scale,
   Activity,
@@ -10,6 +10,8 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 import { Button } from "@/components/ui/button";
 import { logoutUser } from "../slices/userSlice";
+import { apiSlice } from "../slices/apiSlice"; // for the util
+import { useLogoutMutation } from "../slices/userApiSlice";
 import { setMode, resetMode } from "../slices/modeSlice";
 
 export default function DashboardStats() {
@@ -17,9 +19,12 @@ export default function DashboardStats() {
   const { profile, profileLoading } = useOutletContext();
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [logoutApiCall] = useLogoutMutation();
 
-  const handleLogout = () => {
-    dispatch(logoutUser()); // clean session
+  const handleLogout = async () => {
+    await logoutApiCall().unwrap(); // kill cookie
+    dispatch(logoutUser()); // clean redux session
     dispatch(resetMode()); // set back to Light
     dispatch(apiSlice.util.resetApiState()); // clear RTK cache
     navigate("/");
