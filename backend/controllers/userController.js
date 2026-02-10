@@ -1,6 +1,7 @@
 import User from "../models/userModel.js";
 // not used now: import jwt from "jsonwebtoken";
 import generateToken from "../utils/generateToken.js";
+import asyncHandler from "backend/utils/asyncHandler.js";
 
 const login = async (req, res) => {
   try {
@@ -96,47 +97,51 @@ const getUserProfile = asyncHandler(async (req, res) => {
 });
 
 // userController.js
-const updateUserProfile = async (req, res) => {
-  try {
-    // 1. Find the user using the ID attached by your 'protect' middleware
-    const user = await User.findById(req.user._id);
+import asyncHandler from "../utils/asyncHandler.js";
+import User from "../models/userModel.js";
 
-    if (user) {
-      // 2. Update core fields (fallback to existing values if not provided)
-      user.name = req.body.name || user.name;
-      user.email = req.body.email || user.email;
+// @desc    Update user profile
+// @route   PUT /api/users/profile
+// @access  Private
+const updateUserProfile = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id);
 
-      // 3. Update fitness stats
-      if (req.body.weight !== undefined) user.weight = req.body.weight;
-      if (req.body.height !== undefined) user.height = req.body.height;
-      if (req.body.goal !== undefined) user.goal = req.body.goal;
-      if (req.body.targets !== undefined) user.targets = req.body.targets;
+  if (user) {
+    // 1. Update basic info
+    user.name = req.body.name || user.name;
+    user.email = req.body.email || user.email;
 
-      // 4. Save the changes (this also triggers the 'bmi' virtual calculation)
-      const updatedUser = await user.save();
+    // 2. Update fitness stats
+    if (req.body.weight !== undefined) user.weight = req.body.weight;
+    if (req.body.height !== undefined) user.height = req.body.height;
+    if (req.body.goal !== undefined) user.goal = req.body.goal;
+    if (req.body.targets !== undefined) user.targets = req.body.targets;
 
-      // 5. Send back the fresh data (including BMI)
-      res.status(200).json({
-        _id: updatedUser._id,
-        name: updatedUser.name,
-        email: updatedUser.email,
-        weight: updatedUser.weight,
-        height: updatedUser.height,
-        targets: updatedUser.targets,
-        bmi: updatedUser.bmi, // The virtual we added to the model
-        goal: updatedUser.goal,
-      });
-    } else {
-      res.status(404).json({ message: "User not found" });
-    }
-  } catch (error) {
-    // 6. If the database fails or something explodes, catch it here
-    console.error("Update Error:", error);
-    res.status(500).json({
-      message: "Server error updating profile",
-      error: error.message,
+    // 3. Flip the isNewUser flag
+    // Once they update their profile, they aren't "new" anymore!
+    user.isNewUser = false;
+
+    const updatedUser = await user.save();
+
+    res.json({
+      _id: updatedUser._id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+      weight: updatedUser.weight,
+      height: updatedUser.height,
+      targets: updatedUser.targets,
+      bmi: updatedUser.bmi,
+      goal: updatedUser.goal,
+      isNewUser: updatedUser.isNewUser,
     });
+  } else {
+    // Instead of res.status().json(), we just set status and THROW
+    // The asyncHandler catches this and passes it to the errorHandler middleware
+    res.status(404);
+    throw new Error("User not found");
   }
-};
+});
+
+export { updateUserProfile };
 
 export { register, login, updateUserProfile, getUserProfile, logoutUser };

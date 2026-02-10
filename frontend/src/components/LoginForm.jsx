@@ -27,6 +27,7 @@ export function LoginForm() {
 
     window.location.href = `${backendBaseUrl}/auth/google`;
   };
+  
   const submitHandler = async (data) => {
     try {
       const user = await login(data).unwrap();

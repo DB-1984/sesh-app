@@ -9,6 +9,8 @@ import cors from "cors";
 import passport from "passport";
 import { configurePassport } from "./config/passport.js";
 import authGoogleRoutes from "./routes/authGoogle.js";
+import { errorHandler } from "./utils/errorHandler.js";
+import { error } from "console";
 
 dotenv.config();
 
@@ -52,6 +54,8 @@ if (process.env.NODE_ENV === "production") {
     res.send("API is running");
   });
 }
+
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
