@@ -1,7 +1,7 @@
 import User from "../models/userModel.js";
 // not used now: import jwt from "jsonwebtoken";
 import generateToken from "../utils/generateToken.js";
-import asyncHandler from "backend/utils/asyncHandler.js";
+import asyncHandler from "../utils/asyncHandler.js";
 
 const login = async (req, res) => {
   try {
@@ -96,13 +96,6 @@ const getUserProfile = asyncHandler(async (req, res) => {
   }
 });
 
-// userController.js
-import asyncHandler from "../utils/asyncHandler.js";
-import User from "../models/userModel.js";
-
-// @desc    Update user profile
-// @route   PUT /api/users/profile
-// @access  Private
 const updateUserProfile = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user._id);
 
@@ -141,7 +134,5 @@ const updateUserProfile = asyncHandler(async (req, res) => {
     throw new Error("User not found");
   }
 });
-
-export { updateUserProfile };
 
 export { register, login, updateUserProfile, getUserProfile, logoutUser };

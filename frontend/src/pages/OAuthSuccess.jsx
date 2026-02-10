@@ -21,7 +21,7 @@ export default function OAuthSuccess() {
 
       // 2. Logic for the Toast
       if (data.isNewUser) {
-        toast.success("Welcome to Sesh! Let's get your first workout tracked.");
+        toast.success("Welcome to Sesh!");
       } else {
         toast.success(`Welcome back, ${data.name}!`);
       }
