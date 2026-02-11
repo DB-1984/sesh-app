@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { setUserInfo } from "@/slices/userSlice";
 import { useLoginMutation } from "@/slices/userApiSlice";
+import { GoogleIcon } from "./ui/googleIcon";
 
 export function LoginForm() {
   const navigate = useNavigate();
@@ -27,7 +28,7 @@ export function LoginForm() {
 
     window.location.href = `${backendBaseUrl}/auth/google`;
   };
-  
+
   const submitHandler = async (data) => {
     try {
       const user = await login(data).unwrap();
@@ -131,7 +132,7 @@ export function LoginForm() {
             )}
           </Button>
 
-          <p className="pt-2 text-center text-sm text-muted-foreground">
+          <p className="pt-2 text-center pb-2 text-sm text-muted-foreground">
             Don’t have an account?{" "}
             <a
               href="/users/register"
@@ -141,8 +142,13 @@ export function LoginForm() {
             </a>
           </p>
         </form>
-        <button onClick={handleGoogleLogin} className="google-login-btn">
-          Sign in with Google
+        <button
+          onClick={handleGoogleLogin}
+          variant="outline"
+          className="w-full mt-3 text-sm shadow-sm flex items-center justify-center gap-3 h-11 border border-zinc-200 bg-white hover:bg-zinc-50 transition-all font-medium rounded-lg text-zinc-700"
+        >
+          <GoogleIcon />
+          Continue with Google
         </button>
       </div>
     </section>

@@ -13,6 +13,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { setMode, resetMode } from "../slices/modeSlice";
 
 export default function Header() {
   // Define user from store js
@@ -48,28 +49,23 @@ export default function Header() {
   }, [location.pathname]);
 
   const lastLocation = prevPathRef.current;
+  const isAtRoot = /^\/users\/(dashboard)?\/?$/.test(location.pathname);
 
   // LOGIC: Show back if we aren't on the "Home" base (Dashboard)
   // Or if we have a recorded last location to go back to
-  const showBack =
-    location.pathname !== "/users/dashboard" ||
-    (lastLocation && lastLocation !== location.pathname);
+  const showBack = !isAtRoot;
 
   const handleBack = () => {
-    // If we are on the filtered page, clear the filter as we go back
+    // 1. Clear UI state if navigating from the "All Seshes" view
     if (location.pathname === "/users/all-seshes") {
       setSelectedDate(null);
-      navigate("/users/dashboard");
-      return; // Exit early
     }
 
-    // Standard back logic for everything else
-    if (window.history.state && window.history.state.idx > 0) {
-      navigate(-1);
-    } else {
-      navigate("/users/dashboard");
-    }
+    // 2. Always force navigation to the dashboard
+    // 'replace: true' prevents the user from clicking "Forward" back into an edit/filter state
+    navigate("/users/dashboard", { replace: true });
   };
+
   // Theme Sync - for tailwind's CSS to fire
   useEffect(() => {
     const root = document.documentElement;

@@ -18,6 +18,7 @@ export function ExerciseForm({
   defaultValues,
   title = "Add Exercise",
   submitLabel = "Save Exercise",
+  onCancel,
 }) {
   // Initialize form with initial values
   const form = useForm({ defaultValues });
@@ -31,50 +32,90 @@ export function ExerciseForm({
 
   return (
     <form onSubmit={form.handleSubmit(onSubmit)}>
-      <Card className="w-full max-w-3xl border-none bg-none rounded shadow-none mx-auto">
-        <CardHeader>
+      {/* Removed bg-none/border-none so the form actually looks like a cohesive container */}
+      <Card className="w-full border-none bg-transparent shadow-none">
+        <CardHeader className="px-4">
           <CardTitle>
-            <div className="flex items-center gap-2">
-              <Dumbbell className="h-4 w-4" /> {title}
+            <div className="flex items-center text-2xl font-black tracking-tighter gap-2">
+              <Dumbbell className="h-5 w-5" /> {title}
             </div>
           </CardTitle>
         </CardHeader>
-        <CardContent className="flex flex-col gap-4">
+
+        <CardContent className="flex flex-col gap-4 px-4">
           <Input
             {...form.register("exercise", { required: true })}
-            placeholder="Exercise"
+            placeholder="Exercise (e.g. Bench Press)"
+            className="bg-white dark:bg-zinc-900"
           />
-          <Input
-            {...form.register("weight", {
-              required: true,
-              valueAsNumber: true,
-            })}
-            type="number"
-            placeholder="Weight (kg)"
-          />
-          <Input
-            {...form.register("reps", { required: true, valueAsNumber: true })}
-            type="number"
-            placeholder="Reps"
-          />
-          <Input
-            {...form.register("sets", { required: true, valueAsNumber: true })}
-            type="number"
-            placeholder="Sets"
-          />
-          <Input
-            {...form.register("rest", { required: true, valueAsNumber: true })}
-            type="number"
-            placeholder="Rest (seconds)"
-          />
+
+          {/* Grid for numerical values to keep the form from getting too long */}
+          <div className="grid grid-cols-2 gap-4">
+            <Input
+              {...form.register("weight", {
+                required: true,
+                valueAsNumber: true,
+              })}
+              type="number"
+              placeholder="Weight (kg)"
+              className="bg-white dark:bg-zinc-900"
+            />
+            <Input
+              {...form.register("reps", {
+                required: true,
+                valueAsNumber: true,
+              })}
+              type="number"
+              placeholder="Reps"
+              className="bg-white dark:bg-zinc-900"
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <Input
+              {...form.register("sets", {
+                required: true,
+                valueAsNumber: true,
+              })}
+              type="number"
+              placeholder="Sets"
+              className="bg-white dark:bg-zinc-900"
+            />
+            <Input
+              {...form.register("rest", {
+                required: true,
+                valueAsNumber: true,
+              })}
+              type="number"
+              placeholder="Rest (s)"
+              className="bg-white dark:bg-zinc-900"
+            />
+          </div>
+
           <Textarea
             {...form.register("comments")}
-            placeholder="Comments"
+            placeholder="Notes / Comments..."
             rows={3}
+            className="bg-white dark:bg-zinc-900"
           />
-          <Button type="submit" className="w-full">
-            {submitLabel}
-          </Button>
+
+          {/* Action Group: Buttons are now inside the same vertical flow */}
+          <div className="flex flex-col gap-2 mt-2 pt-2">
+            <Button type="submit" className="w-full font-bold">
+              {submitLabel}
+            </Button>
+
+            {onCancel && (
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={onCancel}
+                className="w-full text-zinc-500 hover:text-black pt-2 dark:hover:text-white font-normal"
+              >
+                Cancel Edit
+              </Button>
+            )}
+          </div>
         </CardContent>
       </Card>
     </form>

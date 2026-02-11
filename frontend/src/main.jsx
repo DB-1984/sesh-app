@@ -31,29 +31,29 @@ const router = createBrowserRouter(
         path="/users/register"
         element={<LoginRegisterPage mode="register" />}
       />
+
       {/* Private routes */}
       <Route element={<PrivateRoute />}>
-        {/* Header acts as the Layout for the entire /users prefix */}
         <Route path="/users" element={<Header />}>
+          {/* 1. Dashboard handles ONLY Stats & Profile */}
           <Route path="dashboard" element={<Dashboard />}>
-            {/* The 'index' is the default left panel (Stats) */}
             <Route index element={<DashboardStats />} />
-            {/* This will render the Profile in that same spot */}
             <Route path="profile" element={<Profile />} />
           </Route>
-          <Route path="profile" element={<Profile />} />
+
+          {/* 2. Sesh View: Sibling to Dashboard, but still under Header */}
+          {/* Use :id to match your useParams() call */}
+          <Route path="sesh/:id" element={<ViewSesh />}>
+            <Route path="exercise/:exerciseId/edit" element={<></>} />
+          </Route>
+
           <Route path="all-seshes" element={<AllSeshes />} />
-          <Route path="sesh/:id" element={<ViewSesh />} />
-          <Route
-            path="sesh/:seshId/exercise/:exerciseId/edit"
-            element={<EditExercise />}
-          />
-          {/* Default to dashboard if someone just goes to /users */}
+
           <Route index element={<Navigate to="dashboard" replace />} />
         </Route>
       </Route>
 
-      {/* Catch-all redirect */}
+      {/* Catch-all redirect to login */}
       <Route path="*" element={<Navigate to="/users/login" replace />} />
     </Route>
   )

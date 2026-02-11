@@ -28,7 +28,7 @@ export default function LoginRegisterPage({ mode = "login" }) {
               Sesh
             </span>
 
-            <div className="w-full max-w-xs bg-background p-8 shadow-lg rounded-lg">
+            <div className="w-full max-w-xs bg-background p-4 shadow-lg rounded-lg">
               <FormComponent />
             </div>
           </div>

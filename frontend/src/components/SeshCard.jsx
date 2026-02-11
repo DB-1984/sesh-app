@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 
 export const SeshCard = ({ sesh, onDelete }) => {
   return (
-    <div className="group relative flex items-center justify-between p-5 bg-white dark:bg-zinc-900 border-2 border-zinc-200 dark:border-zinc-800 rounded-2xl hover:border-black dark:hover:border-white transition-all shadow-sm">
+    <div className="group relative flex items-center justify-between p-5 bg-white dark:bg-zinc-900 border-1 border-zinc-200 dark:border-zinc-800 rounded-sm hover:border-black dark:hover:border-white transition-all shadow-sm">
       <Link
         to={`/users/sesh/${sesh._id}`}
         className="flex-1 flex items-center gap-4"
@@ -26,11 +26,11 @@ export const SeshCard = ({ sesh, onDelete }) => {
             {sesh.title || "Untitled Sesh"}
           </h3>
           <div className="flex items-center gap-3 mt-1">
-            <span className="flex items-center gap-1 text-xs font-bold text-zinc-500">
+            <span className="flex items-center gap-2 text-sm font-semibold tracking-tight text-zinc-700">
               <Dumbbell className="h-3 w-3" /> {sesh.exercises?.length || 0}{" "}
               Exercises
             </span>
-            <span className="flex items-center gap-1 text-xs font-bold text-zinc-500">
+            <span className="flex items-center gap-2 text-sm tracking-tight font-bold text-zinc-700">
               <Clock className="h-3 w-3" /> {format(new Date(sesh.date), "p")}
             </span>
           </div>

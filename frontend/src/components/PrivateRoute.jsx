@@ -1,6 +1,7 @@
 import { Navigate, Outlet } from "react-router-dom";
 import { useSelector } from "react-redux"; // Import this
 import { useGetProfileQuery } from "../slices/userApiSlice";
+import { Loader2 } from "lucide-react";
 
 export default function PrivateRoute() {
   // 1. Check if we *think* we are logged in locally (from Redux)
@@ -12,8 +13,14 @@ export default function PrivateRoute() {
     skip: !localUser,
   });
 
-  if (isLoading) return <div>Loading...</div>;
-
+  if (isLoading) {
+    return (
+      <div className="flex h-[calc(100vh-64px)] items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-zinc-800" />
+        <span className="ml-3 text-zinc-500 font-medium">Loading Sesh...</span>
+      </div>
+    );
+  }
   // 3. If we have a local user AND the server confirmed it, show the page
   // Otherwise, kick them back to login
   return localUser && serverUser ? (

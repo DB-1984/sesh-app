@@ -10,6 +10,7 @@ import {
   useLoginMutation,
 } from "@/slices/userApiSlice.js";
 import { setUserInfo } from "../slices/userSlice";
+import { GoogleIcon } from "./ui/googleIcon";
 
 //in the signup form, we gather data with the useForm hook, which is
 // passed to the handleSubmit function (in this case, submitHandler),
@@ -185,7 +186,7 @@ export function SignupForm() {
             {isLoading ? "Creating…" : "Sign up"}
           </Button>
 
-          <p className="pt-2 text-center text-sm text-muted-foreground">
+          <p className="pt-2 pb-2 text-center text-sm text-muted-foreground">
             Already have an account?{" "}
             <a
               href="/users/login"
@@ -196,11 +197,12 @@ export function SignupForm() {
           </p>
         </form>
         <button
-          type="button"
           onClick={handleGoogleLogin}
-          className="google-login-btn"
+          variant="outline"
+          className="w-full mt-3 text-sm shadow-sm flex items-center justify-center gap-3 h-11 border border-zinc-200 bg-white hover:bg-zinc-50 transition-all font-medium rounded-lg text-zinc-700"
         >
-          Sign in with Google
+          <GoogleIcon />
+          Continue with Google
         </button>
       </div>
     </section>

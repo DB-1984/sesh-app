@@ -77,11 +77,15 @@ const Dashboard = () => {
 
   return (
     /* Changed grid-cols-2 to a custom 1:1.5 ratio */
-    <div className="grid min-h-[calc(100vh-64px)] items-center lg:grid-cols-2 overflow-hidden">
+    <div className="grid min-h-[calc(100vh-64px)] lg:grid-cols-2 overflow-hidden bg-white dark:bg-zinc-950">
       {" "}
       {/* LEFT PANEL: The Dynamic Side (Slimmer) */}
-      <div className="flex flex-col h-[calc(100vh-64px)] p-4 md:p-12 bg-white dark:bg-zinc-950 border-r border-zinc-200 dark:border-zinc-800 overflow-y-auto scroll-smooth">
-        <div className="w-full max-w-sm mx-auto">
+      <div className="flex flex-col h-[calc(100vh-64px)] border-r border-zinc-200 dark:border-zinc-800 overflow-y-auto">
+        {/* Removing the 'items-center' from the outer grid 
+       and the 'mx-auto' centering if it feels too narrow.
+    */}
+        <div className="w-full max-w-lg lg:max-w-md mx-auto p-6 md:p-12">
+          {" "}
           <Outlet context={{ profile, profileLoading }} />
         </div>
       </div>
@@ -90,7 +94,7 @@ const Dashboard = () => {
         <div className="flex items-center justify-between mb-12">
           <div className="flex items-center gap-3">
             <History className="h-6 w-6" />
-            <h2 className="text-2xl font-black tracking-tight">Recent</h2>
+            <h2 className="text-4xl font-black tracking-tight">Recent</h2>
           </div>
         </div>
 
@@ -101,8 +105,8 @@ const Dashboard = () => {
               <Loader2 className="animate-spin" />
             </div>
           ) : latestSeshes.length === 0 ? (
-            <div className="text-center py-20 border-2 border-dashed border-zinc-300 dark:border-zinc-700 rounded-3xl">
-              <p className="font-bold text-zinc-500">No sessions found.</p>
+            <div className="text-center py-20">
+              <p className="font-normal text-white">No sessions found.</p>
             </div>
           ) : (
             <>
@@ -114,7 +118,7 @@ const Dashboard = () => {
                 <Button
                   asChild
                   variant="link"
-                  className="w-full py-6 font-semibold text-zinc-600 hover:text-black dark:hover:text-white"
+                  className="w-full py-8 mt-2 font-black text-normal tracking-tighter text-zinc-800 hover:text-black dark:hover:text-white"
                 >
                   <Link to="/users/all-seshes">
                     View all {allSeshes.length} sessions
