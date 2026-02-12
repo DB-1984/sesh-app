@@ -14,9 +14,7 @@ import App from "./App.jsx";
 import LoginRegisterPage from "./pages/LoginRegisterPage.jsx";
 import Header from "./components/Header.jsx";
 import PrivateRoute from "./components/PrivateRoute.jsx";
-import AllSeshes from "./components/AllSeshes.jsx";
 import ViewSesh from "./components/ViewSesh.jsx";
-import EditExercise from "./components/EditExercise.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import DashboardStats from "./components/DashboardStats.jsx";
 import Profile from "./pages/Profile.jsx";
@@ -46,9 +44,6 @@ const router = createBrowserRouter(
           <Route path="sesh/:id" element={<ViewSesh />}>
             <Route path="exercise/:exerciseId/edit" element={<></>} />
           </Route>
-
-          <Route path="all-seshes" element={<AllSeshes />} />
-
           <Route index element={<Navigate to="dashboard" replace />} />
         </Route>
       </Route>

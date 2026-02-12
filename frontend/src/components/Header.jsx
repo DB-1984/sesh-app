@@ -91,13 +91,6 @@ export default function Header() {
     navigate("/users/dashboard");
   };
 
-  // Redirect logic
-  useEffect(() => {
-    if (selectedDate && isDashboard) {
-      navigate("/users/all-seshes", { replace: true }); // update history stack
-    }
-  }, [selectedDate, isDashboard, navigate]);
-
   // For Avatar
   const getInitials = (name = "") =>
     name
