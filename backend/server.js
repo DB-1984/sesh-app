@@ -40,10 +40,11 @@ app.use("/auth", authGoogleRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/seshes", seshRoutes);
 
-const __dirname = path.resolve();
+const __dirname = path.resolve("..");
 
 if (process.env.NODE_ENV === "production") {
   const frontendPath = path.join(__dirname, "frontend", "dist");
+
   app.use(express.static(frontendPath));
 
   app.get(/^(?!\/api|\/auth).*/, (req, res) => {
