@@ -1,5 +1,6 @@
 import User from "../models/userModel.js";
-// not used now: import jwt from "jsonwebtoken";
+import crypto from "crypto";
+import { Resend } from "resend";
 import generateToken from "../utils/generateToken.js";
 import asyncHandler from "../utils/asyncHandler.js";
 
@@ -135,4 +136,63 @@ const updateUserProfile = asyncHandler(async (req, res) => {
   }
 });
 
-export { register, login, updateUserProfile, getUserProfile, logoutUser };
+const forgotPassword = async (req, res) => {
+  console.log("forgotPassword hit:", req.body.email);
+  console.log("RESEND key present?", !!process.env.RESEND_API_KEY);
+
+  // Always keep response generic (avoid email enumeration)
+  const genericResponse = {
+    message: "If that email exists, we’ve sent a password reset link.",
+  };
+
+  try {
+    const { email } = req.body;
+
+    if (!email) return res.status(200).json(genericResponse);
+
+    const user = await User.findOne({ email: email.toLowerCase().trim() });
+    if (!user) return res.status(200).json(genericResponse);
+
+    // Create token + hash
+    const rawToken = crypto.randomBytes(32).toString("hex");
+    const tokenHash = crypto
+      .createHash("sha256")
+      .update(rawToken)
+      .digest("hex");
+
+    user.resetPasswordToken = tokenHash;
+    user.resetPasswordExpires = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+    await user.save({ validateBeforeSave: false });
+
+    const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
+    const resetUrl = `${frontendUrl}/reset-password?token=${rawToken}`;
+
+    const resend = new Resend(process.env.RESEND_API_KEY);
+
+    await resend.emails.send({
+      from: "Sesh <onboarding@resend.dev>",
+      to: user.email,
+      subject: "Reset your Sesh password",
+      html: `
+        <p>Hi${user.name ? ` ${user.name}` : ""},</p>
+        <p>Click the link below to reset your password:</p>
+        <p><a href="${resetUrl}">Reset your password</a></p>
+        <p>This link expires in 1 hour. If you didn’t request this, ignore this email.</p>
+      `,
+    });
+
+    return res.status(200).json(genericResponse);
+  } catch (err) {
+    console.error("forgotPassword error:", err);
+    return res.status(200).json(genericResponse);
+  }
+};
+
+export {
+  register,
+  login,
+  updateUserProfile,
+  getUserProfile,
+  forgotPassword,
+  logoutUser,
+};

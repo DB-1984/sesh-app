@@ -42,6 +42,13 @@ export const userApiSlice = apiSlice.injectEndpoints({
         method: "POST",
       }),
     }),
+    forgotPassword: builder.mutation({
+      query: (data) => ({
+        url: `${USERS_URL}/forgot-password`,
+        method: "POST",
+        body: data, // { email }
+      }),
+    }),
   }),
 });
 
@@ -51,4 +58,5 @@ export const {
   useGetProfileQuery,
   useUpdateProfileMutation,
   useLogoutMutation,
+  useForgotPasswordMutation,
 } = userApiSlice;

@@ -1,5 +1,5 @@
-import express from "express";
 import dotenv from "dotenv";
+import express from "express";
 import cookieParser from "cookie-parser";
 import userRoutes from "./routes/userRoutes.js";
 import seshRoutes from "./routes/seshRoutes.js";
@@ -10,7 +10,6 @@ import passport from "passport";
 import { configurePassport } from "./config/passport.js";
 import authGoogleRoutes from "./routes/authGoogle.js";
 import { errorHandler } from "./utils/errorHandler.js";
-import { error } from "console";
 
 dotenv.config();
 

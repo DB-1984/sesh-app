@@ -26,6 +26,14 @@ const userSchema = new mongoose.Schema(
       sparse: true, // allows many docs with no googleId, but indexes those that have it
     },
 
+    resetPasswordToken: {
+      type: String,
+    },
+
+    resetPasswordExpires: {
+      type: Date,
+    },
+
     password: {
       type: String,
       required: function () {

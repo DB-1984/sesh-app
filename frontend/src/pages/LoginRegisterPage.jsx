@@ -1,4 +1,5 @@
 import { LoginForm } from "@/components/LoginForm";
+import { Link } from "react-router-dom";
 import { SignupForm } from "@/components/SignupForm";
 
 export default function LoginRegisterPage({ mode = "login" }) {
@@ -30,6 +31,11 @@ export default function LoginRegisterPage({ mode = "login" }) {
 
             <div className="w-full max-w-xs bg-background p-4 shadow-lg rounded-lg">
               <FormComponent />
+              <Link to="/forgot-password" className="no-underline">
+                <p className="text-center pb-2 text-sm text-muted-foreground">
+                  Forgotten password?
+                </p>
+              </Link>
             </div>
           </div>
         </div>

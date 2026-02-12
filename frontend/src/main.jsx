@@ -19,10 +19,12 @@ import Dashboard from "./pages/Dashboard.jsx";
 import DashboardStats from "./components/DashboardStats.jsx";
 import Profile from "./pages/Profile.jsx";
 import OAuthSuccess from "./pages/OAuthSuccess.jsx";
+import ForgotPasswordPage from "./components/ForgotPasswordPage.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route element={<App />}>
+      <Route path="/forgot-password" element={<ForgotPasswordPage />} />
       <Route path="/oauth-success" element={<OAuthSuccess />} />
       <Route path="/users/login" element={<LoginRegisterPage mode="login" />} />
       <Route
