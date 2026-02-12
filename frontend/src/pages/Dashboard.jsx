@@ -106,25 +106,15 @@ const Dashboard = () => {
             </div>
           ) : latestSeshes.length === 0 ? (
             <div className="text-center py-20">
-              <p className="font-normal text-white">No sessions found.</p>
+              <p className="text-zinc-800 font-bold tracking-tight text-md">
+                No sessions found.
+              </p>
             </div>
           ) : (
             <>
               {latestSeshes.map((sesh) => (
                 <SeshCard key={sesh._id} sesh={sesh} onDelete={handleDelete} />
               ))}
-
-              {allSeshes.length > 3 && (
-                <Button
-                  asChild
-                  variant="link"
-                  className="w-full py-8 mt-2 font-black text-normal tracking-tighter text-zinc-800 hover:text-black dark:hover:text-white"
-                >
-                  <Link to="/users/all-seshes">
-                    View all {allSeshes.length} sessions
-                  </Link>
-                </Button>
-              )}
             </>
           )}
         </div>

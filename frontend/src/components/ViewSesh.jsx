@@ -183,7 +183,7 @@ export default function ViewSesh() {
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-3">
             <History className="h-6 w-6 text-zinc-800" />
-            <h2 className="text-4xl font-black tracking-tight">Sesh Log</h2>
+            <h2 className="text-4xl font-black tracking-tight">Exercises</h2>
           </div>
           <span className="text-xs font-bold tracking-tight uppercase text-zinc-600 bg-zinc-200/50 dark:bg-zinc-800 px-3 py-1">
             {currentSesh.exercises?.length || 0} Exercises
@@ -248,9 +248,8 @@ export default function ViewSesh() {
               </div>
             ))
           ) : (
-            <div className="flex flex-col items-center justify-center py-24 border-2 border-dashed border-zinc-200 dark:border-zinc-800 rounded-sm">
-              <Dumbbell className="h-12 w-12 text-zinc-200 mb-4" />
-              <p className="text-zinc-400 font-black tracking-tighter uppercase text-sm">
+            <div className="flex flex-col items-center justify-center py-24">
+              <p className="text-zinc-800 font-bold tracking-tight text-md">
                 No exercises logged
               </p>
             </div>

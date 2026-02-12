@@ -86,6 +86,11 @@ export default function Header() {
     }
   }, []);
 
+  const handleClear = () => {
+    setSelectedDate(null);
+    navigate("/users/dashboard");
+  };
+
   // Redirect logic
   useEffect(() => {
     if (selectedDate && isDashboard) {
@@ -187,7 +192,7 @@ export default function Header() {
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => setSelectedDate(null)}
+                        onClick={() => handleClear()}
                         className="h-8 px-2 text-sm text-destructive"
                       >
                         Clear
