@@ -41,20 +41,20 @@ app.use("/api/users", userRoutes);
 app.use("/api/seshes", seshRoutes);
 
 const __dirname = path.resolve();
-const rootDir = path.join(__dirname, "..");
 
 if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(rootDir, "frontend", "dist")));
+  // Use __dirname directly to access the frontend folder inside your project
+  const frontendPath = path.join(__dirname, "frontend", "dist");
 
-  app.get(/^\/(?!api).*/, (req, res) => {
-    res.sendFile(path.join(rootDir, "frontend", "dist", "index.html"));
-  });
-} else {
-  app.get("/", (req, res) => {
-    res.send("API is running");
+  app.use(express.static(frontendPath));
+
+  app.get("*", (req, res) => {
+    // Check if it's an API or Auth route first
+    if (!req.path.startsWith("/api") && !req.path.startsWith("/auth")) {
+      res.sendFile(path.join(frontendPath, "index.html"));
+    }
   });
 }
-
 app.use(errorHandler);
 
 app.listen(PORT, () => {
