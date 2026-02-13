@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams, Link } from "react-router-dom";
 import { useResetPasswordMutation } from "@/slices/userApiSlice";
+import asyncHandler from "backend/utils/asyncHandler";
 
 export default function ResetPasswordPage() {
   const [params] = useSearchParams();
