@@ -19,7 +19,7 @@ export function ForgotPasswordForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+    <form onSubmit={handleSubmit} className="flex flex-col py-4 gap-4">
       <h2 className="text-xl font-semibold text-center">Reset your password</h2>
 
       <p className="text-sm text-muted-foreground text-center">
@@ -37,7 +37,11 @@ export function ForgotPasswordForm() {
         autoComplete="email"
       />
 
-      <button type="submit" disabled={isLoading} className="btn-primary">
+      <button
+        type="submit"
+        disabled={isLoading}
+        className="w-full mt-3 text-sm shadow-sm flex items-center justify-center gap-3 h-11 border border-zinc-200 bg-black text-white transition-all font-medium rounded-lg"
+      >
         {isLoading ? "Sending..." : "Send reset link"}
       </button>
 
@@ -55,7 +59,7 @@ export function ForgotPasswordForm() {
         </p>
       )}
 
-      <div className="text-sm text-center">
+      <div className="text-sm py-2 text-center">
         <Link to="/login" className="text-primary hover:underline">
           Back to login
         </Link>

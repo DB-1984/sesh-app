@@ -149,9 +149,9 @@ const Dashboard = () => {
           <Button
             onClick={handleAddSesh}
             disabled={addSeshLoading}
-            className="py-8 px-8 rounded-2xl bg-black dark:bg-white logo-text text-white dark:text-black font-black text-lg shadow-xl hover:scale-[1.02] active:scale-95 transition-all"
+            className="py-8 px-8 rounded-2xl bg-black dark:bg-white logo-text text-white tracking-tight dark:text-black font-black text-lg shadow-xl hover:scale-[1.02] active:scale-95 transition-all"
           >
-            {addSeshLoading ? <Loader2 className="animate-spin" /> : "+ Sesh"}
+            {addSeshLoading ? <Loader2 className="animate-spin" /> : "+Sesh"}
           </Button>
         </div>
       </div>

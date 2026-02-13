@@ -136,57 +136,71 @@ const updateUserProfile = asyncHandler(async (req, res) => {
   }
 });
 
-const forgotPassword = async (req, res) => {
-  console.log("forgotPassword hit:", req.body.email);
-  console.log("RESEND key present?", !!process.env.RESEND_API_KEY);
+const forgotPassword = asyncHandler(async (req, res, next) => {
+  const { email } = req.body;
 
-  // Always keep response generic (avoid email enumeration)
-  const genericResponse = {
-    message: "If that email exists, we’ve sent a password reset link.",
-  };
+  // 1. Quick exit if no email provided
+  if (!email) return res.status(200).json(genericResponse);
 
-  try {
-    const { email } = req.body;
+  const user = await User.findOne({ email: email.toLowerCase().trim() });
 
-    if (!email) return res.status(200).json(genericResponse);
+  // 2. Security check: If no user, don't leak info; just return success
+  if (!user) return res.status(200).json(genericResponse);
 
-    const user = await User.findOne({ email: email.toLowerCase().trim() });
-    if (!user) return res.status(200).json(genericResponse);
+  // 3. Token Generation
+  const rawToken = crypto.randomBytes(32).toString("hex");
+  const tokenHash = crypto.createHash("sha256").update(rawToken).digest("hex");
 
-    // Create token + hash
-    const rawToken = crypto.randomBytes(32).toString("hex");
-    const tokenHash = crypto
-      .createHash("sha256")
-      .update(rawToken)
-      .digest("hex");
+  // 4. Update User
+  user.resetPasswordToken = tokenHash;
+  user.resetPasswordExpires = new Date(Date.now() + 60 * 60 * 1000);
+  await user.save({ validateBeforeSave: false });
 
-    user.resetPasswordToken = tokenHash;
-    user.resetPasswordExpires = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
-    await user.save({ validateBeforeSave: false });
+  // 5. Send Email
+  const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
+  const resetUrl = `${frontendUrl}/reset-password?token=${rawToken}`;
+  const resend = new Resend(process.env.RESEND_API_KEY);
 
-    const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
-    const resetUrl = `${frontendUrl}/reset-password?token=${rawToken}`;
+  await resend.emails.send({
+    from: "Sesh <onboarding@resend.dev>",
+    to: user.email,
+    subject: "Reset your Sesh password",
+    html: `<p>Click <a href="${resetUrl}">here</a> to reset your password.</p>`,
+  });
 
-    const resend = new Resend(process.env.RESEND_API_KEY);
+  // 6. Final Success Response
+  res.status(200).json(genericResponse);
+});
 
-    await resend.emails.send({
-      from: "Sesh <onboarding@resend.dev>",
-      to: user.email,
-      subject: "Reset your Sesh password",
-      html: `
-        <p>Hi${user.name ? ` ${user.name}` : ""},</p>
-        <p>Click the link below to reset your password:</p>
-        <p><a href="${resetUrl}">Reset your password</a></p>
-        <p>This link expires in 1 hour. If you didn’t request this, ignore this email.</p>
-      `,
-    });
+const resetPassword = asyncHandler(async (req, res) => {
+  const { token, password } = req.body;
 
-    return res.status(200).json(genericResponse);
-  } catch (err) {
-    console.error("forgotPassword error:", err);
-    return res.status(200).json(genericResponse);
+  if (!token || !password) {
+    return res.status(400).json({ message: "Invalid request." });
   }
-};
+
+  const tokenHash = crypto.createHash("sha256").update(token).digest("hex");
+
+  const user = await User.findOne({
+    resetPasswordToken: tokenHash,
+    resetPasswordExpires: { $gt: new Date() },
+  });
+
+  if (!user) {
+    return res.status(400).json({ message: "Token is invalid or expired." });
+  }
+
+  user.password = password;
+  user.resetPasswordToken = undefined;
+  user.resetPasswordExpires = undefined;
+
+  await user.save();
+
+  // If we get here, everything worked.
+  // If ANY await above failed, the code below never runs;
+  // it jumps straight to your Global Error Handler.
+  res.status(200).json({ message: "Password updated successfully." });
+});
 
 export {
   register,
@@ -194,5 +208,6 @@ export {
   updateUserProfile,
   getUserProfile,
   forgotPassword,
+  resetPassword,
   logoutUser,
 };

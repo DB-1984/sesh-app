@@ -32,7 +32,7 @@ export default function LoginRegisterPage({ mode = "login" }) {
             <div className="w-full max-w-xs bg-background p-4 shadow-lg rounded-lg">
               <FormComponent />
               <Link to="/forgot-password" className="no-underline">
-                <p className="text-center pb-2 text-sm text-muted-foreground">
+                <p className="text-center pb-4 hover:underline text-sm text-muted-foreground">
                   Forgotten password?
                 </p>
               </Link>
