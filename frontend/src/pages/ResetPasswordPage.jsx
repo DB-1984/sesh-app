@@ -46,7 +46,10 @@ export default function ResetPasswordPage() {
         </span>
 
         <div className="w-full bg-background p-6 shadow-lg rounded-lg">
-          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          <form
+            onSubmit={handleSubmit}
+            className="flex space-y-4 flex-col gap-4"
+          >
             <h2 className="text-xl font-semibold text-center">
               Choose a new password
             </h2>

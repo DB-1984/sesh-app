@@ -169,7 +169,12 @@ const forgotPassword = asyncHandler(async (req, res, next) => {
     from: "Sesh <onboarding@resend.dev>",
     to: user.email,
     subject: "Reset your Sesh password",
-    html: `<p>Click <a href="${resetUrl}">here</a> to reset your password.</p>`,
+    html: `
+    <p>Hi${user.name ? ` ${user.name}` : ""},</p>
+    <p>You asked to reset your password. Click the link below to choose a new one:</p>
+    <p><a href="${resetUrl}">Reset your password</a></p>
+    <p>This link expires in 1 hour. If you didn’t request this, you can ignore this email.</p>
+  `,
   });
 
   // 6. Final Success Response

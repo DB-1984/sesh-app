@@ -19,7 +19,7 @@ export function ForgotPasswordForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col py-4 gap-4">
+    <form onSubmit={handleSubmit} className="flex flex-col space-y-4 gap-4">
       <h2 className="text-xl font-semibold text-center">Reset your password</h2>
 
       <p className="text-sm text-muted-foreground text-center">
