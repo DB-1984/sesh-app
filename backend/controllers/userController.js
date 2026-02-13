@@ -144,6 +144,10 @@ const forgotPassword = asyncHandler(async (req, res, next) => {
 
   const user = await User.findOne({ email: email.toLowerCase().trim() });
 
+  const genericResponse = {
+    message: "If that email exists, we’ve sent a password reset link.",
+  };
+
   // 2. Security check: If no user, don't leak info; just return success
   if (!user) return res.status(200).json(genericResponse);
 
