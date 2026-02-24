@@ -1,7 +1,8 @@
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useMemo } from "react";
 import { Outlet, useLocation, useNavigate, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { format } from "date-fns";
+import { useGetSeshesQuery } from "../slices/seshApiSlice";
+import { format, parseISO, startOfDay } from "date-fns";
 import { ArrowLeft, CalendarIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -33,36 +34,15 @@ export default function Header() {
   const headerRef = useRef(null); // For back button context
   // For showing date picker
   const isDashboard = location.pathname === "/users/dashboard";
-  const isAllSeshes = location.pathname === "/users/all-seshes";
   const showCalendar = isDashboard || isAllSeshes;
 
-  // Used to track current path value
-  const prevPathRef = useRef(null);
-
-  // Update the "Referrer" every time the path changes
-  useEffect(() => {
-    // This runs after the component renders with the NEW path
-    // So we store the current path in the ref for the NEXT change
-    return () => {
-      prevPathRef.current = location.pathname;
-    };
-  }, [location.pathname]);
-
-  const lastLocation = prevPathRef.current;
+  // Simplifies to: if it's not the root/dashboard, show back.
   const isAtRoot = /^\/users\/(dashboard)?\/?$/.test(location.pathname);
-
-  // LOGIC: Show back if we aren't on the "Home" base (Dashboard)
-  // Or if we have a recorded last location to go back to
   const showBack = !isAtRoot;
 
   const handleBack = () => {
-    // 1. Clear UI state if navigating from the "All Seshes" view
-    if (location.pathname === "/users/all-seshes") {
-      setSelectedDate(null);
-    }
-
-    // 2. Always force navigation to the dashboard
-    // 'replace: true' prevents the user from clicking "Forward" back into an edit/filter state
+    // If you want the calendar to reset whenever they leave a sub-page:
+    setSelectedDate(null);
     navigate("/users/dashboard", { replace: true });
   };
 
@@ -100,6 +80,13 @@ export default function Header() {
           .join("")
           .toUpperCase()
       : "U";
+
+  const { data: workouts = [] } = useGetSeshesQuery();
+
+  // 3. Extract the dates for the calendar dots
+  const workoutDates = useMemo(() => {
+    return workouts.map((sesh) => startOfDay(parseISO(sesh.date)));
+  }, [workouts]);
 
   return (
     <div className="min-h-[100dvh] bg-background">
@@ -178,7 +165,12 @@ export default function Header() {
                           mode="single"
                           selected={selectedDate}
                           onSelect={setSelectedDate}
-                        />
+                          modifiers={{ hasWorkout: workoutDates }}
+                          modifiersClassNames={{
+                            hasWorkout:
+                              "bg-black text-white dark:bg-white dark:text-black rounded",
+                          }}
+                        /> 
                       </PopoverContent>
                     </Popover>
                     {selectedDate && (
