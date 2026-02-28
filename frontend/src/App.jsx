@@ -8,9 +8,15 @@ export default function App() {
     document.title = "Sesh";
   }, []);
   return (
-    <div className="min-h-[100dvh] bg-background text-foreground transition-colors duration-300">
-      <title>Sesh</title>
-      <main>
+    <div className="relative min-h-[100dvh] bg-transparent overflow-hidden">
+      {/* THE ANIMATION CONTAINER */}
+      <div className="fixed inset-0 z-0 pointer-events-none bg-transparent">
+        <div className="shape1 op-10"></div>
+        <div className="shape2 op-5"></div>
+        <div className="shape3 op-10"></div>
+      </div>
+
+      <main className="relative z-10">
         <Outlet />
       </main>
 

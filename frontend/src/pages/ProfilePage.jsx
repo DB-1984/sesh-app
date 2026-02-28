@@ -206,9 +206,9 @@ export default function ProfilePage() {
           <Button
             type="submit"
             disabled={isUpdating}
-            className="w-full py-6 rounded-md bg-black dark:bg-white text-white dark:text-black font-black text-md shadow-xl hover:scale-[1.01] transition-all disabled:opacity-50"
+            className="w-full py-8 rounded-2xl bg-black dark:bg-white text-white dark:text-black font-black text-xl shadow-xl hover:scale-[1.01] transition-all disabled:opacity-50"
           >
-            {isUpdating ? <Loader2 className="animate-spin" /> : "Update"}
+            {isUpdating ? <Loader2 className="animate-spin" /> : "SAVE CHANGES"}
           </Button>
         </div>
       </form>

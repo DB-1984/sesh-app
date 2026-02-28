@@ -16,8 +16,10 @@ export default function PrivateRoute() {
   if (isLoading) {
     return (
       <div className="flex h-[calc(100vh-64px)] items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-zinc-800" />
-        <span className="ml-3 text-zinc-500 font-medium">Loading Sesh...</span>
+        <Loader2 className="h-12 w-12 animate-spin" />
+        <span className="ml-3 text-lg tracking-tight font-semibold">
+          Loading...
+        </span>
       </div>
     );
   }

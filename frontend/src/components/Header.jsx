@@ -1,9 +1,15 @@
 import { useRef, useState, useEffect, useMemo } from "react";
-import { Outlet, useLocation, useNavigate, Link } from "react-router-dom";
+import {
+  Outlet,
+  useLocation,
+  useNavigate,
+  Link,
+  useSearchParams,
+} from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { useGetSeshesQuery } from "../slices/seshApiSlice";
-import { format, parseISO, startOfDay } from "date-fns";
+import { format } from "date-fns";
 import { ArrowLeft, CalendarIcon } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Switch } from "@/components/ui/switch";
@@ -14,39 +20,71 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { setMode, resetMode } from "../slices/modeSlice";
+
+import { setMode } from "../slices/modeSlice";
+import { useGetSeshesQuery } from "../slices/seshApiSlice";
 
 export default function Header() {
-  // Define user from store js
   const { userInfo } = useSelector((state) => state.user);
-
-  // Check current mode
   const { mode } = useSelector((state) => state.mode);
 
-  // Utils..
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  // Ensure these are defined so Outlet context isn't undefined
-  const [selectedDate, setSelectedDate] = useState(null);
+  const headerRef = useRef(null);
   const [headerHeight, setHeaderHeight] = useState(0);
-  const headerRef = useRef(null); // For back button context
-  // For showing date picker
-  const isDashboard = location.pathname === "/users/dashboard";
-  const showCalendar = isDashboard || isAllSeshes;
 
-  // Simplifies to: if it's not the root/dashboard, show back.
+  // Only show calendar on dashboard
+  const isDashboard = location.pathname === "/users/dashboard";
+  const showCalendar = isDashboard;
+
+  // Back button visibility
   const isAtRoot = /^\/users\/(dashboard)?\/?$/.test(location.pathname);
   const showBack = !isAtRoot;
 
+  // Date comes from URL param when on dashboard
+  const dateParam = isDashboard ? searchParams.get("date") : null; // "yyyy-MM-dd"
+  const selectedDate = dateParam ? new Date(`${dateParam}T00:00:00`) : null;
+
+  // Fetch seshes for date markers (calendar underline/border)
+  const { data: seshes = [] } = useGetSeshesQuery(
+    { userId: userInfo?._id },
+    { skip: !userInfo?._id }
+  );
+
+  // Set() lets the calendar instantly know which days contain sessions, efficiently.
+  const seshDaySet = useMemo(() => {
+    return new Set(seshes.map((s) => format(new Date(s.date), "yyyy-MM-dd")));
+  }, [seshes]);
+
+  const setDateParam = (d) => {
+    if (!isDashboard) return;
+
+    const next = new URLSearchParams(searchParams);
+
+    if (d) {
+      next.set("date", format(d, "yyyy-MM-dd"));
+    } else {
+      next.delete("date");
+    }
+
+    setSearchParams(next, { replace: true });
+  };
+
   const handleBack = () => {
-    // If you want the calendar to reset whenever they leave a sub-page:
-    setSelectedDate(null);
+    // Clear date filter whenever leaving a subpage
+    if (isDashboard) setDateParam(null);
     navigate("/users/dashboard", { replace: true });
   };
 
-  // Theme Sync - for tailwind's CSS to fire
+  const handleClear = () => {
+    setDateParam(null);
+    navigate("/users/dashboard");
+  };
+
+  // Theme sync
   useEffect(() => {
     const root = document.documentElement;
     mode === "dark"
@@ -54,24 +92,19 @@ export default function Header() {
       : root.classList.remove("dark");
   }, [mode]);
 
-  // Dynamic Header Height using ResizeObserver API
+  // Dynamic header height
   useEffect(() => {
-    if (headerRef.current) {
-      const updateHeight = () =>
-        setHeaderHeight(headerRef.current.offsetHeight);
-      updateHeight();
-      const ro = new ResizeObserver(updateHeight);
-      ro.observe(headerRef.current);
-      return () => ro.disconnect();
-    }
+    if (!headerRef.current) return;
+
+    const updateHeight = () => setHeaderHeight(headerRef.current.offsetHeight);
+    updateHeight();
+
+    const ro = new ResizeObserver(updateHeight);
+    ro.observe(headerRef.current);
+
+    return () => ro.disconnect();
   }, []);
 
-  const handleClear = () => {
-    setSelectedDate(null);
-    navigate("/users/dashboard");
-  };
-
-  // For Avatar
   const getInitials = (name = "") =>
     name
       ? name
@@ -81,28 +114,22 @@ export default function Header() {
           .toUpperCase()
       : "U";
 
-  const { data: workouts = [] } = useGetSeshesQuery();
-
-  // 3. Extract the dates for the calendar dots
-  const workoutDates = useMemo(() => {
-    return workouts.map((sesh) => startOfDay(parseISO(sesh.date)));
-  }, [workouts]);
-
   return (
-    <div className="min-h-[100dvh] bg-background">
+    <div className="min-h-[100dvh] bg-transparent">
       <header
         ref={headerRef}
-        className="fixed top-0 p-3 left-0 w-full z-50 bg-white/70 dark:bg-gray-900/70 backdrop-blur-sm shadow-sm border-b"
+        className="fixed top-0 left-0 w-full z-50 bg-white/70 dark:bg-gray-900/70 backdrop-blur-sm shadow-sm border-b"
       >
-        <div className="max-w-7xl mx-auto px-4 py-4">
+        <div className="max-w-8xl mx-auto px-6 py-4">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
-            {/* Left: Logo & User */}
+            {/* Left */}
             <div className="flex items-center justify-between md:justify-start gap-4">
               <Link to="/users/dashboard" className="flex items-center gap-3">
                 <span className="logo-text text-3xl font-bold text-foreground">
                   SESH
                 </span>
               </Link>
+
               <div className="flex items-center gap-2">
                 <Avatar className="h-8 w-8">
                   <AvatarFallback>{getInitials(userInfo?.name)}</AvatarFallback>
@@ -113,7 +140,7 @@ export default function Header() {
               </div>
             </div>
 
-            {/* Right: Controls */}
+            {/* Right */}
             <div className="flex items-center justify-between md:justify-end gap-3 w-full md:w-auto">
               <div className="flex items-center gap-2 bg-gray-100/50 dark:bg-gray-800/50 px-2 py-1 rounded-md">
                 <Label className="text-sm font-normal">Theme</Label>
@@ -145,39 +172,43 @@ export default function Header() {
                         <Button
                           variant="outline"
                           size="lg"
-                          className="h-8 text-sm gap-1"
+                          className="h-8 text-sm gap-2"
                         >
                           <span className="hidden sm:inline">
                             {selectedDate
                               ? format(selectedDate, "MMM d")
-                              : "Filter By Date"}
+                              : "Filter by date"}
                           </span>
                           <span className="sm:hidden">
                             {selectedDate
                               ? format(selectedDate, "MM/dd")
-                              : "Filter By Date"}
+                              : "Date"}
                           </span>
                           <CalendarIcon className="h-3 w-3" />
                         </Button>
                       </PopoverTrigger>
+
                       <PopoverContent className="w-auto p-0" align="end">
                         <Calendar
                           mode="single"
-                          selected={selectedDate}
-                          onSelect={setSelectedDate}
-                          modifiers={{ hasWorkout: workoutDates }}
-                          modifiersClassNames={{
-                            hasWorkout:
-                              "bg-black text-white dark:bg-white dark:text-black rounded",
+                          selected={selectedDate ?? undefined}
+                          onSelect={(d) => setDateParam(d ?? null)}
+                          modifiers={{
+                            hasWorkout: (date) =>
+                              seshDaySet.has(format(date, "yyyy-MM-dd")),
                           }}
-                        /> 
+                          modifiersClassNames={{
+                            hasWorkout: "underline",
+                          }}
+                        />
                       </PopoverContent>
                     </Popover>
+
                     {selectedDate && (
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => handleClear()}
+                        onClick={handleClear}
                         className="h-8 px-2 text-sm text-destructive"
                       >
                         Clear
@@ -192,14 +223,7 @@ export default function Header() {
       </header>
 
       <main style={{ paddingTop: `${headerHeight}px` }}>
-        {/* Supply datepicker context to nested Router Routes after /user */}
-        <Outlet
-          context={{
-            selectedDate,
-            setSelectedDate,
-            isDashboard,
-          }}
-        />
+        <Outlet />
       </main>
     </div>
   );

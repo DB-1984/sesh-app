@@ -2,53 +2,65 @@ import { format } from "date-fns";
 import { Trash2, ChevronRight, Clock, Dumbbell } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 
 export const SeshCard = ({ sesh, onDelete }) => {
-  return (
-    <div className="group relative flex items-center justify-between p-5 bg-white dark:bg-zinc-900 border-1 border-zinc-200 dark:border-zinc-800 rounded-sm hover:border-black dark:hover:border-white transition-all shadow-sm">
-      <Link
-        to={`/users/sesh/${sesh._id}`}
-        className="flex-1 flex items-center gap-4"
-      >
-        {/* Date Icon */}
-        <div className="flex flex-col items-center justify-center h-12 w-12 rounded-xl bg-zinc-100 dark:bg-zinc-800 group-hover:bg-black group-hover:text-white dark:group-hover:bg-white dark:group-hover:text-black transition-colors">
-          <span className="text-[10px] font-black uppercase leading-none">
-            {format(new Date(sesh.date), "MMM")}
-          </span>
-          <span className="text-xl font-black leading-none">
-            {format(new Date(sesh.date), "dd")}
-          </span>
-        </div>
+  const date = new Date(sesh.date);
 
-        {/* Info */}
-        <div className="flex flex-col">
-          <h3 className="font-black text-lg leading-tight tracking-tightest text-black dark:text-white">
-            {sesh.title || "Untitled Sesh"}
-          </h3>
-          <div className="flex items-center gap-3 mt-1">
-            <span className="flex items-center gap-2 text-sm font-semibold tracking-tight text-zinc-700">
-              <Dumbbell className="h-3 w-3" /> {sesh.exercises?.length || 0}{" "}
-              Exercises
+  return (
+    <Card className="group relative overflow-hidden border border-border bg-muted/30 hover:bg-muted/50 transition-all hover:shadow-lg hover:-translate-y-[2px]">
+      {/* Left Accent Line */}
+      <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-foreground/10 group-hover:bg-foreground transition-colors" />
+
+      <div className="flex items-center justify-between p-5">
+        <Link
+          to={`/users/sesh/${sesh._id}`}
+          className="flex flex-1 items-center gap-4 no-underline"
+        >
+          {/* Date Block — now darker */}
+          <div className="flex flex-col items-center justify-center h-14 w-14 rounded-lg bg-foreground text-background shadow-sm transition-all group-hover:scale-105">
+            <span className="text-[10px] uppercase tracking-wider opacity-80">
+              {format(date, "MMM")}
             </span>
-            <span className="flex items-center gap-2 text-sm tracking-tight font-bold text-zinc-700">
-              <Clock className="h-3 w-3" /> {format(new Date(sesh.date), "p")}
+            <span className="text-lg font-semibold leading-none">
+              {format(date, "dd")}
             </span>
           </div>
-        </div>
-      </Link>
 
-      {/* Actions */}
-      <div className="flex items-center gap-2">
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => onDelete(sesh._id)}
-          className="text-zinc-300 hover:text-destructive hover:bg-destructive/10 transition-colors"
-        >
-          <Trash2 className="h-4 w-4" />
-        </Button>
-        <ChevronRight className="h-5 w-5 text-zinc-300 group-hover:text-black dark:group-hover:text-white transition-transform group-hover:translate-x-1" />
+          {/* Info */}
+          <div className="flex flex-col min-w-0">
+            <h3 className="text-base font-semibold tracking-tight text-foreground truncate">
+              {sesh.title || "Untitled Sesh"}
+            </h3>
+
+            <div className="mt-1 flex items-center gap-4 text-sm text-foreground/70">
+              <span className="flex items-center gap-1.5">
+                <Dumbbell className="h-3.5 w-3.5" />
+                {sesh.exercises?.length || 0} exercises
+              </span>
+
+              <span className="flex items-center gap-1.5">
+                <Clock className="h-3.5 w-3.5" />
+                {format(date, "p")}
+              </span>
+            </div>
+          </div>
+        </Link>
+
+        {/* Actions */}
+        <div className="flex items-center gap-1 ml-4">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => onDelete(sesh._id)}
+            className="text-foreground/50 hover:text-destructive hover:bg-destructive/10"
+          >
+            <Trash2 className="h-4 w-4" />
+          </Button>
+
+          <ChevronRight className="h-4 w-4 text-foreground/50 transition-all group-hover:translate-x-1 group-hover:text-foreground" />
+        </div>
       </div>
-    </div>
+    </Card>
   );
 };

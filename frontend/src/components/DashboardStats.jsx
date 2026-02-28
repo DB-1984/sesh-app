@@ -7,14 +7,16 @@ import {
   UserPen,
   LogOut,
 } from "lucide-react";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { Button } from "@/components/ui/button";
 import { logoutUser } from "../slices/userSlice";
-import { apiSlice } from "../slices/apiSlice"; // for the util
+import { apiSlice } from "../slices/apiSlice";
 import { useLogoutMutation } from "../slices/userApiSlice";
 
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+
 export default function DashboardStats() {
-  // Grab the data passed down from the Dashboard Outlet
   const { profile, profileLoading } = useOutletContext();
 
   const dispatch = useDispatch();
@@ -22,85 +24,132 @@ export default function DashboardStats() {
   const [logoutApiCall] = useLogoutMutation();
 
   const handleLogout = async () => {
-    await logoutApiCall().unwrap(); // kill cookie
-    dispatch(logoutUser()); // clean redux session
-    dispatch(resetMode()); // set back to Light
-    dispatch(apiSlice.util.resetApiState()); // clear RTK cache
+    await logoutApiCall().unwrap();
+    dispatch(logoutUser());
+    dispatch(resetMode());
+    dispatch(apiSlice.util.resetApiState());
     navigate("/");
   };
 
+  const goalText = profileLoading ? "…" : profile?.goal || "General";
+  const weightText = profileLoading
+    ? "…"
+    : profile?.weight
+    ? `${profile.weight}kg`
+    : "—";
+  const bmiText = profileLoading ? "…" : profile?.bmi || "—";
+  const targetsText =
+    profile?.targets || "No targets set. Update your profile to add some.";
+
   return (
-    <div className="flex flex-col min-h-full">
-      {/* HEADER SECTION */}
-      <div className="flex items-center gap-3 mb-8">
-        <LayoutDashboard className="h-6 w-6" />
-        <h2 className="text-4xl font-black tracking-tight">Dashboard</h2>
-      </div>
-
-      {/* SCROLLABLE CONTENT AREA */}
-      <div className="flex-1 space-y-10">
-        <section>
-          <p className="text-2xl font-black tracking-tighter mb-1">
-            Current Objective
-          </p>
-          <p className="text-md font-normal tracking-tighter text-zinc-500">
-            {profileLoading ? "..." : profile?.goal || "General"}
-          </p>
-        </section>
-
-        <section className="space-y-4">
-          <p className="text-2xl font-black tracking-tighter">Stats</p>
-          <div className="grid grid-cols-2 gap-6">
-            {/* Body Weight */}
-            <div className="bg-zinc-50 dark:bg-zinc-900/50 p-4 rounded-2xl border border-zinc-100 dark:border-zinc-800">
-              <p className="text-[10px] font-black text-zinc-600 flex tracking-tight items-center gap-1 mb-1 uppercase">
-                <Scale className="h-3 w-3" /> Body Weight
-              </p>
-              <p className="text-2xl font-black">
-                {profileLoading ? "..." : `${profile?.weight || "--"}kg`}
-              </p>
-            </div>
-
-            {/* BMI Index */}
-            <div className="bg-zinc-50 dark:bg-zinc-900/50 p-4 rounded-2xl border border-zinc-100 dark:border-zinc-800">
-              <p className="text-[10px] font-black text-zinc-600 tracking-tight flex items-center gap-1 mb-1 uppercase">
-                <Activity className="h-3 w-3" /> BMI
-              </p>
-              <p className="text-2xl font-black">
-                {profileLoading ? "..." : profile?.bmi || "--"}
-              </p>
-            </div>
+    <div className="flex flex-col min-h-full gap-6">
+      {/* HEADER */}
+      <div className="flex items-start justify-between">
+        <div>
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <LayoutDashboard className="h-4 w-4" />
+            <span>Overview</span>
           </div>
-        </section>
-
-        <section>
-          <p className="text-2xl font-black tracking-tighter mb-1">Targets</p>
-          <p className="text-md font-normal tracking-tighter text-zinc-500">
-            {profile?.targets ||
-              "No targets set. Update your profile to add some."}
-          </p>
-        </section>
+          <h2 className="mt-1 text-2xl md:text-3xl font-semibold tracking-tight">
+            Dashboard
+          </h2>
+        </div>
       </div>
 
-      {/* ACTION SECTION: Pushed to bottom by flex-1 above */}
-      <div className="mt-12 pt-8 pb-8 border-t border-zinc-100 dark:border-zinc-900">
-        <div className="flex flex-col gap-3">
+      {/* OBJECTIVE (unchanged) */}
+      <Card className="bg-muted/20">
+        <CardHeader className="pb-3">
+          <CardTitle className="-mb-4 pt-2">Current objective</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-lg font-medium tracking-tight">{goalText}</p>
+          <p className="mt-1 pb-2 text-sm text-muted-foreground">
+            This helps shape your training focus and targets.
+          </p>
+        </CardContent>
+      </Card>
+
+      {/* STATS (unchanged) */}
+      <div className="grid grid-cols-2 gap-4">
+        <Card className="relative overflow-hidden">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-xs uppercase tracking-wider text-muted-foreground flex items-center gap-2">
+              <Scale className="h-3.5 w-3.5" />
+              Body weight
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-2xl font-semibold tracking-tight">
+              {weightText}
+            </p>
+            <p className="mt-1 text-xs text-muted-foreground">
+              Keep it consistent, not perfect.
+            </p>
+          </CardContent>
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1 bg-foreground/10" />
+        </Card>
+
+        <Card className="relative overflow-hidden">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-xs uppercase tracking-wider text-muted-foreground flex items-center gap-2">
+              <Activity className="h-3.5 w-3.5" />
+              BMI
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-2xl font-semibold tracking-tight">{bmiText}</p>
+            <p className="mt-1 text-xs text-muted-foreground">
+              A rough guide, not the whole story.
+            </p>
+          </CardContent>
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1 bg-foreground/10" />
+        </Card>
+      </div>
+
+      {/* TARGETS — dark */}
+      <Card>
+        <CardHeader className="pb-2">
+          <CardTitle className="-mb-4 py-3">Targets</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-sm leading-relaxed pb-2 text-muted-foreground">
+            {targetsText}
+          </p>
+        </CardContent>
+      </Card>
+
+      {/* QUICK ACTIONS — dark */}
+      <Card className="mt-auto bg-muted/40text-foreground">
+        <CardHeader className="py-3">
+          <CardTitle className="-mb-2">Quick actions</CardTitle>
+        </CardHeader>
+
+        <Separator className="bg-border" />
+
+        <CardContent className="p-2 space-y-6">
           {/* Update Health Data */}
           <Button
             asChild
             variant="ghost"
-            className="group flex h-16 w-full items-center justify-between rounded-2xl bg-zinc-50 px-5 transition-all hover:bg-zinc-100 dark:bg-zinc-900/50 dark:hover:bg-zinc-900"
+            className="group w-full justify-between rounded-xl px-4 py-6 hover:bg-muted/70"
           >
             <Link to="profile" className="no-underline">
-              <div className="flex items-center gap-4">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white shadow-sm dark:bg-zinc-800">
-                  <UserPen className="h-5 w-5 text-zinc-600 group-hover:text-black dark:text-zinc-400 dark:group-hover:text-white" />
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-background/70 border">
+                  <UserPen className="h-5 w-5 text-muted-foreground group-hover:text-foreground" />
                 </div>
-                <span className="text-base font-bold text-zinc-900 dark:text-zinc-100">
-                  Update Health Data
-                </span>
+
+                <div className="text-left">
+                  <div className="text-sm font-medium text-foreground">
+                    Update health data
+                  </div>
+                  <div className="text-xs text-muted-foreground">
+                    Weight, goals, targets and more
+                  </div>
+                </div>
               </div>
-              <ArrowRight className="h-5 w-5 text-zinc-400 transition-transform group-hover:translate-x-1" />
+
+              <ArrowRight className="h-4 w-4 text-muted-foreground transition-transform group-hover:translate-x-1 group-hover:text-foreground" />
             </Link>
           </Button>
 
@@ -108,20 +157,27 @@ export default function DashboardStats() {
           <Button
             variant="ghost"
             onClick={handleLogout}
-            className="group flex h-16 w-full items-center justify-between rounded-2xl bg-red-50/40 px-5 transition-all hover:bg-red-50 dark:bg-red-950/10 dark:hover:bg-red-950/20 border border-transparent hover:border-red-100 dark:hover:border-red-900/50"
+            className="group w-full justify-between rounded-xl px-4 py-6 hover:bg-destructive/10"
           >
-            <div className="flex items-center gap-4">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white shadow-sm dark:bg-zinc-800">
-                <LogOut className="h-5 w-5 text-red-500" />
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-background/70 border">
+                <LogOut className="h-5 w-5 text-destructive" />
               </div>
-              <span className="text-base font-bold text-red-600 dark:text-red-400">
-                Log out
-              </span>
+
+              <div className="text-left">
+                <div className="text-sm font-medium text-destructive">
+                  Log out
+                </div>
+                <div className="text-xs text-muted-foreground">
+                  End this session on this device
+                </div>
+              </div>
             </div>
-            <ArrowRight className="h-5 w-5 text-red-300 transition-transform group-hover:translate-x-1" />
+
+            <ArrowRight className="h-4 w-4 text-muted-foreground transition-transform group-hover:translate-x-1 group-hover:text-foreground" />
           </Button>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

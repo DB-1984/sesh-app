@@ -31,7 +31,6 @@
 }
 
 /* Light mode mesh */
-
 .app-bg {
   background: linear-gradient(-45deg, #ee7752, #5db698, #23a6d5, #23d5ab);
   background-size: 400% 400%;
@@ -220,3 +219,74 @@ h3 {
 .animate-bounce {
   animation: bounce 1s infinite;
 }
+
+/* index.css */
+
+.op-10 {
+  opacity: 0.1;
+}
+.op-5 {
+  opacity: 0.05;
+}
+
+.shape1,
+.shape2,
+.shape3 {
+  position: absolute;
+  background: black; /* Clinical black blobs */
+  filter: blur(2rem);
+}
+
+.shape1 {
+  top: 20%;
+  left: 60%;
+  width: 35rem;
+  height: 35rem;
+  border-radius: 24% 76% 77% 23% / 30% 30% 70% 70%;
+  animation: shape1 25s infinite;
+}
+
+.shape2 {
+  top: 40%;
+  left: 10%;
+  width: 45rem;
+  height: 30rem;
+  border-radius: 73% 27% 77% 23% / 53% 4% 96% 47%;
+  animation: shape2 40s infinite;
+}
+
+.shape3 {
+  top: -10%;
+  left: 30%;
+  width: 30rem;
+  height: 30rem;
+  border-radius: 70% 30% 80% 20% / 42% 25% 75% 58%;
+  animation: shape3 30s infinite;
+}
+
+@keyframes shape1 {
+  0% {
+    transform: translate(0, 0);
+    border-radius: 24% 76% 77% 23% / 30% 30% 70% 70%;
+  }
+  25% {
+    transform: translate(-30%, 20%);
+    border-radius: 28% 72% 81% 19% / 78% 25% 75% 22%;
+    height: 40rem;
+  }
+  50% {
+    transform: translate(-50%, -10%);
+    border-radius: 60% 40% 0% 100% / 1% 74% 26% 99%;
+  }
+  75% {
+    transform: translate(10%, -20%);
+    border-radius: 0% 100% 100% 0% / 0% 100% 100% 0%;
+  }
+  100% {
+    transform: translate(0, 0);
+    border-radius: 24% 76% 77% 23% / 30% 30% 70% 70%;
+  }
+}
+
+/* Use your existing keyframes for shape2 and shape3 here, 
+   just ensure they use 'transform: translate' as you had them */
