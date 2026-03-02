@@ -72,6 +72,7 @@ const Dashboard = () => {
     ? "Showing all sessions for this date."
     : "Showing your 5 most recent sessions.";
 
+
   return (
     <div className="grid min-h-[calc(100vh-64px)] lg:grid-cols-[420px_1fr] bg-transparent">
       {/* LEFT PANEL */}

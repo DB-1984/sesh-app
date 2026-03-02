@@ -12,7 +12,7 @@ export default function LoginRegisterPage({ mode = "login" }) {
 
   return (
     <div className="grid min-h-svh lg:grid-cols-2">
-      <div className="flex flex-col gap-4 p-6 app-bg md:p-10">
+      <div className="flex flex-col gap-4 p-6 md:p-10">
         {/* Desktop logo (lg and up only) */}
         <div className="hidden lg:flex justify-center md:justify-start">
           <a href="/" className="flex items-center font-medium">

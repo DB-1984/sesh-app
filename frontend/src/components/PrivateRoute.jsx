@@ -13,16 +13,16 @@ export default function PrivateRoute() {
     skip: !localUser,
   });
 
-  if (isLoading) {
+  if (isLoading)
     return (
-      <div className="flex h-[calc(100vh-64px)] items-center justify-center">
-        <Loader2 className="h-12 w-12 animate-spin" />
-        <span className="ml-3 text-lg tracking-tight font-semibold">
-          Loading...
-        </span>
+      <div className="fixed inset-0 flex flex-col items-center justify-center bg-background/50 backdrop-blur-sm">
+        <div className="flex flex-col items-center justify-center text-zinc-500">
+          <span className="font-black uppercase logo-text text-black tracking-tighter text-xl">
+            Loading...
+          </span>
+        </div>
       </div>
     );
-  }
   // 3. If we have a local user AND the server confirmed it, show the page
   // Otherwise, kick them back to login
   return localUser && serverUser ? (

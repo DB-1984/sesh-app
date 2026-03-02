@@ -56,16 +56,16 @@ export default function ViewSesh() {
     if (isError) toast.error("Failed to load session");
   }, [isError]);
 
-  if (isLoading) {
+  if (isLoading)
     return (
-      <div className="flex h-[calc(100vh-64px)] items-center justify-center">
-        <Loader2 className="h-12 w-12 animate-spin" />
-        <span className="ml-3 text-lg tracking-tight font-semibold">
-          Loading Sesh...
-        </span>
+      <div className="fixed inset-0 flex flex-col items-center justify-center bg-background/50 backdrop-blur-sm">
+        <div className="flex flex-col items-center justify-center text-zinc-500">
+          <span className="font-black uppercase logo-text text-black tracking-tighter text-xl">
+            Loading...
+          </span>
+        </div>
       </div>
     );
-  }
 
   if (!currentSesh)
     return <div className="p-10 text-center">Sesh not found.</div>;
@@ -216,7 +216,7 @@ export default function ViewSesh() {
                     <History className="h-4 w-4 shrink-0" />
                     <span>Exercises</span>
                   </div>
-                  <CardTitle className="mt-2 text-3xl leading-none">
+                  <CardTitle className="mt-2 font-semibold text-1xl leading-none">
                     Logged exercises
                   </CardTitle>
                 </div>
