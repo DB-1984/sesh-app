@@ -23,6 +23,7 @@ export default function PrivateRoute() {
         </div>
       </div>
     );
+    
   // 3. If we have a local user AND the server confirmed it, show the page
   // Otherwise, kick them back to login
   return localUser && serverUser ? (

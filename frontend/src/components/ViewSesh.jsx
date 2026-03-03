@@ -151,8 +151,8 @@ export default function ViewSesh() {
 
             {/* Form card — tighter + consistent */}
             <Card className="bg-muted/20">
-              <CardHeader className="py-5">
-                <CardTitle className="text-base leading-none">
+              <CardHeader className="py-3">
+                <CardTitle className="text-xl leading-none">
                   {exerciseId ? "Edit exercise" : "Add exercise"}
                 </CardTitle>
               </CardHeader>
